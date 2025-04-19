@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 module.exports = (sequelize) => {
     class User extends Model {
         static associate(models) {
-    
             User.hasOne(models.Doctor, { foreignKey: 'userId' });
             User.hasOne(models.Patient, { foreignKey: 'userId' });
         }
@@ -40,14 +39,6 @@ module.exports = (sequelize) => {
         active: {
             type: DataTypes.BOOLEAN,
             defaultValue: true
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
         }
     }, {
         sequelize,
@@ -74,3 +65,4 @@ module.exports = (sequelize) => {
 
     return User;
 };
+
