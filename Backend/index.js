@@ -5,7 +5,7 @@ const app = express();
 
 const sequelize = require("./src/database/dbConfig");
 
-require("./src/database/associations");
+require("./src/database/models/associations");
 
 
 app.use(bodyParser.json());

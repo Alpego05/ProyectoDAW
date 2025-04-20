@@ -1,6 +1,6 @@
 const UserModel = require('../database/models/UserModel');
 const jwt = require('jsonwebtoken');
-const db = require('./../database/associations');
+const db = require('../database/models/associations');
 const User = db.User;
 
 const userService = {
