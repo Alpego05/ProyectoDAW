@@ -1,9 +1,9 @@
 const sequelize = require('./dbConfig');
 
 // Importa los modelos
-const User = require('./models/userModel')(sequelize);
-const Doctor = require('./models/doctorModel')(sequelize);
-const Patient = require('./models/patientModel')(sequelize);
+const User = require('./models/UserModel');
+const Doctor = require('./models/DoctorModel');
+const Patient = require('./models/PatientModel');
 
 // Define las asociaciones
 User.associate({ Doctor, Patient });

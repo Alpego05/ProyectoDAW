@@ -1,4 +1,4 @@
-const Patient = require('../database/models/patientModel');
+const Patient = require('../database/models/PatientModel');
 
 const patientService = {
     // Obtener todos los pacientes con información de usuario

@@ -1,6 +1,6 @@
-const Patient = require('../database/models/patientModel');
-const { User } = require('../database/models/userModel');
-const Doctor = require("./../database/models/doctorModel");
+const Patient = require('../database/models/PatientModel');
+const { User } = require('../database/models/UserModel');
+const Doctor = require("../database/models/DoctorModel");
 
 const { sequelize } = require('./../database/dbConfig');
 const userService = require('./../services/userServices');

@@ -1,5 +1,7 @@
-const { User } = require('../database/models/userModel');
+const UserModel = require('../database/models/UserModel');
 const jwt = require('jsonwebtoken');
+const db = require('./../database/associations');
+const User = db.User;
 
 const userService = {
     // Obtener todos los usuarios
