@@ -2,8 +2,8 @@ const Patient = require('../database/models/patientModel');
 const { User } = require('../database/models/userModel');
 const Doctor = require("./../database/models/doctorModel");
 
-const { sequelize } = require('../database');
-const userService = require('./userService');
+const { sequelize } = require('./../database/dbConfig');
+const userService = require('./../services/userServices');
 
 const doctorService = {
     // Obtener todos los médicos con información de usuario

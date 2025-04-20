@@ -1,6 +1,11 @@
 const { Sequelize } = require('sequelize');
+require("dotenv").config();
 
-const sequelize = new Sequelize('nombre_db', 'usuario', 'contraseña', {
+const sequelize = new Sequelize(
+    'MediNet',
+    process.env.DB_USER,
+    process.env.DB_PASSWORD, {
+        
     host: 'localhost',
     dialect: 'mysql',
 
