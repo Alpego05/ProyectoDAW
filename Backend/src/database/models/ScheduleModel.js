@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class Schedule extends Model {
     static associate(models) {
@@ -7,7 +7,8 @@ class Schedule extends Model {
         Schedule.belongsToMany(models.Appointment, {
             through: 'agenda_cita',
             foreignKey: 'id_agenda',
-            otherKey: 'id_cita'
+            otherKey: 'id_cita',
+            as: 'appointments'
         });
     }
 }
@@ -15,51 +16,52 @@ class Schedule extends Model {
 Schedule.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_agenda'
         },
         doctorId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_medico',
             references: {
-                model: 'medicos',
-                key: 'id_medico'
+                model: 'doctors',
+                key: 'id'
             }
         },
-        date: {
+        day: {
             type: DataTypes.DATEONLY,
             allowNull: false,
-            field: 'fecha',
-            validate: {
-                isDate: {
-                    msg: 'La fecha debe ser válida'
-                }
-            }
         },
         startTime: {
             type: DataTypes.TIME,
             allowNull: false,
-            field: 'hora_inicio'
         },
         endTime: {
             type: DataTypes.TIME,
             allowNull: false,
-            field: 'hora_fin'
         },
-        available: {
+        isAvailable: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
-            field: 'disponible'
+            allowNull: false,
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'Schedule',
-        tableName: 'agendas',
-        timestamps: false
+        tableName: 'schedules',
+        timestamps: true,
+        underscored: true,
     }
 );
 

@@ -1,17 +1,19 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class Disease extends Model {
     static associate(models) {
         Disease.belongsToMany(models.Diagnosis, {
             through: 'diagnostico_enfermedad',
             foreignKey: 'id_enfermedad',
-            otherKey: 'id_diagnostico'
+            otherKey: 'id_diagnostico',
+            as: 'diagnoses'
         });
         Disease.belongsToMany(models.Medication, {
             through: 'enfermedad_medicamento',
             foreignKey: 'id_enfermedad',
-            otherKey: 'id_medicamento'
+            otherKey: 'id_medicamento',
+            as: 'medications'
         });
     }
 }
@@ -19,37 +21,44 @@ class Disease extends Model {
 Disease.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_enfermedad'
         },
         name: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING,
             allowNull: false,
-            field: 'nombre',
-            validate: {
-                notEmpty: {
-                    msg: 'El nombre de la enfermedad no puede estar vacío'
-                }
-            }
+            unique: true,
         },
         description: {
             type: DataTypes.TEXT,
-            allowNull: true,
-            field: 'descripcion'
+            allowNull: false,
         },
-        cieCode: {
-            type: DataTypes.STRING(20),
+        symptoms: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        treatmentInfo: {
+            type: DataTypes.TEXT,
             allowNull: true,
-            field: 'codigo_cie'
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'Disease',
-        tableName: 'enfermedades',
-        timestamps: false
+        tableName: 'diseases',
+        timestamps: true,
+        underscored: true,
     }
 );
 

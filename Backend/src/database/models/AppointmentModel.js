@@ -1,77 +1,85 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class Appointment extends Model {
     static associate(models) {
         Appointment.belongsTo(models.Patient, { foreignKey: 'patientId' });
         Appointment.belongsTo(models.Doctor, { foreignKey: 'doctorId' });
-        Appointment.hasOne(models.Diagnosis, { foreignKey: 'appointmentId' });
         Appointment.belongsToMany(models.Schedule, {
             through: 'agenda_cita',
             foreignKey: 'id_cita',
-            otherKey: 'id_agenda'
+            otherKey: 'id_agenda',
+            as: 'schedules'
         });
+        Appointment.hasOne(models.Diagnosis, { foreignKey: 'appointmentId', as: 'diagnosis' });
     }
 }
 
 Appointment.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_cita'
         },
         patientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_paciente',
             references: {
-                model: 'pacientes',
-                key: 'id_paciente'
+                model: 'patients',
+                key: 'id'
             }
         },
         doctorId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_medico',
             references: {
-                model: 'medicos',
-                key: 'id_medico'
+                model: 'doctors',
+                key: 'id'
             }
         },
         date: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false,
-            field: 'fecha',
-            validate: {
-                isDate: {
-                    msg: 'La fecha debe ser válida'
-                }
-            }
+        },
+        startTime: {
+            type: DataTypes.TIME,
+            allowNull: false,
+        },
+        endTime: {
+            type: DataTypes.TIME,
+            allowNull: false,
+        },
+        room: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        status: {
+            type: DataTypes.ENUM('pendiente', 'completada','no_asistida'),
+            defaultValue: 'pendiente',
+            allowNull: false,
         },
         reason: {
             type: DataTypes.TEXT,
             allowNull: true,
-            field: 'motivo'
         },
-        status: {
-            type: DataTypes.ENUM('Programada', 'Completada', 'Cancelada'),
-            defaultValue: 'Programada',
-            field: 'estado',
-            validate: {
-                isIn: {
-                    args: [['Programada', 'Completada', 'Cancelada']],
-                    msg: "El estado debe ser 'Programada', 'Completada' o 'Cancelada'"
-                }
-            }
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'Appointment',
-        tableName: 'citas',
-        timestamps: false
+        tableName: 'appointments',
+        timestamps: true,
+        underscored: true,
     }
 );
 

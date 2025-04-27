@@ -4,80 +4,77 @@ const sequelize = require('../dbConfig');
 class Patient extends Model {
     static associate(models) {
         Patient.belongsTo(models.User, { foreignKey: 'userId' });
-        Patient.hasMany(models.Appointment, { foreignKey: 'patientId' });
-        Patient.hasOne(models.MedicalHistory, { foreignKey: 'patientId' });
+        Patient.belongsTo(models.Doctor, { foreignKey: 'generalDoctorId', as: 'generalDoctor' });
+        Patient.hasOne(models.MedicalHistory, { foreignKey: 'patientId', as: 'medicalHistory' });
+        Patient.hasMany(models.Appointment, { foreignKey: 'patientId', as: 'appointments' });
     }
 }
 
 Patient.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_paciente'
         },
         userId: {
-            type: DataTypes.STRING,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_usuario',
+            unique: true,
             references: {
                 model: 'users',
                 key: 'id'
             }
         },
-        birthDate: {
+        generalDoctorId: {
+            type: DataTypes.UUID,
+            allowNull: false,
+            references: {
+                model: 'doctors',
+                key: 'id'
+            }
+        },
+        dateOfBirth: {
             type: DataTypes.DATEONLY,
             allowNull: false,
-            field: 'fecha_nacimiento',
-            validate: {
-                isDate: {
-                    msg: 'La fecha de nacimiento debe ser una fecha válida'
-                },
-                isBefore: {
-                    args: new Date().toISOString().split('T')[0],
-                    msg: 'La fecha de nacimiento no puede ser posterior a hoy'
-                }
-            }
         },
         gender: {
             type: DataTypes.ENUM('M', 'F', 'Otro'),
             allowNull: false,
-            field: 'genero',
-            validate: {
-                isIn: {
-                    args: [['M', 'F', 'Otro']],
-                    msg: "El género debe ser 'M', 'F' u 'Otro'"
-                }
-            }
+        },
+        bloodType: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        allergies: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        contactPhone: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         address: {
             type: DataTypes.TEXT,
-            allowNull: true,
-            field: 'direccion'
+            allowNull: false,
         },
-        bloodType: {
-            type: DataTypes.STRING(5),
-            allowNull: true,
-            field: 'grupo_sanguineo',
-            validate: {
-                isIn: {
-                    args: [['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']],
-                    msg: 'El grupo sanguíneo no es válido'
-                }
-            }
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         },
-        medicalInsurance: {
-            type: DataTypes.STRING(100),
-            allowNull: true,
-            field: 'seguro_medico'
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'Patient',
-        tableName: 'pacientes',
-        timestamps: false
+        tableName: 'patients',
+        timestamps: true,
+        underscored: true,
     }
 );
 

@@ -4,56 +4,60 @@ const sequelize = require('../dbConfig');
 class Doctor extends Model {
     static associate(models) {
         Doctor.belongsTo(models.User, { foreignKey: 'userId' });
-        Doctor.hasMany(models.Appointment, { foreignKey: 'doctorId' });
-        Doctor.hasMany(models.Schedule, { foreignKey: 'doctorId' });
-        Doctor.hasMany(models.Diagnosis, { foreignKey: 'doctorId' });
+        Doctor.hasMany(models.Schedule, { foreignKey: 'doctorId', as: 'schedules' });
+        Doctor.hasMany(models.Appointment, { foreignKey: 'doctorId', as: 'appointments' });
+        Doctor.hasMany(models.Diagnosis, { foreignKey: 'doctorId', as: 'diagnoses' });
+        Doctor.hasMany(models.Patient, { foreignKey: 'generalDoctorId', as: 'patients' });
     }
 }
 
 Doctor.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_medico'
         },
         userId: {
-            type: DataTypes.STRING,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_usuario',
+            unique: true,
             references: {
                 model: 'users',
                 key: 'id'
             }
         },
-        specialty: {
-            type: DataTypes.STRING(100),
+        speciality: {
+            type: DataTypes.STRING,
             allowNull: false,
-            field: 'especialidad',
-            validate: {
-                notEmpty: {
-                    msg: 'La especialidad no puede estar vacía'
-                }
-            }
         },
         licenseNumber: {
-            type: DataTypes.STRING(20),
+            type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-            field: 'numero_colegiado',
-            validate: {
-                notEmpty: {
-                    msg: 'El número de colegiado no puede estar vacío'
-                }
-            }
+        },
+        isGeneralDoctor: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'Doctor',
-        tableName: 'medicos',
-        timestamps: false
+        tableName: 'doctors',
+        timestamps: true,
+        underscored: true,
     }
 );
 

@@ -1,76 +1,67 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class Medication extends Model {
     static associate(models) {
-        Medication.hasMany(models.Prescription, { foreignKey: 'medicationId' });
         Medication.belongsToMany(models.Disease, {
             through: 'enfermedad_medicamento',
             foreignKey: 'id_medicamento',
-            otherKey: 'id_enfermedad'
+            otherKey: 'id_enfermedad',
+            as: 'diseases'
         });
+        Medication.hasMany(models.Prescription, { foreignKey: 'medicationId', as: 'prescriptions' });
     }
 }
 
 Medication.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_medicamento'
         },
         name: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING,
             allowNull: false,
-            field: 'nombre',
-            validate: {
-                notEmpty: {
-                    msg: 'El nombre del medicamento no puede estar vacío'
-                }
-            }
-        },
-        activeIngredient: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-            field: 'principio_activo',
-            validate: {
-                notEmpty: {
-                    msg: 'El principio activo no puede estar vacío'
-                }
-            }
-        },
-        concentration: {
-            type: DataTypes.STRING(50),
-            allowNull: true,
-            field: 'concentracion'
-        },
-        presentation: {
-            type: DataTypes.STRING(50),
-            allowNull: true,
-            field: 'presentacion'
-        },
-        administrationRoute: {
-            type: DataTypes.STRING(50),
-            allowNull: true,
-            field: 'via_administracion'
+            unique: true,
         },
         description: {
             type: DataTypes.TEXT,
-            allowNull: true,
-            field: 'descripcion'
+            allowNull: false,
         },
-        requiresPrescription: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            field: 'requiere_receta'
+        dosageForm: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        activeIngredient: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        contraindications: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        sideEffects: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'Medication',
-        tableName: 'medicamentos',
-        timestamps: false
+        tableName: 'medications',
+        timestamps: true,
+        underscored: true,
     }
 );
 

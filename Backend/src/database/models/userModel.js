@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 
 class User extends Model {
     static associate(models) {
-        User.hasOne(models.Doctor, { foreignKey: 'userId' });
-        User.hasOne(models.Patient, { foreignKey: 'userId' });
+        User.hasOne(models.Doctor, { foreignKey: 'userId', as: 'doctor' });
+        User.hasOne(models.Patient, { foreignKey: 'userId', as: 'patient' });
     }
-
+    
     async validPassword(password) {
         return await bcrypt.compare(password, this.password);
     }
@@ -16,7 +16,8 @@ class User extends Model {
 User.init(
     {
         id: {
-            type: DataTypes.STRING,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
         username: {
@@ -69,6 +70,16 @@ User.init(
                 },
             },
         },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        }
     },
     {
         sequelize,

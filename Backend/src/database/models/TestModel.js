@@ -1,12 +1,13 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class Test extends Model {
   static associate(models) {
-    Test.belongsToMany(models.Diagnosis, { 
-      through: 'diagnostico_prueba', 
+    Test.belongsToMany(models.Diagnosis, {
+      through: 'diagnostico_prueba',
       foreignKey: 'id_prueba',
-      otherKey: 'id_diagnostico'
+      otherKey: 'id_diagnostico',
+      as: 'diagnoses'
     });
   }
 }
@@ -14,43 +15,56 @@ class Test extends Model {
 Test.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      autoIncrement: true,
-      field: 'id_prueba'
     },
     name: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: false,
-      field: 'nombre',
-      validate: {
-        notEmpty: {
-          msg: 'El nombre de la prueba no puede estar vacío'
-        }
-      }
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true,
-      field: 'descripcion'
+      allowNull: false,
     },
-    requiresFasting: {
+    result: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    completed: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-      field: 'requiere_ayuno'
+      allowNull: false,
     },
-    resultTime: {
-      type: DataTypes.INTEGER,
+    labNumber: {
+      type: DataTypes.STRING,
       allowNull: true,
-      field: 'tiempo_resultados',
-      comment: 'Tiempo estimado en días'
+    },
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
     }
   },
   {
     sequelize,
     modelName: 'Test',
-    tableName: 'pruebas',
-    timestamps: false
+    tableName: 'tests',
+    timestamps: true,
+    underscored: true,
   }
 );
 

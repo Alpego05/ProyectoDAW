@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class Prescription extends Model {
     static associate(models) {
@@ -11,70 +11,63 @@ class Prescription extends Model {
 Prescription.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_receta'
         },
         diagnosisId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_diagnostico',
             references: {
-                model: 'diagnosticos',
-                key: 'id_diagnostico'
+                model: 'diagnoses',
+                key: 'id'
             }
         },
         medicationId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_medicamento',
             references: {
-                model: 'medicamentos',
-                key: 'id_medicamento'
+                model: 'medications',
+                key: 'id'
             }
         },
-        dose: {
-            type: DataTypes.STRING(50),
+        dosage: {
+            type: DataTypes.STRING,
             allowNull: false,
-            field: 'dosis',
-            validate: {
-                notEmpty: {
-                    msg: 'La dosis no puede estar vacía'
-                }
-            }
         },
         frequency: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRING,
             allowNull: false,
-            field: 'frecuencia',
-            validate: {
-                notEmpty: {
-                    msg: 'La frecuencia no puede estar vacía'
-                }
-            }
         },
-        duration: {
-            type: DataTypes.STRING(50),
+        startDate: {
+            type: DataTypes.DATEONLY,
             allowNull: false,
-            field: 'duracion',
-            validate: {
-                notEmpty: {
-                    msg: 'La duración no puede estar vacía'
-                }
-            }
+        },
+        endDate: {
+            type: DataTypes.DATEONLY,
+            allowNull: false,
         },
         instructions: {
             type: DataTypes.TEXT,
             allowNull: true,
-            field: 'instrucciones'
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'Prescription',
-        tableName: 'recetas',
-        timestamps: false
+        tableName: 'prescriptions',
+        timestamps: true,
+        underscored: true,
     }
 );
 

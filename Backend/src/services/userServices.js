@@ -1,183 +1,162 @@
-const UserModel = require('../database/models/UserModel');
+const User = require('../database/models/UserModel');
 const jwt = require('jsonwebtoken');
 const db = require('../database/models/associations');
-const User = db.User;
 
-const userService = {
-    // Obtener todos los usuarios
-    getAllUsers: async () => {
-        try {
-            return await User.findAll({
-                attributes: { exclude: ['password'] }
-            });
-        } catch (error) {
-            throw new Error(`Error al obtener usuarios: ${error.message}`);
+
+// Obtener todos los usuarios
+const getAllUsers = async () => {
+    try {
+        return await User.findAll({
+            attributes: { exclude: ['password'] }
+        });
+    } catch (error) {
+        throw new Error(`Error al obtener usuarios: ${error.message}`);
+    }
+}
+
+// Obtener un usuario por ID
+const getUserById = async (id) => {
+    try {
+        const user = await User.findByPk(id, {
+            attributes: { exclude: ['password'] }
+        });
+
+        if (!user) {
+            throw new Error('Usuario no encontrado');
         }
-    },
 
-    // Obtener un usuario por ID
-    getUserById: async (id) => {
-        try {
-            const user = await User.findByPk(id, {
-                attributes: { exclude: ['password'] }
-            });
+        return user;
+    } catch (error) {
+        throw new Error(`Error al obtener el usuario: ${error.message}`);
+    }
+}
 
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
+// Verificar si existe un usuario con el email proporcionado
+const getUserByEmail = async (email) => {
+    try {
+        const user = await User.findOne({ where: { email } });
+        return !!user;
+    } catch (error) {
+        throw new Error(`Error al verificar el usuario: ${error.message}`);
+    }
+}
 
-            return user;
-        } catch (error) {
-            throw new Error(`Error al obtener el usuario: ${error.message}`);
+// Crear un nuevo usuario
+const createUser = async (userData) => {
+    try {
+        const { username, email, password, role } = userData;
+
+        // Validar campos requeridos
+        if (!username || !email || !password) {
+            throw new Error('Faltan campos requeridos');
         }
-    },
 
-    // Verificar si existe un usuario con el email proporcionado
-    checkUserExists: async (email) => {
-        try {
-            const user = await User.findOne({ where: { email } });
-            return !!user;
-        } catch (error) {
-            throw new Error(`Error al verificar el usuario: ${error.message}`);
+        // Verificar si el usuario ya existe
+        const existingUser = await User.findOne({ where: { email } });
+
+        if (existingUser) {
+            throw new Error('El correo ya está registrado');
         }
-    },
 
-    // Crear un nuevo usuario
-    createUser: async (userData) => {
-        try {
-            const { username, email, password, role } = userData;
+        const newUser = await User.create({
+            username,
+            email,
+            password,
+            role: role || 'patient'
+        });
 
-            // Validar campos requeridos
-            if (!username || !email || !password) {
-                throw new Error('Faltan campos requeridos');
-            }
+        // Excluir la contraseña de la respuesta
+        const userWithoutPassword = {
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
+            role: newUser.role,
+            active: newUser.active,
+            createdAt: newUser.createdAt,
+            updatedAt: newUser.updatedAt
+        };
 
-            // Verificar si el usuario ya existe
-            const existingUser = await User.findOne({ where: { email } });
+        return userWithoutPassword;
+    } catch (error) {
+        throw new Error(`Error al crear el usuario: ${error.message}`);
+    }
+}
 
-            if (existingUser) {
-                throw new Error('El correo ya está registrado');
-            }
+// Actualizar un usuario
+const updateUser = async (id, userData) => {
+    try {
+        const { username, email, password, role, active } = userData;
 
-            const newUser = await User.create({
-                username,
-                email,
-                password,
-                role: role || 'patient'
-            });
+        const user = await User.findByPk(id);
 
-            // Excluir la contraseña de la respuesta
-            const userWithoutPassword = {
-                id: newUser.id,
-                username: newUser.username,
-                email: newUser.email,
-                role: newUser.role,
-                active: newUser.active,
-                createdAt: newUser.createdAt,
-                updatedAt: newUser.updatedAt
-            };
-
-            return userWithoutPassword;
-        } catch (error) {
-            throw new Error(`Error al crear el usuario: ${error.message}`);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
         }
-    },
 
-    // Actualizar un usuario
-    updateUser: async (id, userData) => {
-        try {
-            const { username, email, password, role, active } = userData;
+        // Actualizar campos si existen en la solicitud
+        if (username) user.username = username;
+        if (email) user.email = email;
+        if (password) user.password = password;
+        if (role) user.role = role;
+        if (active !== undefined) user.active = active;
 
-            const user = await User.findByPk(id);
+        await user.save();
 
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
+        // Excluir la contraseña de la respuesta
+        const userWithoutPassword = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            active: user.active,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        };
 
-            // Actualizar campos si existen en la solicitud
-            if (username) user.username = username;
-            if (email) user.email = email;
-            if (password) user.password = password;
-            if (role) user.role = role;
-            if (active !== undefined) user.active = active;
+        return userWithoutPassword;
+    } catch (error) {
+        throw new Error(`Error al actualizar el usuario: ${error.message}`);
+    }
+}
 
-            await user.save();
+// Eliminar un usuario
+const deleteUser = async (id) => {
+    try {
+        const user = await User.findByPk(id);
 
-            // Excluir la contraseña de la respuesta
-            const userWithoutPassword = {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                active: user.active,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
-            };
-
-            return userWithoutPassword;
-        } catch (error) {
-            throw new Error(`Error al actualizar el usuario: ${error.message}`);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
         }
-    },
 
-    // Eliminar un usuario
-    deleteUser: async (id) => {
-        try {
-            const user = await User.findByPk(id);
+        await user.destroy();
+        return true;
+    } catch (error) {
+        throw new Error(`Error al eliminar el usuario: ${error.message}`);
+    }
+}
 
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            await user.destroy();
-            return true;
-        } catch (error) {
-            throw new Error(`Error al eliminar el usuario: ${error.message}`);
+const loginUser = async (email) => {
+    try {
+        const user = await User.findOne({
+            where: {
+                email: email,
+            },
+        });
+        if (!user) {
+            throw new Error("Usuario no encontrado");
         }
-    },
-
-    // Autenticar usuario
-    authenticateUser: async (email, password) => {
-        try {
-            if (!email || !password) {
-                throw new Error('Email y contraseña son requeridos');
-            }
-
-            const user = await User.findOne({ where: { email } });
-
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            const isPasswordValid = await user.validPassword(password);
-
-            if (!isPasswordValid) {
-                throw new Error('Contraseña incorrecta');
-            }
-
-            const token = jwt.sign(
-                {
-                    id: user.id,
-                    email: user.email,
-                    role: user.role
-                },
-                process.env.JWT_SECRET,
-                { expiresIn: '24h' }
-            );
-
-            return {
-                token,
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    email: user.email,
-                    role: user.role
-                }
-            };
-        } catch (error) {
-            throw new Error(`Error en la autenticación: ${error.message}`);
-        }
+        return user;
+    } catch (error) {
+        throw new Error("Error al logear el usuario: " + error.message);
     }
 };
 
-module.exports = userService;
+module.exports = {
+    getAllUsers,
+    getUserById,
+    getUserByEmail,
+    deleteUser,
+    createUser,
+    updateUser,
+    loginUser,
+}

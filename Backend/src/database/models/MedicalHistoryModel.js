@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class MedicalHistory extends Model {
     static associate(models) {
@@ -7,7 +7,8 @@ class MedicalHistory extends Model {
         MedicalHistory.belongsToMany(models.Diagnosis, {
             through: 'historial_diagnostico',
             foreignKey: 'id_historial',
-            otherKey: 'id_diagnostico'
+            otherKey: 'id_diagnostico',
+            as: 'diagnoses'
         });
     }
 }
@@ -15,42 +16,48 @@ class MedicalHistory extends Model {
 MedicalHistory.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
-            field: 'id_historial'
         },
         patientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             allowNull: false,
-            field: 'id_paciente',
+            unique: true,
             references: {
-                model: 'pacientes',
-                key: 'id_paciente'
+                model: 'patients',
+                key: 'id'
             }
         },
-        creationDate: {
-            type: DataTypes.DATEONLY,
-            allowNull: false,
-            field: 'fecha_creacion',
-            defaultValue: DataTypes.NOW
-        },
-        background: {
+        backgroundInfo: {
             type: DataTypes.TEXT,
             allowNull: true,
-            field: 'antecedentes'
         },
-        allergies: {
+        familyHistory: {
             type: DataTypes.TEXT,
             allowNull: true,
-            field: 'alergias'
+        },
+        notes: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         }
     },
     {
         sequelize,
         modelName: 'MedicalHistory',
-        tableName: 'historiales',
-        timestamps: false
+        tableName: 'medical_histories',
+        timestamps: true,
+        underscored: true,
     }
 );
 
