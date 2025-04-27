@@ -1,20 +1,18 @@
-const patientService = require('../services/patientservices');
+const patientService = require('./../services/patientServices');
 
 const patientController = {
     // Obtener todos los pacientes
     getAllPatients: async (req, res) => {
         try {
             const patients = await patientService.getAllPatients();
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 data: patients
             });
         } catch (error) {
-            console.error('Error en getAllPatients controller:', error);
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
-                message: 'Error al obtener los pacientes',
-                error: error.message
+                message: error.message
             });
         }
     },
@@ -24,14 +22,12 @@ const patientController = {
         try {
             const { id } = req.params;
             const patient = await patientService.getPatientById(id);
-            res.status(200).json({
+
+            return res.status(200).json({
                 success: true,
                 data: patient
             });
         } catch (error) {
-            console.error('Error en getPatientById controller:', error);
-
-            // Si el error es "Paciente no encontrado", devuelve 404
             if (error.message === 'Paciente no encontrado') {
                 return res.status(404).json({
                     success: false,
@@ -39,10 +35,9 @@ const patientController = {
                 });
             }
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
-                message: 'Error al obtener el paciente',
-                error: error.message
+                message: error.message
             });
         }
     },
@@ -52,27 +47,24 @@ const patientController = {
         try {
             const patientData = req.body;
             const newPatient = await patientService.createPatient(patientData);
-            res.status(201).json({
+
+            return res.status(201).json({
                 success: true,
-                message: 'Paciente creado con éxito',
+                message: 'Paciente creado correctamente',
                 data: newPatient
             });
         } catch (error) {
-            console.error('Error en createPatient controller:', error);
-
-            // Si el error es por datos duplicados o faltantes, devuelve 400
-            if (error.message.includes('Faltan campos requeridos') ||
-                error.message.includes('ya está registrado')) {
+            if (error.message === 'Faltan campos requeridos' ||
+                error.message === 'El número de identificación ya está registrado') {
                 return res.status(400).json({
                     success: false,
                     message: error.message
                 });
             }
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
-                message: 'Error al crear el paciente',
-                error: error.message
+                message: error.message
             });
         }
     },
@@ -82,33 +74,25 @@ const patientController = {
         try {
             const { id } = req.params;
             const patientData = req.body;
+
             const updatedPatient = await patientService.updatePatient(id, patientData);
-            res.status(200).json({
+
+            return res.status(200).json({
                 success: true,
-                message: 'Paciente actualizado con éxito',
+                message: 'Paciente actualizado correctamente',
                 data: updatedPatient
             });
         } catch (error) {
-            console.error('Error en updatePatient controller:', error);
-
-            // Manejar diferentes tipos de errores
             if (error.message === 'Paciente no encontrado') {
                 return res.status(404).json({
                     success: false,
                     message: error.message
                 });
-            } else if (error.message.includes('ya está registrado') ||
-                error.message.includes('El médico asignado no existe')) {
-                return res.status(400).json({
-                    success: false,
-                    message: error.message
-                });
             }
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
-                message: 'Error al actualizar el paciente',
-                error: error.message
+                message: error.message
             });
         }
     },
@@ -118,13 +102,12 @@ const patientController = {
         try {
             const { id } = req.params;
             await patientService.deletePatient(id);
-            res.status(200).json({
+
+            return res.status(200).json({
                 success: true,
-                message: 'Paciente eliminado con éxito'
+                message: 'Paciente eliminado correctamente'
             });
         } catch (error) {
-            console.error('Error en deletePatient controller:', error);
-
             if (error.message === 'Paciente no encontrado') {
                 return res.status(404).json({
                     success: false,
@@ -132,10 +115,9 @@ const patientController = {
                 });
             }
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
-                message: 'Error al eliminar el paciente',
-                error: error.message
+                message: error.message
             });
         }
     }
