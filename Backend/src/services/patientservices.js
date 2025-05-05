@@ -1,6 +1,5 @@
 const Patient = require("./../database/models/PatientModel");
 const User = require("./../database/models/UserModel")
-const Doctor = require("./../database/models/DoctorModel")
 
 const patientService = {
     // Obtener todos los pacientes
@@ -87,7 +86,7 @@ const patientService = {
 
             // Actualizar el paciente
             await patient.update(patientData);
-            
+
             return await Patient.findByPk(id, {
                 include: [
                     { model: User }

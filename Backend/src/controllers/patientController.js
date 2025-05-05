@@ -1,4 +1,4 @@
-const patientService = require('./../services/patientServices');
+const patientService = require('./../services/patientservices');
 
 const patientController = {
     // Obtener todos los pacientes

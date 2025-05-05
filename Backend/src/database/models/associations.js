@@ -1,124 +1,105 @@
 const User = require('./UserModel');
-const Doctor = require('./DoctorModel');
-const Patient = require('./PatientModel');
-const MedicalHistory = require('./MedicalHistoryModel');
-const Schedule = require('./ScheduleModel');
-const Appointment = require('./AppointmentModel');
-const Diagnosis = require('./DiagnosisModel');
-const Disease = require('./DiseaseModel');
-const Medication = require('./MedicationModel');
-const Test = require('./TestModel');
-const Prescription = require('./PrescriptionModel');
+const Patient = require('./patientModel');
+const Doctor = require('./doctorModel');
+const HorarioAtencion = require('./HorarioAtencionModel');
+const Cita = require('./CitaModel');
+const Diagnostico = require('./DiagnosticoModel');
+const Receta = require('./RecetaModel');
+const Enfermedad = require('./EnfermedadModel');
+const Medicamento = require('./MedicamentoModel');
 
 // Definir asociaciones
-User.hasOne(Doctor, { foreignKey: 'userId', as: 'doctor' });
-Doctor.belongsTo(User, { foreignKey: 'userId' });
 
-User.hasOne(Patient, { foreignKey: 'userId', as: 'patient' });
-Patient.belongsTo(User, { foreignKey: 'userId' });
+// Asociaciones User-Doctor
+User.hasOne(Doctor, { foreignKey: 'id_usuario', as: 'doctor' });
+Doctor.belongsTo(User, { foreignKey: 'id_usuario' });
 
-Doctor.hasMany(Patient, { foreignKey: 'generalDoctorId', as: 'patients' });
-Patient.belongsTo(Doctor, { foreignKey: 'generalDoctorId', as: 'generalDoctor' });
+// Asociaciones User-Patient
+User.hasOne(Patient, { foreignKey: 'id_usuario', as: 'paciente' });
+Patient.belongsTo(User, { foreignKey: 'id_usuario' });
 
-Patient.hasOne(MedicalHistory, { foreignKey: 'patientId', as: 'medicalHistory' });
-MedicalHistory.belongsTo(Patient, { foreignKey: 'patientId' });
+// Asociaciones Doctor-Patient
+Doctor.hasMany(Patient, { foreignKey: 'id_doctor_general', as: 'pacientes' });
+Patient.belongsTo(Doctor, { foreignKey: 'id_doctor_general', as: 'doctorGeneral' });
 
-Doctor.hasMany(Schedule, { foreignKey: 'doctorId', as: 'schedules' });
-Schedule.belongsTo(Doctor, { foreignKey: 'doctorId' });
+// Asociaciones Doctor-HorarioAtencion
+Doctor.hasMany(HorarioAtencion, { foreignKey: 'id_doctor', as: 'horarios' });
+HorarioAtencion.belongsTo(Doctor, { foreignKey: 'id_doctor' });
 
-Patient.hasMany(Appointment, { foreignKey: 'patientId', as: 'appointments' });
-Appointment.belongsTo(Patient, { foreignKey: 'patientId' });
+// Asociaciones Patient-Cita
+Patient.hasMany(Cita, { foreignKey: 'id_paciente', as: 'citas' });
+Cita.belongsTo(Patient, { foreignKey: 'id_paciente' });
 
-Doctor.hasMany(Appointment, { foreignKey: 'doctorId', as: 'appointments' });
-Appointment.belongsTo(Doctor, { foreignKey: 'doctorId' });
+// Asociaciones Doctor-Cita
+Doctor.hasMany(Cita, { foreignKey: 'id_doctor', as: 'citas' });
+Cita.belongsTo(Doctor, { foreignKey: 'id_doctor' });
 
-Schedule.belongsToMany(Appointment, {
-  through: 'agenda_cita',
-  foreignKey: 'id_agenda',
+// Asociaciones HorarioAtencion-Cita
+HorarioAtencion.belongsToMany(Cita, {
+  through: 'horario_cita',
+  foreignKey: 'id_horario',
   otherKey: 'id_cita',
-  as: 'appointments'
+  as: 'citas'
 });
-Appointment.belongsToMany(Schedule, {
-  through: 'agenda_cita',
+Cita.belongsToMany(HorarioAtencion, {
+  through: 'horario_cita',
   foreignKey: 'id_cita',
-  otherKey: 'id_agenda',
-  as: 'schedules'
+  otherKey: 'id_horario',
+  as: 'horarios'
 });
 
-Appointment.hasOne(Diagnosis, { foreignKey: 'appointmentId', as: 'diagnosis' });
-Diagnosis.belongsTo(Appointment, { foreignKey: 'appointmentId' });
+// Asociaciones Cita-Diagnostico
+Cita.hasOne(Diagnostico, { foreignKey: 'id_cita', as: 'diagnostico' });
+Diagnostico.belongsTo(Cita, { foreignKey: 'id_cita' });
 
-Doctor.hasMany(Diagnosis, { foreignKey: 'doctorId', as: 'diagnoses' });
-Diagnosis.belongsTo(Doctor, { foreignKey: 'doctorId' });
+// Asociaciones Doctor-Diagnostico
+Doctor.hasMany(Diagnostico, { foreignKey: 'id_doctor', as: 'diagnosticos' });
+Diagnostico.belongsTo(Doctor, { foreignKey: 'id_doctor' });
 
-Diagnosis.belongsToMany(Disease, {
+// Asociaciones Diagnostico-Enfermedad
+Diagnostico.belongsToMany(Enfermedad, {
   through: 'diagnostico_enfermedad',
   foreignKey: 'id_diagnostico',
   otherKey: 'id_enfermedad',
-  as: 'diseases'
+  as: 'enfermedades'
 });
-Disease.belongsToMany(Diagnosis, {
+Enfermedad.belongsToMany(Diagnostico, {
   through: 'diagnostico_enfermedad',
   foreignKey: 'id_enfermedad',
   otherKey: 'id_diagnostico',
-  as: 'diagnoses'
+  as: 'diagnosticos'
 });
 
-Disease.belongsToMany(Medication, {
+// Asociaciones Enfermedad-Medicamento
+Enfermedad.belongsToMany(Medicamento, {
   through: 'enfermedad_medicamento',
   foreignKey: 'id_enfermedad',
   otherKey: 'id_medicamento',
-  as: 'medications'
+  as: 'medicamentos'
 });
-Medication.belongsToMany(Disease, {
+Medicamento.belongsToMany(Enfermedad, {
   through: 'enfermedad_medicamento',
   foreignKey: 'id_medicamento',
   otherKey: 'id_enfermedad',
-  as: 'diseases'
+  as: 'enfermedades'
 });
 
-Diagnosis.belongsToMany(Test, {
-  through: 'diagnostico_prueba',
-  foreignKey: 'id_diagnostico',
-  otherKey: 'id_prueba',
-  as: 'tests'
-});
-Test.belongsToMany(Diagnosis, {
-  through: 'diagnostico_prueba',
-  foreignKey: 'id_prueba',
-  otherKey: 'id_diagnostico',
-  as: 'diagnoses'
-});
+// Asociaciones Diagnostico-Receta
+Diagnostico.hasMany(Receta, { foreignKey: 'id_diagnostico', as: 'recetas' });
+Receta.belongsTo(Diagnostico, { foreignKey: 'id_diagnostico' });
 
-MedicalHistory.belongsToMany(Diagnosis, {
-  through: 'historial_diagnostico',
-  foreignKey: 'id_historial',
-  otherKey: 'id_diagnostico',
-  as: 'diagnoses'
-});
-Diagnosis.belongsToMany(MedicalHistory, {
-  through: 'historial_diagnostico',
-  foreignKey: 'id_diagnostico',
-  otherKey: 'id_historial',
-  as: 'medicalHistories'
-});
-
-Diagnosis.hasMany(Prescription, { foreignKey: 'diagnosisId', as: 'prescriptions' });
-Prescription.belongsTo(Diagnosis, { foreignKey: 'diagnosisId' });
-
-Medication.hasMany(Prescription, { foreignKey: 'medicationId', as: 'prescriptions' });
-Prescription.belongsTo(Medication, { foreignKey: 'medicationId' });
+// Asociaciones Medicamento-Receta
+Medicamento.hasMany(Receta, { foreignKey: 'id_medicamento', as: 'recetas' });
+Receta.belongsTo(Medicamento, { foreignKey: 'id_medicamento' });
 
 module.exports = {
   User,
   Doctor,
   Patient,
-  MedicalHistory,
-  Schedule,
-  Appointment,
-  Diagnosis,
-  Disease,
-  Medication,
-  Test,
-  Prescription
+  HorarioAtencion,
+  Cita,
+  Diagnostico,
+  Enfermedad,
+  Medicamento,
+  Receta,
 };

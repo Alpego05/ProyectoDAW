@@ -1,66 +1,51 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./../dbConfig');
+const sequelize = require('../dbConfig');
 
 class Patient extends Model {
     static associate(models) {
-        Patient.belongsTo(models.User, { foreignKey: 'userId' });
-        Patient.belongsTo(models.Doctor, { foreignKey: 'generalDoctorId', as: 'generalDoctor' });
-        Patient.hasMany(models.Appointment, { foreignKey: 'patientId', as: 'appointments' });
-        Patient.hasMany(models.Diagnosis, { foreignKey: 'patientId', as: 'diagnoses' });
+        Patient.belongsTo(models.User, { foreignKey: 'id_paciente', targetKey: 'dni', as: 'usuario' });
+        Patient.hasMany(models.Cita, { foreignKey: 'id_paciente', as: 'citas' });
+        Patient.hasMany(models.Diagnostico, { foreignKey: 'id_paciente', as: 'diagnosticos' });
+        Patient.hasMany(models.Receta, { foreignKey: 'id_paciente', as: 'recetas' });
     }
 }
 
 Patient.init(
     {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+        id_paciente: {
+            type: DataTypes.STRING,
             primaryKey: true,
-        },
-        userId: {
-            type: DataTypes.UUID,
             allowNull: false,
-            field: 'user_id',
             references: {
-                model: 'users',
-                key: 'id'
+                model: 'usuarios',
+                key: 'dni'
             }
         },
-        generalDoctorId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-            field: 'general_doctor_id',
-            references: {
-                model: 'doctors',
-                key: 'id'
+        genero: {
+            type: DataTypes.ENUM('masculino', 'femenino', 'otro'),
+            allowNull: false
+        },
+        direccion: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        telefono: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                is: {
+                    args: [/^[0-9+\-\s]+$/],
+                    msg: 'El teléfono debe contener sólo números, espacios y caracteres +/-'
+                }
             }
         },
-        birthDate: {
-            type: DataTypes.DATEONLY,
-            allowNull: false,
-            field: 'date_of_birth', 
+        tipo_sangre: {
+            type: DataTypes.ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'),
+            allowNull: true
         },
-        gender: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        bloodType: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            field: 'blood_type',
-        },
-        allergies: {
+        alergias: {
             type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        contactPhone: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            field: 'contact_phone',
-        },
-        address: {
-            type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         created_at: {
             type: DataTypes.DATE,
@@ -76,9 +61,9 @@ Patient.init(
     {
         sequelize,
         modelName: 'Patient',
-        tableName: 'patients',
+        tableName: 'pacientes',
         timestamps: true,
-        underscored: true,
+        underscored: true
     }
 );
 

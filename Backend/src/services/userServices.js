@@ -44,41 +44,59 @@ const getUserByEmail = async (email) => {
 // Crear un nuevo usuario
 const createUser = async (userData) => {
     try {
-        const { username, email, password, role } = userData;
+        const { id, username, email, password, role } = userData;
 
-        // Validar campos requeridos
-        if (!username || !email || !password) {
-            throw new Error('Faltan campos requeridos');
+        // Validate required fields
+        if (!id || !username || !email || !password) {
+            const error = new Error('Faltan campos requeridos');
+            error.statusCode = 400;
+            throw error;
         }
 
-        // Verificar si el usuario ya existe
-        const existingUser = await User.findOne({ where: { email } });
-
-        if (existingUser) {
-            throw new Error('El correo ya está registrado');
+        // Validar formato del DNI
+        if (!/^\d{8,10}$/.test(id)) {
+            const error = new Error('El DNI debe contener entre 8 y 10 dígitos numéricos');
+            error.statusCode = 400;
+            throw error;
         }
 
+        // Check if user already exists (by email or DNI)
+        const existingUserEmail = await User.findOne({
+            where: { email }
+        });
+
+        const existingUserDNI = await User.findOne({
+            where: { id }
+        });
+
+        if (existingUserEmail) {
+            const error = new Error('El correo ya está registrado');
+            error.statusCode = 409;  // Conflict
+            throw error;
+        }
+
+        if (existingUserDNI) {
+            const error = new Error('El DNI ya está registrado');
+            error.statusCode = 409;  // Conflict
+            throw error;
+        }
+
+        // Create new user (password will be hashed by hook)
         const newUser = await User.create({
+            id,  // DNI como identificador
             username,
             email,
             password,
             role: role || 'patient'
         });
 
-        // Excluir la contraseña de la respuesta
-        const userWithoutPassword = {
-            id: newUser.id,
-            username: newUser.username,
-            email: newUser.email,
-            role: newUser.role,
-            active: newUser.active,
-            createdAt: newUser.createdAt,
-            updatedAt: newUser.updatedAt
-        };
-
-        return userWithoutPassword;
+        return newUser;
     } catch (error) {
-        throw new Error(`Error al crear el usuario: ${error.message}`);
+        // Add status code if not already present
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw error;
     }
 }
 
