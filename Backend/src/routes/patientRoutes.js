@@ -1,10 +1,10 @@
-const patientRouter = require("express").Router();
-const patientController = require("./../controllers/patientController");
+const PatientRouter = require("express").Router();
+const PatientController = require("../controllers/patientController");
 
-patientRouter.get("/", patientController.getAllPatients);
-patientRouter.get("/:id", patientController.getPatientById);
-patientRouter.delete("/delete/:id", patientController.deletePatient);
-patientRouter.post("/create", patientController.createPatient);
-patientRouter.patch("/edit/:id", patientController.updatePatient); 
+// Rutas para pacientes
+PatientRouter.get('/', PatientController.getAllPatients);
+PatientRouter.get('/:id', PatientController.getPatientById);
+PatientRouter.patch('/edit/:id', PatientController.updatePatient);
+PatientRouter.delete('/delete/:id', PatientController.deletePatient);
 
-module.exports = patientRouter;
+module.exports = PatientRouter;

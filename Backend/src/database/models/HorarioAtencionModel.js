@@ -1,11 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class HorarioAtencion extends Model {
-    static associate(models) {
-        HorarioAtencion.belongsTo(models.Doctor, { foreignKey: 'id_doctor', as: 'doctor' });
-    }
-}
+class HorarioAtencion extends Model {}
 
 HorarioAtencion.init(
     {
@@ -47,16 +43,11 @@ HorarioAtencion.init(
                 }
             }
         },
-        created_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        }
+
+        
+
+
+
     },
     {
         sequelize,

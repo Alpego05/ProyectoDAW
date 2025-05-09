@@ -1,13 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class Cita extends Model {
-    static associate(models) {
-        Cita.belongsTo(models.Doctor, { foreignKey: 'id_doctor', as: 'doctor' });
-        Cita.belongsTo(models.Patient, { foreignKey: 'id_paciente', as: 'paciente' });
-        Cita.hasOne(models.Diagnostico, { foreignKey: 'id_cita', as: 'diagnostico' });
-    }
-}
+class Cita extends Model {}
 
 Cita.init(
     {
@@ -62,16 +56,7 @@ Cita.init(
                 }
             }
         },
-        created_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        }
+       
     },
     {
         sequelize,

@@ -41,6 +41,7 @@ const getUserByEmail = async (email) => {
     }
 }
 
+/*
 // Crear un nuevo usuario
 const createUser = async (userData) => {
     try {
@@ -99,11 +100,12 @@ const createUser = async (userData) => {
         throw error;
     }
 }
+*/
 
 // Actualizar un usuario
 const updateUser = async (id, userData) => {
     try {
-        const { username, email, password, role, active } = userData;
+        const { nombre, apellido1, apellido2, clave, email } = userData;
 
         const user = await User.findByPk(id);
 
@@ -112,21 +114,20 @@ const updateUser = async (id, userData) => {
         }
 
         // Actualizar campos si existen en la solicitud
-        if (username) user.username = username;
+        if (nombre) user.nombre = nombre;
+        if (apellido1) user.apellido1 = apellido1;
+        if (apellido2) user.apellido2 = apellido2;
+        if (clave) user.clave = clave;
         if (email) user.email = email;
-        if (password) user.password = password;
-        if (role) user.role = role;
-        if (active !== undefined) user.active = active;
-
+        
         await user.save();
 
         // Excluir la contraseña de la respuesta
         const userWithoutPassword = {
-            id: user.id,
-            username: user.username,
+            name: user.nombre,
+            apellido1: user.apellido1,
+            apellido2: user.apellido2,
             email: user.email,
-            role: user.role,
-            active: user.active,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt
         };
@@ -174,7 +175,6 @@ module.exports = {
     getUserById,
     getUserByEmail,
     deleteUser,
-    createUser,
     updateUser,
     loginUser,
 }

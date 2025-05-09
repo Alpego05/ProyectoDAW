@@ -16,13 +16,14 @@ const getAllUsers = async (req, res) => {
     }
 }
 
+
 // Obtener un usuario por ID
 const getUserById = async (req, res) => {
     try {
         const { id } = req.params;
         const user = await userService.getUserById(id);
 
-        return res.status(200).json({
+        return res.status(201).json({
             data: user
         });
     } catch (error) {
@@ -40,42 +41,14 @@ const getUserById = async (req, res) => {
     }
 }
 
-// Crear un nuevo usuario
-const createUser = async (req, res) => {
-    try {
-        const userData = {
-            id: req.body.id, 
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-            role: req.body.role || 'patient',
-        };
-
-        const createdUser = await userService.createUser(userData);
-
-        const { password, ...userWithoutPassword } = createdUser.toJSON();
-
-        res.status(201).json({
-            success: true,
-            message: 'Usuario creado exitosamente',
-            data: userWithoutPassword,
-        });
-    } catch (error) {
-        res.status(error.statusCode || 500).json({
-            success: false,
-            message: error.message || 'Error al crear el usuario',
-        });
-    }
-}
-
 const updateUser = async (req, res) => {
     try {
-        const updatedUser = await userService.editUser(
+        const updatedUser = await userService.updateUser(
             req.params.id,
             req.body
         );
         if (updatedUser) {
-            res.status(200).json(updatedUser);
+            res.status(201).json(updatedUser);
         } else {
             res.status(404).json({ message: "Cliente no encontrado" });
         }
@@ -105,7 +78,7 @@ const login = async (req, res) => {
         const { email, password } = req.body;
         const authData = await userService.authenticateUser(email, password);
 
-        return res.status(200).json({
+        return res.status(201).json({
             message: 'Login exitoso',
             token: authData.token,
             user: authData.user
@@ -144,7 +117,6 @@ const login = async (req, res) => {
 module.exports = {
     getAllUsers,
     getUserById,
-    createUser,
     login,
     updateUser,
     deleteUser

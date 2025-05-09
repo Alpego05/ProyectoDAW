@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 // Middleware para verificar token
-const verifyToken = (req, res, next) => {
+/*const verifyToken = (req, res, next) => {
     // Obtener el token del header, query o cookies
     const token = req.headers['authorization']?.split(' ')[1] ||
         req.query.token ||
@@ -26,4 +26,4 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-module.exports = { verifyToken };
+//module.exports = { verifyToken }; */

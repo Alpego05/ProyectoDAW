@@ -1,17 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class Enfermedad extends Model {
-    static associate(models) {
-        Enfermedad.hasMany(models.Receta, { foreignKey: 'id_enfermedad', as: 'recetas' });
-        Enfermedad.belongsToMany(models.Medicamento, {
-            through: 'enfermedades_medicamentos',
-            foreignKey: 'id_enfermedad',
-            otherKey: 'id_medicamento',
-            as: 'medicamentos'
-        });
-    }
-}
+class Enfermedad extends Model {}
 
 Enfermedad.init(
     {
@@ -30,19 +20,8 @@ Enfermedad.init(
         },
         codigo_cie: {
             type: DataTypes.STRING,
-            allowNull: false,
-            unique: true
-        },
-        created_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
             allowNull: false
         },
-        updated_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        }
     },
     {
         sequelize,

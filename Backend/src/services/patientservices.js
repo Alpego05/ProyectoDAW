@@ -1,117 +1,127 @@
-const Patient = require("./../database/models/PatientModel");
-const User = require("./../database/models/UserModel")
+const Patient = require('../database/models/patientModel');
+const User = require('../database/models/UserModel');
 
-const patientService = {
-    // Obtener todos los pacientes
-    getAllPatients: async () => {
-        try {
-            const patients = await Patient.findAll({
-                include: [
-                    { model: User }
-                ]
-            });
-            return patients;
-        } catch (error) {
-            throw new Error(`Error al obtener pacientes: ${error.message}`);
-        }
-    },
+// Obtener todos los pacientes
+const getAllPatients = async () => {
+    try {
+        return await Patient.findAll( );
 
-    // Obtener un paciente por ID
-    getPatientById: async (id) => {
-        try {
-            const patient = await Patient.findByPk(id, {
-                include: [
-                    { model: User }
-                ]
-            });
 
-            if (!patient) {
-                throw new Error('Paciente no encontrado');
-            }
-
-            return patient;
-        } catch (error) {
-            throw error;
-        }
-    },
-
-    // Crear un nuevo paciente
-    createPatient: async (patientData) => {
-        try {
-            // Verificar campos requeridos
-            if (!patientData.userId || !patientData.birthDate || !patientData.identificationNumber) {
-                throw new Error('Faltan campos requeridos');
-            }
-
-            // Verificar si ya existe un paciente 
-            const existingPatient = await Patient.findOne({
-                where: { identificationNumber: patientData.identificationNumber }
-            });
-
-            if (existingPatient) {
-                throw new Error('El número de identificación ya está registrado');
-            }
-
-            // Crear el paciente
-            const newPatient = await Patient.create(patientData);
-            return await Patient.findByPk(newPatient.id, {
-                include: [
-                    { model: User }
-                ]
-            });
-        } catch (error) {
-            throw error;
-        }
-    },
-
-    // Actualizar un paciente
-    updatePatient: async (id, patientData) => {
-        try {
-            const patient = await Patient.findByPk(id);
-
-            if (!patient) {
-                throw new Error('Paciente no encontrado');
-            }
-
-            // Verificar si ya existe otro paciente
-            if (patientData.identificationNumber) {
-                const existingPatient = await Patient.findOne({
-                    where: { identificationNumber: patientData.identificationNumber }
-                });
-
-                if (existingPatient && existingPatient.id !== id) {
-                    throw new Error('El número de identificación ya está registrado');
-                }
-            }
-
-            // Actualizar el paciente
-            await patient.update(patientData);
-
-            return await Patient.findByPk(id, {
-                include: [
-                    { model: User }
-                ]
-            });
-        } catch (error) {
-            throw error;
-        }
-    },
-
-    // Eliminar un paciente
-    deletePatient: async (id) => {
-        try {
-            const patient = await Patient.findByPk(id);
-
-            if (!patient) {
-                throw new Error('Paciente no encontrado');
-            }
-
-            await patient.destroy();
-            return true;
-        } catch (error) {
-            throw error;
-        }
+    } catch (error) {
+        throw new Error(`Error al obtener pacientes: ${error.message}`);
     }
 };
 
-module.exports = patientService;
+// Obtener un paciente por ID
+const getPatientById = async (id) => {
+    try {
+        const patient = await Patient.findByPk(id);
+
+        if (!patient) {
+            throw new Error('Paciente no encontrado');
+        }
+
+        return patient;
+    } catch (error) {
+        throw new Error(`Error al obtener el paciente: ${error.message}`);
+    }
+};
+
+/*
+// Crear un nuevo paciente
+const createPatient = async (patientData) => {
+    try {
+        const { id_paciente, genero, direccion, telefono, tipo_sangre, alergias } = patientData;
+
+        // Validar campos requeridos
+        if (!id_paciente || !genero || !direccion || !telefono) {
+            const error = new Error('Faltan campos requeridos para el paciente');
+            error.statusCode = 400;
+            throw error;
+        }
+
+        // Verificar que el usuario existe
+        const userExists = await User.findByPk(id_paciente);
+        if (!userExists) {
+            const error = new Error('El usuario asociado no existe');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        // Verificar que el paciente no existe ya
+        const existingPatient = await Patient.findByPk(id_paciente);
+        if (existingPatient) {
+            const error = new Error('El paciente ya está registrado');
+            error.statusCode = 409; // Conflict
+            throw error;
+        }
+
+        // Crear nuevo paciente
+        const newPatient = await Patient.create({
+            id_paciente,
+            genero,
+            direccion,
+            telefono,
+            tipo_sangre: tipo_sangre || null,
+            alergias: alergias || null
+        });
+
+        return newPatient;
+    } catch (error) {
+        // Add status code if not already present
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw error;
+    }
+};
+*/
+
+// Actualizar un paciente
+const updatePatient = async (id, patientData) => {
+    try {
+        const patient = await Patient.findByPk(id);
+
+        if (!patient) {
+            throw new Error('Paciente no encontrado');
+        }
+
+        const { genero, direccion, telefono, tipo_sangre, alergias } = patientData;
+
+        // Actualizar campos si existen en la solicitud
+        if (genero) patient.genero = genero;
+        if (direccion) patient.direccion = direccion;
+        if (telefono) patient.telefono = telefono;
+        if (tipo_sangre !== undefined) patient.tipo_sangre = tipo_sangre;
+        if (alergias !== undefined) patient.alergias = alergias;
+
+        await patient.save();
+
+        return patient;
+    } catch (error) {
+        throw new Error(`Error al actualizar el paciente: ${error.message}`);
+    }
+};
+
+// Eliminar un paciente
+const deletePatient = async (id) => {
+    try {
+        const patient = await Patient.findByPk(id);
+
+        if (!patient) {
+            throw new Error('Paciente no encontrado');
+        }
+
+        await patient.destroy();
+        return true;
+    } catch (error) {
+        throw new Error(`Error al eliminar el paciente: ${error.message}`);
+    }
+};
+
+module.exports = {
+    getAllPatients,
+    getPatientById,
+    updatePatient,
+    deletePatient
+};

@@ -3,11 +3,6 @@ const sequelize = require('../dbConfig');
 const bcrypt = require('bcrypt');
 
 class User extends Model {
-    static associate(models) {
-        User.hasOne(models.Doctor, { foreignKey: 'id_doctor', sourceKey: 'dni', as: 'doctor' });
-        User.hasOne(models.Patient, { foreignKey: 'id_paciente', sourceKey: 'dni', as: 'patient' });
-    }
-
     async validPassword(password) {
         return await bcrypt.compare(password, this.clave);
     }
@@ -21,7 +16,6 @@ User.init(
             allowNull: false,
             validate: {
                 notEmpty: true,
-                isNumeric: true,
                 len: {
                     args: [8, 8],
                     msg: "El DNI debe tener 8 dígitos"
@@ -71,7 +65,6 @@ User.init(
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
             validate: {
                 isEmail: {
                     msg: 'El email no es válido',
@@ -89,16 +82,7 @@ User.init(
                 }
             }
         },
-        created_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        }
+       
     },
     {
         sequelize,
@@ -118,9 +102,49 @@ User.init(
                     const salt = await bcrypt.genSalt(10);
                     user.clave = await bcrypt.hash(user.clave, salt);
                 }
+            },
+            
+            beforeDestroy: async (user, options) => {
+                const deleteAssociatedDoctor = async (user, transaction) => {
+                    try {
+                        const doctor = await Doctor.findOne({ 
+                            where: { id_doctor: user.id },
+                            transaction 
+                        });
+                        
+                        if (doctor) {
+                            console.log(`Eliminando doctor con id_doctor: ${doctor.id_doctor}`);
+                            await doctor.destroy({ transaction });
+                        }
+                    } catch (error) {
+                        console.error('Error al eliminar doctor asociado:', error);
+                        throw error;
+                    }
+                };
+                
+                const deleteAssociatedPatient = async (user, transaction) => {
+                    try {
+                        const patient = await Patient.findOne({ 
+                            where: { id_paciente: user.id },
+                            transaction 
+                        });
+                        
+                        if (patient) {
+                            console.log(`Eliminando paciente con id_paciente: ${patient.id_paciente}`);
+                            await patient.destroy({ transaction });
+                        }
+                    } catch (error) {
+                        console.error('Error al eliminar paciente asociado:', error);
+                        throw error;
+                    }
+                };
+                
+                const transaction = options.transaction;
+                await deleteAssociatedDoctor(user, transaction);
+                await deleteAssociatedPatient(user, transaction);
             }
         }
-    }
-);
+    });
+
 
 module.exports = User;

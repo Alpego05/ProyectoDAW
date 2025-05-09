@@ -1,13 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class Diagnostico extends Model {
-    static associate(models) {
-        Diagnostico.belongsTo(models.Cita, { foreignKey: 'id_cita', as: 'cita' });
-        Diagnostico.belongsTo(models.Patient, { foreignKey: 'id_paciente', as: 'paciente' });
-        Diagnostico.hasOne(models.Receta, { foreignKey: 'id_diagnostico', as: 'receta' });
-    }
-}
+class Diagnostico extends Model { }
 
 Diagnostico.init(
     {
@@ -45,16 +39,6 @@ Diagnostico.init(
             type: DataTypes.TEXT,
             allowNull: false
         },
-        created_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        }
     },
     {
         sequelize,

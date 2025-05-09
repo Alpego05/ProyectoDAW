@@ -1,17 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class Medicamento extends Model {
-    static associate(models) {
-        Medicamento.hasMany(models.Receta, { foreignKey: 'id_medicamento', as: 'recetas' });
-        Medicamento.belongsToMany(models.Enfermedad, {
-            through: 'enfermedades_medicamentos',
-            foreignKey: 'id_medicamento',
-            otherKey: 'id_enfermedad',
-            as: 'enfermedades'
-        });
-    }
-}
+class Medicamento extends Model {}
 
 Medicamento.init(
     {
@@ -30,19 +20,9 @@ Medicamento.init(
         },
         forma_via: {
             type: DataTypes.STRING,
-            allowNull: false,
-            comment: 'Forma farmacéutica y vía de administración'
-        },
-        created_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
             allowNull: false
         },
-        updated_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        }
+
     },
     {
         sequelize,

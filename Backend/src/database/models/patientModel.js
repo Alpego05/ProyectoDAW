@@ -1,14 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class Patient extends Model {
-    static associate(models) {
-        Patient.belongsTo(models.User, { foreignKey: 'id_paciente', targetKey: 'dni', as: 'usuario' });
-        Patient.hasMany(models.Cita, { foreignKey: 'id_paciente', as: 'citas' });
-        Patient.hasMany(models.Diagnostico, { foreignKey: 'id_paciente', as: 'diagnosticos' });
-        Patient.hasMany(models.Receta, { foreignKey: 'id_paciente', as: 'recetas' });
-    }
-}
+class Patient extends Model {}
 
 Patient.init(
     {
@@ -17,7 +10,7 @@ Patient.init(
             primaryKey: true,
             allowNull: false,
             references: {
-                model: 'usuarios',
+                model: 'User',
                 key: 'dni'
             }
         },
@@ -47,16 +40,7 @@ Patient.init(
             type: DataTypes.TEXT,
             allowNull: true
         },
-        created_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            allowNull: false
-        }
+        
     },
     {
         sequelize,
