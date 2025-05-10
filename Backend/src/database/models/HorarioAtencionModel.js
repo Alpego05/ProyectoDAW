@@ -1,61 +1,65 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class HorarioAtencion extends Model {}
+class HorarioAtencion extends Model { }
 
 HorarioAtencion.init(
     {
         id_horario: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            allowNull: false,
         },
         id_doctor: {
             type: DataTypes.STRING,
             allowNull: false,
             references: {
-                model: 'doctores',
-                key: 'id_doctor'
-            }
+                model: "doctores",
+                key: "id_doctor",
+            },
         },
         dia: {
-            type: DataTypes.ENUM('lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'),
+            type: DataTypes.ENUM("lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"),
             allowNull: false,
             validate: {
+                notEmpty: { msg: "El día no puede estar vacío" },
                 isIn: {
-                    args: [['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']],
-                    msg: "El día debe ser uno de los días de la semana"
-                }
-            }
+                    args: [["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]],
+                    msg: "El día debe ser lunes, martes, miercoles, jueves, viernes, sabado o domingo",
+                },
+            },
         },
         hora_inicio: {
             type: DataTypes.TIME,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notEmpty: { msg: "La hora de inicio no puede estar vacía" },
+                isTime: { msg: "El formato de la hora de inicio no es válido" },
+            },
         },
         hora_fin: {
             type: DataTypes.TIME,
             allowNull: false,
             validate: {
+                notEmpty: { msg: "La hora de fin no puede estar vacía" },
+                isTime: { msg: "El formato de la hora de fin no es válido" },
                 isAfterStartTime(value) {
-                    if (this.hora_inicio >= value) {
-                        throw new Error('La hora de fin debe ser posterior a la hora de inicio');
+                    if (this.hora_inicio && value <= this.hora_inicio) {
+                        throw new Error("La hora de fin debe ser posterior a la hora de inicio")
                     }
-                }
-            }
+                },
+            },
         },
-
-        
-
-
-
     },
     {
         sequelize,
-        modelName: 'HorarioAtencion',
-        tableName: 'horarios_atencion',
-        timestamps: true,
-        underscored: true
-    }
-);
+        modelName: "HorarioAtencion",
+        tableName: "horarios_atencion",
+        underscored: true,
+        createdAt: "created_at",
+        updatedAt: "updated_at",
+    },
+)
 
 module.exports = HorarioAtencion;

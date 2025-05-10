@@ -1,5 +1,5 @@
 const User = require("./userModel");
-const Patient = require("./patientModel");
+const Patient = require("./PatientModel");
 const Doctor = require("./doctorModel");
 const HorarioAtencion = require("./HorarioAtencionModel");
 const Cita = require("./CitaModel");
