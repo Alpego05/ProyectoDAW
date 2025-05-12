@@ -1,0 +1,54 @@
+.Home{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.header{
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+}
+.Home-box{
+  text-align: center;
+  border: 2px solid palevioletred;
+  width: 500px;
+  border-radius: 10px;
+}
+
+.Flex{
+  display: flex;
+  
+}
+
+.userCard{
+  margin: 10px;
+  background-color: rgba(230, 192, 255, 0.342);
+  border-radius: 10px;
+}
+
+.Users{
+  max-width: 500px;
+}
+
+.Header-link{
+  margin: 10px;
+}
+
+.Posts{
+  width: 1100px;
+}
+
+.Flex-tags{
+  display: flex;
+}
+.Flex-tags div{
+  margin: 5px;
+}
+
+.Products{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-evenly;
+}
