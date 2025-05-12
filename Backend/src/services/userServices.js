@@ -154,17 +154,32 @@ const deleteUser = async (id) => {
     }
 }
 
-const loginUser = async (email) => {
+const bcrypt = require('bcrypt');
+
+const loginUser = async (dni, clave) => {
     try {
+        // Buscar usuario por DNI
         const user = await User.findOne({
             where: {
-                email: email,
+                dni: dni,
             },
         });
+        
         if (!user) {
             throw new Error("Usuario no encontrado");
         }
-        return user;
+        
+        // Verificar la contraseña con bcrypt
+        const isPasswordValid = await bcrypt.compare(clave, user.clave);
+        
+        if (!isPasswordValid) {
+            throw new Error("Contraseña incorrecta");
+        }
+        
+        const userWithoutPassword = { ...user.get() };
+        delete userWithoutPassword.clave;
+        
+        return userWithoutPassword;
     } catch (error) {
         throw new Error("Error al logear el usuario: " + error.message);
     }

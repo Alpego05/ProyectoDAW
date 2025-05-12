@@ -88,7 +88,7 @@ const registerDoctor = async (userData, doctorData, transaction) => {
 
   try {
     const { nombre, apellido1, apellido2, email, dni } = userData;
-    const { especialidad, sala_asignada } = doctorData;
+    const { especialidad, sala_asignada, numero_licencia } = doctorData;
 
     // Generar una contraseña temporal aleatoria
     const tempPassword = Math.random().toString(36).slice(-10);
@@ -114,6 +114,7 @@ const registerDoctor = async (userData, doctorData, transaction) => {
         usuario_id: newUser.id, // Asegurarse de asignar el ID del usuario
         especialidad,
         sala_asignada,
+        numero_licencia
       },
       { transaction: t }
     );
