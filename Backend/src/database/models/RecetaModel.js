@@ -19,11 +19,11 @@ Receta.init(
             }
         },
         id_paciente: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: 'pacientes',
-                key: 'id_paciente'
+                key: 'usuario_id'
             }
         },
         id_medicamento: {
