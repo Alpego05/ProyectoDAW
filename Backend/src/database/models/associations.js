@@ -146,19 +146,23 @@ Enfermedad.belongsToMany(Diagnostico, {
 });
 
 // Asociaciones Enfermedad-Medicamento
+// Asociaciones Enfermedad-Medicamento
 Medicamento.belongsToMany(Enfermedad, {
   through: MedicamentoEnfermedad,
   foreignKey: "id_medicamento",
   otherKey: "id_enfermedad",
   as: "enfermedades",
-})
+  onDelete: "CASCADE"
+});
 
 Enfermedad.belongsToMany(Medicamento, {
   through: MedicamentoEnfermedad,
   foreignKey: "id_enfermedad",
   otherKey: "id_medicamento",
   as: "medicamentos",
-})
+  onDelete: "CASCADE"
+});
+
 
 // Asociaciones Diagnostico-Receta
 Diagnostico.hasMany(Receta, {
