@@ -99,7 +99,8 @@ const login = async (req, res) => {
         return res.status(200).json({
             message: 'Login exitoso',
             token: createToken(authData), 
-            user: authData.id,            
+            user: authData.id,  
+            rol: authData.tipo_usuario         
         });
     } catch (error) {
         const errorMessage = error.message;
