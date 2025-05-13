@@ -4,7 +4,7 @@ const sequelize = require("../database/dbConfig");
 const { Op } = require("sequelize");
 const { sendWelcomeEmail } = require("./../utils/mailer");
 
-// email o dni
+// email o dni no se pueden repetir ninguno
 const checkUserExistence = async (email, dni) => {
   return await User.findOne({
     where: {
@@ -22,10 +22,10 @@ const registerPatient = async (userData, patientData, transaction) => {
     const { genero, fecha_nacimiento, direccion, telefono, tipo_sangre, alergias } = patientData;
 
     // Generar una contraseña temporal aleatoria
-    const tempPassword = Math.random().toString(36).slice(-10);
+    // const tempPassword = Math.random().toString(36).slice(-10);
+    const tempPassword = "123456";
     const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
-    // Crear el usuario primero
     const newUser = await User.create(
       {
         nombre,
@@ -35,7 +35,7 @@ const registerPatient = async (userData, patientData, transaction) => {
         clave: hashedPassword,
         dni,
         role: "paciente",
-        tipo_usuario: "paciente", // Asegurarse de que este campo esté establecido
+        tipo_usuario: "paciente", 
       },
       { transaction: t }
     );
@@ -44,7 +44,7 @@ const registerPatient = async (userData, patientData, transaction) => {
     const newPatient = await Patient.create(
       {
         id_paciente: dni,
-        usuario_id: newUser.id, // Asignar el ID del usuario recién creado
+        usuario_id: newUser.id,
         genero,
         fecha_nacimiento,
         direccion,
@@ -55,17 +55,14 @@ const registerPatient = async (userData, patientData, transaction) => {
       { transaction: t }
     );
 
-    // Si no se proporcionó una transacción externa, confirmar la transacción
     if (!transaction) {
       await t.commit();
     }
 
     try {
-      // Enviar correo de bienvenida pasando el objeto usuario completo
       await sendWelcomeEmail(newUser);
     } catch (emailError) {
       console.error("Error al enviar correo:", emailError.message);
-      // No revertimos la transacción pero propagamos el error
       throw new Error(`Error al enviar correo de bienvenida: ${emailError.message}`);
     }
 
@@ -91,8 +88,10 @@ const registerDoctor = async (userData, doctorData, transaction) => {
     const { especialidad, sala_asignada, numero_licencia } = doctorData;
 
     // Generar una contraseña temporal aleatoria
-    const tempPassword = Math.random().toString(36).slice(-10);
-    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    // const tempPassword = Math.random().toString(36).slice(-10);
+    const tempPassword = "123456";
+   const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    // console.log("Hashed Password:", hashedPassword);
 
     const newUser = await User.create(
       {
@@ -103,7 +102,7 @@ const registerDoctor = async (userData, doctorData, transaction) => {
         clave: hashedPassword,
         dni,
         role: "doctor",
-        tipo_usuario: "doctor", // Asegurarse de que este campo esté establecido
+        tipo_usuario: "doctor", 
       },
       { transaction: t }
     );
@@ -111,7 +110,7 @@ const registerDoctor = async (userData, doctorData, transaction) => {
     const newDoctor = await Doctor.create(
       {
         id_doctor: dni,
-        usuario_id: newUser.id, // Asegurarse de asignar el ID del usuario
+        usuario_id: newUser.id,
         especialidad,
         sala_asignada,
         numero_licencia
@@ -119,17 +118,15 @@ const registerDoctor = async (userData, doctorData, transaction) => {
       { transaction: t }
     );
 
-    // Si no se proporcionó una transacción externa, confirmar la transacción
     if (!transaction) {
       await t.commit();
     }
 
     try {
-      // Enviar correo de bienvenida pasando el objeto usuario completo
+      // enviar el correo
       await sendWelcomeEmail(newUser);
     } catch (emailError) {
       console.error("Error al enviar correo:", emailError.message);
-      // No revertimos la transacción pero propagamos el error
       throw new Error(`Error al enviar correo de bienvenida: ${emailError.message}`);
     }
 
@@ -138,7 +135,6 @@ const registerDoctor = async (userData, doctorData, transaction) => {
 
     return { user: userResponse, doctor: newDoctor };
   } catch (error) {
-    // Si no se proporcionó una transacción externa, revertir la transacción
     if (!transaction) {
       await t.rollback();
     }

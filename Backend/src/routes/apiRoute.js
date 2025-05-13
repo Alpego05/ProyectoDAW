@@ -9,6 +9,8 @@ const horarioRoutes = require('./horarioRoutes');
 const medRoutes= require('./medicamentoRoutes');
 const EnfRoutes = require('./enfermedadRoutes');
 const EnfMEdRouter = require("./EnfMEdRoutes");
+const RecetaRouter = require("./recetaRoutes");
+const DiagnosticoRouter = require("./diagnosticoRoutes")
 
 apiRouter.use("/users", userRouter);
 apiRouter.use("/doctors", doctorRouter);
@@ -19,6 +21,8 @@ apiRouter.use("/horarios", horarioRoutes);
 apiRouter.use("/med", medRoutes);
 apiRouter.use("/enf", EnfRoutes);
 apiRouter.use("/enfmed", EnfMEdRouter);
+apiRouter.use("/recetas", RecetaRouter);
+apiRouter.use("/diagnosticos", DiagnosticoRouter);
 
 module.exports = apiRouter;
 

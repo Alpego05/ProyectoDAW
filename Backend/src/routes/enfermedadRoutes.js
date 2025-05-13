@@ -1,10 +1,11 @@
 const EnfRoutes = require("express").Router();
 const  EnfController = require("./../controllers/EnfermedadController");
+const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
-EnfRoutes.get("/", EnfController.getAllEnfermedades);
-EnfRoutes.get("/:id", EnfController.getEnfermedadById);
-EnfRoutes.post("/create" , EnfController.createEnfermedad);
-EnfRoutes.patch("/edit/:id", EnfController.updateEnfermedad);
-EnfRoutes.delete("/delete/:id", EnfController.deleteEnfermedad);
+EnfRoutes.get("/",  EnfController.getAllEnfermedades);
+EnfRoutes.get("/:id", verifyToken, EnfController.getEnfermedadById);
+EnfRoutes.post("/create" , verifyToken, EnfController.createEnfermedad);
+EnfRoutes.patch("/edit/:id", verifyToken, EnfController.updateEnfermedad);
+EnfRoutes.delete("/delete/:id", verifyToken, EnfController.deleteEnfermedad);
 
 module.exports = EnfRoutes;

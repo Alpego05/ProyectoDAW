@@ -96,20 +96,20 @@ User.init(
         tableName: "usuarios",
         timestamps: true,
         underscored: true,
-        hooks: {
-            beforeCreate: async (user) => {
-                if (user.clave) {
-                    const salt = await bcrypt.genSalt(10);
-                    user.clave = await bcrypt.hash(user.clave, salt);
-                }
-            },
-            beforeUpdate: async (user) => {
-                if (user.changed("clave")) {
-                    const salt = await bcrypt.genSalt(10);
-                    user.clave = await bcrypt.hash(user.clave, salt);
-                }
-            },
-        },
+        // hooks: {
+        //     beforeCreate: async (user) => {
+        //         if (user.clave) {
+        //             const salt = await bcrypt.genSalt(10);
+        //             user.clave = await bcrypt.hash(user.clave, salt);
+        //         }
+        //     },
+        //     beforeUpdate: async (user) => {
+        //         if (user.changed("clave")) {
+        //             const salt = await bcrypt.genSalt(10);
+        //             user.clave = await bcrypt.hash(user.clave, salt);
+        //         }
+        //     },
+        // },
     }
 );
 

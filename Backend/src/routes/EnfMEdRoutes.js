@@ -1,17 +1,15 @@
 const express = require("express")
 const EnfMEdRouter = express.Router()
 const medicamentoEnfermedadController = require("../controllers/MedicamentoEnfermedadController")
+const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 // medicamentos que pueden ayudar a una enfermedad específica
-EnfMEdRouter.get("/enfermedades/:id/medicamentos", medicamentoEnfermedadController.getMedicamentosByEnfermedad)
-
+EnfMEdRouter.get("/enf/:id/med",  medicamentoEnfermedadController.getMedicamentosByEnfermedad)
 // enfermedades tratadas por un medicamento específico
-EnfMEdRouter.get("/medicamentos/:id/enfermedades", medicamentoEnfermedadController.getEnfermedadesByMedicamento)
-
+EnfMEdRouter.get("/med/:id/enf", verifyToken, medicamentoEnfermedadController.getEnfermedadesByMedicamento)
 // asignar un medicamento a una enfermedad
-EnfMEdRouter.post("/medicamentos/:medicamentoId/enfermedades/:enfermedadId",medicamentoEnfermedadController.asignarMedicamentoAEnfermedad,)
-
-// Eliminar asignación de medicamento a enfermedad
-EnfMEdRouter.delete("/medicamentos/:medicamentoId/enfermedades/:enfermedadId",medicamentoEnfermedadController.eliminarAsignacion,)
+EnfMEdRouter.post("/med/:medicamentoId/enf/:enfermedadId", verifyToken, medicamentoEnfermedadController.asignarMedicamentoAEnfermedad,)
+// eliminar la asignación
+EnfMEdRouter.delete("/med/:medicamentoId/enf/:enfermedadId", verifyToken,medicamentoEnfermedadController.eliminarAsignacion,)
 
 module.exports = EnfMEdRouter

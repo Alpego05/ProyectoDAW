@@ -1,13 +1,14 @@
 require("dotenv").config();
+require("./src/database/models/associations");
+const express = require('express');
 const bodyParser = require("body-parser");
-const express = require("express");
 const app = express();
-
+const cors = require('cors');
 const sequelize = require("./src/database/dbConfig");
 
-require("./src/database/models/associations");
 
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

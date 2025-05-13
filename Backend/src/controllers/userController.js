@@ -1,5 +1,6 @@
 const userService = require('./../services/userServices');
-const bcrypt = require("bcrypt");
+const moment = require("moment");
+const jwt = require("jwt-simple");
 
 //Obtener todos los usuarios
 const getAllUsers = async (req, res) => {
@@ -72,21 +73,38 @@ const deleteUser = async (req, res) => {
     }
 }
 
-// Login de usuario
+//creamos el token al iniciar el usuario
+const createToken=(user) => { 
+  const payload={
+    usuarioId:user.id,
+    createdAt:moment().unix(),
+    expiredAt:moment().add(60,"minutes").unix()
+  }
+  return jwt.encode(payload, process.env.JWT_SECRET)
+ }
+
+
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const authData = await userService.authenticateUser(email, password);
+        const { dni, clave } = req.body;
 
-        return res.status(201).json({
+        // Validación básica
+        if (!dni || !clave) {
+            throw new Error('Dni y contraseña son requeridos');
+        }
+
+        // Lógica de autenticación
+        const authData = await userService.loginUser(dni, clave);
+
+        return res.status(200).json({
             message: 'Login exitoso',
-            token: authData.token,
-            user: authData.user
+            token: createToken(authData), 
+            user: authData.id,            
         });
     } catch (error) {
         const errorMessage = error.message;
 
-        if (errorMessage === 'Email y contraseña son requeridos') {
+        if (errorMessage === 'Dni y contraseña son requeridos') {
             return res.status(400).json({
                 success: false,
                 message: errorMessage
@@ -109,10 +127,12 @@ const login = async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: errorMessage
+            message: "Error en el servidor: " + errorMessage
         });
     }
-}
+};
+
+
 
 module.exports = {
     getAllUsers,
