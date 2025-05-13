@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Menu, X, Phone, Calendar, LogOut, CalendarCheck, FileText, Pill, User } from 'lucide-react'
 import "./Header.css"
 import Logo from './../assets/images/logo.png'
+import { logout } from '../services/authservices'
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -104,9 +105,9 @@ const Header = () => {
             <li className="nav-item">
               <a href="#" className="nav-link"><User size={18} /> Perfil</a>
             </li>
-            <li className="nav-item logout">
+            <li className="nav-item logout" onClick={logout}>
               <a href="#" className="nav-link-2"><LogOut size={18} /> Logout</a>
-            </li>
+             </li>
           </ul>
         </div>
       </nav>

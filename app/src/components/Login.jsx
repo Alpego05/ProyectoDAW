@@ -54,6 +54,7 @@ function Login() {
             localStorage.setItem("authToken", data.token);
             localStorage.setItem("userId", data.user);
             localStorage.setItem("rol", data.rol);
+            localStorage.setItem("loginTime", Date.now().toString());
 
             // Redireccionar al home
             navigate("/Home");

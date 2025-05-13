@@ -102,9 +102,7 @@ const Footer = () => {
                                     <span>Lun-Vie: 8:00 - 20:00</span>
                                 </li>
                             </ul>
-                            <div className="footer-map">
-                                <img src={Map} alt="Mapa de ubicación" className="map-image" />
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
