@@ -53,6 +53,7 @@ function Login() {
             // Guardar token en localStorage
             localStorage.setItem("authToken", data.token);
             localStorage.setItem("userId", data.user);
+            localStorage.setItem("rol", data.rol);
 
             // Redireccionar al home
             navigate("/Home");
