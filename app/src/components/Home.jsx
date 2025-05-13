@@ -1,20 +1,25 @@
-import React from 'react'
-import imgProducts from '../assets/images/productos.jpg'
-import imgUsers from '../assets/images/usuarios.png'
-import { Link } from 'react-router-dom'
+"use client"
 
-const Home = () => {
+import { useEffect, useState } from "react"
+function Home() {
+
     return (
-        <div className='Home'>
-            <h1>hola</h1>
+        <div className="dashboard">
+            <header className="dashboard-header">
+                <h1>Panel de Control</h1>
+                <button>
+                    Cerrar Sesión
+                </button>
+            </header>
 
-
-            
-
-
-
+            <main className="dashboard-content">
+                <div className="welcome-card">
+                    <h2>Bienvenido al Sistema</h2>
+                    <p>Has iniciado sesión correctamente. Aquí podrás gestionar tu información.</p>
+                </div>
+            </main>
         </div>
     )
 }
 
-export default Home
+export default Home;
