@@ -38,7 +38,8 @@ function Login() {
                 } else if (response.status === 400) {
                     setError("DNI y contraseña son requeridos");
                 } else {
-                    setError( "Error al iniciar sesión");
+                    // Extraer el mensaje específico del error del servidor
+                    setError(extractErrorMessage(data.message) || "Error al iniciar sesión");
                 }
                 return;
             }
@@ -67,6 +68,24 @@ function Login() {
         } finally {
             setLoading(false);
         }
+    };
+
+    // Función para extraer mensajes específicos de error
+    const extractErrorMessage = (message) => {
+        if (!message) return null;
+        
+        // Extraer mensajes específicos
+        if (message.includes("Usuario no encontrado")) {
+            return "Usuario no encontrado";
+        }
+        if (message.includes("Contraseña incorrecta")) {
+            return "Contraseña incorrecta";
+        }
+        if (message.includes("Dni y contraseña son requeridos")) {
+            return "DNI y contraseña son requeridos";
+        }
+        
+        return message;
     };
 
     const togglePasswordVisibility = () => {
