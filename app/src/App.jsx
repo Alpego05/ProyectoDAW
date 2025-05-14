@@ -6,15 +6,10 @@ import Login from "./components/Login"
 import PatientDashboard from "./components/patients/Dashboard";
 import DoctorDashboard from "./components/doctors/Dashboard";
 import AdminDashboard from "./components/admins/Dashboard";
-import { logout , isSessionExpired } from './services/authservices';
+
 
 function App() {
   const rol = localStorage.getItem("rol")
-
-
-   
-
-
 
   return (
     <BrowserRouter>

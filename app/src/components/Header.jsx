@@ -63,7 +63,7 @@ const Header = () => {
 
         <div className="contact-info">
           <div className="contact-item">
-            <Phone size={35} className="contact-icon" />
+            <Phone size={30} className="contact-icon" />
             <div className="contact-text">
               <span className="contact-label">Emergencias 24/7</span>
               <span className="contact-value">666-66-66</span>
@@ -89,7 +89,7 @@ const Header = () => {
         <div className="nav-container">
           <div className="mobile-nav-header">
             <div className="mobile-brand">
-              <img src="/placeholder.svg?height=40&width=40" alt="Medinet Logo" className="mobile-logo" />
+              <img src={Logo} alt="Medinet Logo" className="mobile-logo" />
               <span>Medinet</span>
             </div>
             <button className="mobile-close" onClick={toggleMobileMenu}>

@@ -46,19 +46,10 @@ const Footer = () => {
                                     <a href="#">Inicio</a>
                                 </li>
                                 <li>
-                                    <a href="#">Sobre Nosotros</a>
-                                </li>
-                                <li>
                                     <a href="#">Servicios</a>
                                 </li>
                                 <li>
-                                    <a href="#">Especialidades</a>
-                                </li>
-                                <li>
-                                    <a href="#">Médicos</a>
-                                </li>
-                                <li>
-                                    <a href="#">Contacto</a>
+                                    <a href="#">Sobre Nosotros</a>
                                 </li>
                             </ul>
                         </div>
@@ -72,17 +63,9 @@ const Footer = () => {
                                     <a href="#">Laboratorio Clínico</a>
                                 </li>
                                 <li>
-                                    <a href="#">Diagnóstico por Imágenes</a>
-                                </li>
-                                <li>
-                                    <a href="#">Cirugía Ambulatoria</a>
-                                </li>
-                                <li>
                                     <a href="#">Urgencias</a>
                                 </li>
-                                <li>
-                                    <a href="#">Telemedicina</a>
-                                </li>
+                                
                             </ul>
                         </div>
                         <div className="footer-links-column">

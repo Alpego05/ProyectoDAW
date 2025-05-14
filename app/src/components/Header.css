@@ -140,8 +140,8 @@
 /* Main Navigation */
 .main-nav {
   background-color: var(--primary-color);
-  margin-left: 20px;
-  padding-left: 10px;
+  margin-left: 0px;
+  padding-left: 0px;
   padding-right: 20px;
 }
 
@@ -192,7 +192,7 @@
   font-size: 0.95rem;
   transition: all 0.2s ease;
   position: relative;
-  background-color: #0169a1;
+  background-color: #0347a753;
 }
 .nav-icon {
   flex-shrink: 0;
