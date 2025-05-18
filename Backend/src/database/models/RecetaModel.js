@@ -10,7 +10,7 @@ Receta.init(
             primaryKey: true,
             autoIncrement: true
         },
-        id_diagnostico: {
+        diagnostico_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
@@ -26,7 +26,7 @@ Receta.init(
                 key: 'usuario_id'
             }
         },
-        id_medicamento: {
+        medicamento_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {

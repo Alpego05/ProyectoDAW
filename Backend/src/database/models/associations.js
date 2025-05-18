@@ -9,14 +9,13 @@ const Enfermedad = require("./EnfermedadModel");
 const Medicamento = require("./MedicamentoModel");
 const MedicamentoEnfermedad = require("./MedicamentoEnfermedadModel");
 
-// Definir asociaciones de herencia
+// Herencia
 User.hasOne(Doctor, {
   foreignKey: "usuario_id",
   as: "doctor",
   onDelete: "CASCADE",
   hooks: true,
 });
-
 Doctor.belongsTo(User, {
   foreignKey: "usuario_id",
   as: "usuario",
@@ -30,7 +29,6 @@ User.hasOne(Patient, {
   onDelete: "CASCADE",
   hooks: true,
 });
-
 Patient.belongsTo(User, {
   foreignKey: "usuario_id",
   as: "usuario",
@@ -38,115 +36,86 @@ Patient.belongsTo(User, {
   hooks: true,
 });
 
-// Asociaciones Doctor-Patient
+// Doctor - Patient
 Doctor.hasMany(Patient, {
   foreignKey: "doctor_id",
   as: "pacientes",
   onDelete: "SET NULL",
 });
-
 Patient.belongsTo(Doctor, {
   foreignKey: "doctor_id",
   as: "doctorGeneral",
   onDelete: "SET NULL",
 });
 
-// Asociaciones Doctor-HorarioAtencion
+// Doctor - HorarioAtencion
 Doctor.hasMany(HorarioAtencion, {
   foreignKey: "doctor_id",
   as: "horarios",
   onDelete: "CASCADE",
 });
-
 HorarioAtencion.belongsTo(Doctor, {
   foreignKey: "doctor_id",
   onDelete: "CASCADE",
 });
 
-// Asociaciones Patient-Cita
+// Patient - Cita
 Patient.hasMany(Cita, {
   foreignKey: "paciente_id",
   as: "citas",
   onDelete: "CASCADE",
 });
-
 Cita.belongsTo(Patient, {
   foreignKey: "paciente_id",
   onDelete: "CASCADE",
 });
 
-// Asociaciones Doctor-Cita
+// Doctor - Cita
 Doctor.hasMany(Cita, {
   foreignKey: "doctor_id",
   as: "citas",
   onDelete: "CASCADE",
 });
-
 Cita.belongsTo(Doctor, {
   foreignKey: "doctor_id",
   onDelete: "CASCADE",
 });
 
-// Asociaciones HorarioAtencion-Cita
-HorarioAtencion.belongsToMany(Cita, {
-  through: "horario_cita",
-  foreignKey: "horario_id",
-  otherKey: "cita_id",
-  as: "citas",
-  onDelete: "CASCADE",
-});
-
-Cita.belongsToMany(HorarioAtencion, {
-  through: "horario_cita",
-  foreignKey: "cita_id",
-  otherKey: "horario_id",
-  as: "horarios",
-  onDelete: "CASCADE",
-});
-
-// Asociaciones Cita-Diagnostico
+// Cita - Diagnostico (1:1)
 Cita.hasOne(Diagnostico, {
   foreignKey: "cita_id",
   as: "diagnostico",
   onDelete: "CASCADE",
 });
-
 Diagnostico.belongsTo(Cita, {
   foreignKey: "cita_id",
   onDelete: "CASCADE",
 });
 
-// Asociaciones Doctor-Diagnostico
+// Doctor - Diagnostico
 Doctor.hasMany(Diagnostico, {
   foreignKey: "doctor_id",
   as: "diagnosticos",
   onDelete: "CASCADE",
 });
-
 Diagnostico.belongsTo(Doctor, {
   foreignKey: "doctor_id",
   onDelete: "CASCADE",
 });
 
-// Asociaciones Diagnostico-Enfermedad
-Diagnostico.belongsToMany(Enfermedad, {
-  through: "diagnostico_enfermedad",
-  foreignKey: "diagnostico_id",
-  otherKey: "enfermedad_id",
-  as: "enfermedades",
+// Diagnostico - Enfermedad (1:1)
+Diagnostico.belongsTo(Enfermedad, {
+  foreignKey: "enfermedad_id",
+  as: "enfermedad",
   onDelete: "CASCADE",
 });
-
-Enfermedad.belongsToMany(Diagnostico, {
-  through: "diagnostico_enfermedad",
+Enfermedad.hasMany(Diagnostico, {
   foreignKey: "enfermedad_id",
-  otherKey: "diagnostico_id",
   as: "diagnosticos",
   onDelete: "CASCADE",
 });
 
-// Asociaciones Enfermedad-Medicamento
-// Asociaciones Enfermedad-Medicamento
+// Enfermedad - Medicamento (N:M)
 Medicamento.belongsToMany(Enfermedad, {
   through: MedicamentoEnfermedad,
   foreignKey: "id_medicamento",
@@ -154,7 +123,6 @@ Medicamento.belongsToMany(Enfermedad, {
   as: "enfermedades",
   onDelete: "CASCADE"
 });
-
 Enfermedad.belongsToMany(Medicamento, {
   through: MedicamentoEnfermedad,
   foreignKey: "id_enfermedad",
@@ -164,29 +132,6 @@ Enfermedad.belongsToMany(Medicamento, {
 });
 
 
-// Asociaciones Diagnostico-Receta
-Diagnostico.hasMany(Receta, {
-  foreignKey: "diagnostico_id",
-  as: "recetas",
-  onDelete: "CASCADE",
-});
-
-Receta.belongsTo(Diagnostico, {
-  foreignKey: "diagnostico_id",
-  onDelete: "CASCADE",
-});
-
-// Asociaciones Medicamento-Receta
-Medicamento.hasMany(Receta, {
-  foreignKey: "medicamento_id",
-  as: "recetas",
-  onDelete: "CASCADE",
-});
-
-Receta.belongsTo(Medicamento, {
-  foreignKey: "medicamento_id",
-  onDelete: "CASCADE",
-});
 
 module.exports = {
   User,
@@ -200,3 +145,4 @@ module.exports = {
   Receta,
   MedicamentoEnfermedad
 };
+
