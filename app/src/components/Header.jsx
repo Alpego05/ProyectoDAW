@@ -3,6 +3,7 @@ import { Menu, X, Phone, Calendar, LogOut, CalendarCheck, FileText, Pill, User }
 import "./Header.css"
 import Logo from './../assets/images/logo.png'
 import { logout } from '../services/authservices'
+import { Link } from "react-router-dom"
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -22,25 +23,25 @@ const Header = () => {
       case "admin":
         return (
           <>
-            <li className="nav-item"><a href="#" className="nav-link">Citas</a></li>
-            <li className="nav-item"><a href="#" className="nav-link">Usuarios</a></li>
-            <li className="nav-item"><a href="#" className="nav-link">Diagnosticos</a></li>
+            <li className="nav-item"><Link to={"DashboardCitas"} className="nav-link">Citas</Link></li>
+            <li className="nav-item"><Link to={"DashboardUsuarios"} className="nav-link">Usuarios</Link></li>
+            <li className="nav-item"><Link to={"DashboardDiagnosticos"} className="nav-link">Diagnosticos</Link></li>
           </>
         )
       case "doctor":
         return (
           <>
-            <li className="nav-item"><a href="#" className="nav-link"><CalendarCheck size={18} /> Calendario</a></li>
-            <li className="nav-item"><a href="#" className="nav-link"><FileText size={18} /> Glosario</a></li>
-            <li className="nav-item"><a href="#" className="nav-link"><Pill size={18} /> Asignar</a></li>
+            <li className="nav-item"><Link to={"Calendario"} className="nav-link"><CalendarCheck size={18} /> Calendario</Link></li>
+            <li className="nav-item"><Link to={"Glosario"} className="nav-link"><FileText size={18} /> Glosario</Link></li>
+            <li className="nav-item"><Link to={"Pacientes"} className="nav-link"><Pill size={18} /> Pacientes</Link></li>
           </>
         )
       case "paciente":
         return (
           <>
-            <li className="nav-item"><a href="#" className="nav-link"><CalendarCheck size={18} /> Citas</a></li>
-            <li className="nav-item"><a href="#" className="nav-link"><FileText size={18} /> Historial</a></li>
-            <li className="nav-item"><a href="#" className="nav-link"><Pill size={18} /> Recetas</a></li>
+            <li className="nav-item"><Link to={"Agenda"} className="nav-link"><CalendarCheck size={18} /> Citas</Link></li>
+            <li className="nav-item"><Link to={"Historial"} className="nav-link"><FileText size={18} /> Historial</Link></li>
+            <li className="nav-item"><Link to={"Recetas"} className="nav-link"><Pill size={18} /> Recetas</Link></li>
           </>
         )
       default:
@@ -78,7 +79,9 @@ const Header = () => {
           </div>
         </div>
 
-        <button className="appointment-button">Solicitar cita</button>
+        {rol === "paciente" && (
+          <button className="appointment-button">Solicitar cita</button>
+        )}
 
         <button className="mobile-toggle" onClick={toggleMobileMenu}>
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -99,15 +102,15 @@ const Header = () => {
 
           <ul className="nav-list">
             <li className="nav-item">
-              <a href="#" className="nav-link active">Inicio</a>
+              <Link to={"../Home"} className="nav-link active">Inicio</Link>
             </li>
             {renderNavItems()}
             <li className="nav-item">
-              <a href="#" className="nav-link"><User size={18} /> Perfil</a>
+              <Link to={"Perfil"} className="nav-link"><User size={18} /> Perfil</Link>
             </li>
             <li className="nav-item logout" onClick={logout}>
-              <a href="#" className="nav-link-2"><LogOut size={18} /> Logout</a>
-             </li>
+              <button className="nav-link-2 cursor-pointer"><LogOut size={18} /> Logout</button>
+            </li>
           </ul>
         </div>
       </nav>

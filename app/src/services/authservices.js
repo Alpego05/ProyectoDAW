@@ -1,4 +1,3 @@
-//LOGIN NO SE USA
 export const login = async ({ dni, clave }) => {
     const response = await fetch("http://localhost:3000/users/login", {
         method: "POST",
@@ -12,7 +11,6 @@ export const login = async ({ dni, clave }) => {
 
     if (!response.ok) {
         throw { status: response.status, message: data.message };
-
     }
 
     if (!data.token) {
@@ -22,10 +20,8 @@ export const login = async ({ dni, clave }) => {
     localStorage.setItem("authToken", data.token);
     localStorage.setItem("userId", data.user);
     localStorage.setItem("rol", data.rol);
-    localStorage.setItem("loginTime", Date.now().toString());
 
-    window.location("/Home")
-
+    return data;
 };
 
 export const logout = () => {

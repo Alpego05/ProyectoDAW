@@ -1,104 +1,40 @@
-
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Phone, MapPin, Clock, Menu, X, Eye, EyeOff, Calendar, HeartPulse, Stethoscope, Users, ChevronRight, CheckCircle2, CircleAlert, Activity } from 'lucide-react';
-import Footer from "./Footer";
-import "./../index.css"
-import InstalacionesImg from './../assets/images/Instalaciones.jpg';
-import EquipoImg from './../assets/images/Equipo.jpg';
-import Logo from './../assets/images/logo.png'
-
+import { CircleAlert, Eye, EyeOff } from 'lucide-react';
+import { login } from "../services/authservices"; 
+import Logo from './../assets/images/logo.png';
 
 function Login() {
     const navigate = useNavigate();
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isNavOpen, setIsNavOpen] = useState(false);
     const [dni, setDni] = useState("");
     const [clave, setClave] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
-
-    const toggleLoginAside = () => {
-        setIsLoginOpen(!isLoginOpen);
-        // Reset form when closing
-        if (isLoginOpen) {
-            setDni("");
-            setClave("");
-            setError(null);
-        }
-    };
-
-    const toggleMobileNav = () => {
-        setIsNavOpen(!isNavOpen);
-    };
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
+        setIsLoading(true);
 
         try {
-            const response = await fetch("http://localhost:3000/users/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ dni, clave }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                if (response.status === 404) {
-                    setError("Usuario no encontrado");
-                } else if (response.status === 401) {
-                    setError("Contraseña incorrecta");
-                } else if (response.status === 400) {
-                    setError("DNI y contraseña son requeridos");
-                } else {
-                    setError(extractErrorMessage(data.message) || "Error al iniciar sesión");
-                }
-                return;
-            }
-
-            if (!data.token) {
-                setError("Error en la autenticación: No se recibió token");
-                return;
-            }
-
-            localStorage.setItem("authToken", data.token);
-            localStorage.setItem("userId", data.user);
-            localStorage.setItem("rol", data.rol);
-            localStorage.setItem("loginTime", Date.now().toString());
-
+            await login({ dni, clave });
             navigate("/Home");
         } catch (err) {
-            console.error("Error de conexión:", err);
-
-            if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
-                setError("No se pudo conectar al servidor. Verifique su conexión a internet o contacte al administrador.");
+            console.error("Error de login:", err);
+            
+            if (err.status === 404) {
+                setError("Usuario no encontrado");
+            } else if (err.status === 401) {
+                setError("Contraseña incorrecta");
+            } else if (err.status === 400) {
+                setError("DNI y contraseña son requeridos");
             } else {
-                setError("Error de conexión. Por favor, intente nuevamente.");
+                setError(err.message || "Error al iniciar sesión");
             }
+        } finally {
+            setIsLoading(false);
         }
-    };
-
-
-    // Función para extraer mensajes específicos de error
-    const extractErrorMessage = (message) => {
-        if (!message) return null;
-
-        // Extraer mensajes específicos
-        if (message.includes("Usuario no encontrado")) {
-            return "Usuario no encontrado";
-        }
-        if (message.includes("Contraseña incorrecta")) {
-            return "Contraseña incorrecta";
-        }
-        if (message.includes("Dni y contraseña son requeridos")) {
-            return "DNI y contraseña son requeridos";
-        }
-
-        return message;
     };
 
     const togglePasswordVisibility = () => {
@@ -106,7 +42,14 @@ function Login() {
     };
 
     return (
-        
+        <div className="flex flex-col min-h-screen">
+            <div className="container mx-auto px-4 py-8 flex-grow flex flex-col items-center justify-center">
+                <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+                    <div className="text-center mb-6">
+                        <img src={Logo} alt="Logo" className="h-16 mx-auto mb-4" />
+                        <h2 className="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
+                    </div>
+                    
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <label htmlFor="dni" className="block text-sm font-medium" style={{ color: "var(--text-medium)" }}>
@@ -147,16 +90,6 @@ function Login() {
                                         transition: "var(--transition)"
                                     }}
                                 />
-
-                                {error && (
-                                    <div className="flex items-center gap-3 pt-4 pl-3 rounded-md"
-                                        style={{
-                                            backgroundColor: "var(--danger-color, #ef4444)/10"
-                                        }}>
-                                        <CircleAlert style={{ color: "var(--danger-color, #ef4444)" }} />
-                                        <p className="text-sm" style={{ color: "var(--danger-color, #ef4444)" }}>{error}</p>
-                                    </div>
-                                )}
                                 <button
                                     type="button"
                                     className="absolute right-3 top-1/2 -translate-y-1/2"
@@ -168,20 +101,33 @@ function Login() {
                             </div>
                         </div>
 
+                        {error && (
+                            <div className="flex items-center gap-3 p-3 rounded-md"
+                                style={{
+                                    backgroundColor: "rgba(239, 68, 68, 0.1)"
+                                }}>
+                                <CircleAlert style={{ color: "var(--danger-color, #ef4444)" }} />
+                                <p className="text-sm" style={{ color: "var(--danger-color, #ef4444)" }}>{error}</p>
+                            </div>
+                        )}
+
                         <button
+                            type="submit"
+                            disabled={isLoading}
                             className="w-full font-semibold py-3 px-4 rounded-md cursor-pointer"
                             style={{
                                 backgroundColor: "var(--primary-color)",
                                 color: "white",
-                                transition: "var(--transition)"
+                                transition: "var(--transition)",
+                                opacity: isLoading ? 0.7 : 1
                             }}
                         >
-                            Iniciar Sesión
+                            {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
                         </button>
                     </form>
-
-
-
+                </div>
+            </div>
+        </div>
     );
 }
 
