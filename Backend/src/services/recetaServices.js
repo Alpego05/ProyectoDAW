@@ -1,4 +1,5 @@
 const Receta = require('../database/models/RecetaModel');
+const Medicamento = require('../database/models/MedicamentoModel');
 
 // Obtener todas las recetas
 const getAllRecetas = async () => {
@@ -97,15 +98,21 @@ const deleteReceta = async (id_receta) => {
 
 // Obtener recetas por ID de paciente
 const getRecetasByPacienteId = async (id_paciente) => {
-    try {
-        const recetas = await Receta.findAll({
-            where: { id_paciente }
-        });
-        return recetas;
-    } catch (error) {
-        throw new Error(`Error al obtener las recetas del paciente: ${error.message}`);
-    }
+  try {
+    const recetas = await Receta.findAll({
+      where: { id_paciente },
+      include: {
+        model: Medicamento,
+        as: "medicamento", // Asegúrate que coincida con el alias definido
+        attributes: ["nombre"] // Solo queremos el nombre
+      }
+    });
+    return recetas;
+  } catch (error) {
+    throw new Error(`Error al obtener las recetas del paciente: ${error.message}`);
+  }
 };
+
 
 // Obtener recetas por ID de diagnóstico
 const getRecetasByDiagnosticoId = async (diagnostico_id) => {

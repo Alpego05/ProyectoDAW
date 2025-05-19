@@ -36,6 +36,18 @@ Patient.belongsTo(User, {
   hooks: true,
 });
 
+Receta.belongsTo(Medicamento, {
+  foreignKey: "medicamento_id",
+  as: "medicamento",
+  onDelete: "SET NULL",
+});
+
+Medicamento.hasMany(Receta, {
+  foreignKey: "medicamento_id",
+  as: "recetas",
+  onDelete: "SET NULL",
+});
+
 // Doctor - Patient
 Doctor.hasMany(Patient, {
   foreignKey: "doctor_id",
