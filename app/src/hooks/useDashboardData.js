@@ -5,11 +5,9 @@ import {
     getRecetasByPacienteId,
     getDiagnosticosByPacienteId,
     getPatientById
-} from './../services/apiClient';
+} from '../services/apiPatientClient';
 
-/**
- * hook personalizado para gestionar todos los datos necesarios para el Dashboard
- */
+
 export const useDashboardData = (userId, userRole) => {
     const [estado, setEstado] = useState({
         usuario: null,

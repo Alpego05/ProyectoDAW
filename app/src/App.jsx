@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import Layout from "./components/Layout"
-import Login from "./components/Login"
+import Layout from "./components/Pages/layout/Layout"
+import Login from "./components/Pages/Login"
 
 // rutas páginas
-import Dashboard from "./components/Dashboard";
-import AgendaPaciente from './components/patients/AgendaPaciente'
-import HistorialPaciente from './components/patients/HistorialPaciente'
-import RecetasPaciente from './components/patients/RecetasPaciente'
-import Perfil from './components/Perfil'
-import SolicitarCita from './components/patients/SolicitarCita'
-import DashboardCitas from './components/admins/DashboardCitas'
-import DashboardUsuarios from './components/admins/DashboardUsuarios'
-import DashboardDiagnosticos from './components/admins/DashboardDiagnosticos'
-import Calendario from './components/doctors/Calendario'
-import Glosario from './components/doctors/Glosario'
-import Pacientes from './components/doctors/Pacientes'
+import Dashboard from "./components/Pages/Dashboard";
+import AgendaPaciente from './components/Pages/patients/AgendaPaciente'
+import HistorialPaciente from './components/Pages/patients/HistorialPaciente'
+import RecetasPaciente from './components/Pages/patients/RecetasPaciente'
+import Perfil from './components/Pages/Perfil'
+import SolicitarCita from './components/Pages/patients/SolicitarCita'
+import DashboardCitas from './components/Pages/admins/DashboardCitas'
+import DashboardUsuarios from './components/Pages/admins/DashboardUsuarios'
+import DashboardDiagnosticos from './components/Pages/admins/DashboardDiagnosticos'
+import Calendario from './components/Pages/doctors/Calendario'
+import Glosario from './components/Pages/doctors/Glosario'
+import Pacientes from './components/Pages/doctors/Pacientes'
 
 
 

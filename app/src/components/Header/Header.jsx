@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
 import { Menu, X, Phone, Calendar, LogOut, CalendarCheck, FileText, Pill, User } from 'lucide-react'
 import "./Header.css"
-import Logo from './../assets/images/logo.png'
-import { logout } from '../services/authservices'
+import Logo from './../../assets/images/logo.png'
+import { logout } from '../../services/authservices'
 import { Link } from "react-router-dom"
 
 const Header = () => {

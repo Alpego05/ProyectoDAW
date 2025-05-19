@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CircleAlert, Eye, EyeOff } from 'lucide-react';
-import { login } from "../services/authservices"; 
-import Logo from './../assets/images/logo.png';
+import { login } from "../../services/authservices"; 
+import Logo from './../../assets/images/logo.png';
 
 function Login() {
     const navigate = useNavigate();

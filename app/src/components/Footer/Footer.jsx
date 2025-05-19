@@ -2,8 +2,8 @@
 
 import { MapPin, Phone, Mail, Clock, Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
 import "./Footer.css"
-import Map from "./../assets/images/map.png"
-import Logo from './../assets/images/logo.png'
+import Map from "./../../assets/images/Map.png"
+import Logo from './../../assets/images/logo.png'
 
 const Footer = () => {
     return (
