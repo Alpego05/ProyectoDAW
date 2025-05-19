@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class Cita extends Model {}
+class Cita extends Model { }
 
 Cita.init(
   {
@@ -22,6 +22,20 @@ Cita.init(
         notEmpty: { msg: "El ID del doctor no puede estar vacío" },
       },
     },
+
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        is: {
+          args: [/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/],
+          msg: "El nombre solo puede contener letras y espacios",
+        },
+        notEmpty: true,
+      },
+    },
+
+
     paciente_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

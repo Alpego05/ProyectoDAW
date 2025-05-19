@@ -40,6 +40,17 @@ Diagnostico.init(
         key: "usuario_id",
       },
     },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        is: {
+          args: [/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/],
+          msg: "El nombre solo puede contener letras y espacios",
+        },
+        notEmpty: true,
+      },
+    },
     sintomas: {
       type: DataTypes.TEXT,
       allowNull: false,
