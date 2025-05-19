@@ -239,3 +239,146 @@ export const deleteDiagnostico = async (id) => {
     }
 };
 
+// === CITAS ===
+// Obtener todas las citas
+export const getAllCitas = async () => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener citas");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar citas:", error);
+        throw error;
+    }
+};
+
+// Obtener citas por paciente
+export const getCitaByPatient = async (patientId) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas/bypatient/${patientId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener citas del paciente");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar citas del paciente:", error);
+        throw error;
+    }
+};
+
+// Obtener citas por doctor
+export const getCitaByDoctor = async (doctorId) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas/bydoctor/${doctorId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener citas del doctor");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar citas del doctor:", error);
+        throw error;
+    }
+};
+
+// Crear una cita
+export const createCita = async (citaData) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${getToken()}`
+            },
+            body: JSON.stringify(citaData)
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al crear cita");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al crear cita:", error);
+        throw error;
+    }
+};
+
+// Actualizar una cita
+export const updateCita = async (id, citaData) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas/edit/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${getToken()}`
+            },
+            body: JSON.stringify(citaData)
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al actualizar cita");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al actualizar cita:", error);
+        throw error;
+    }
+};
+
+// Eliminar una cita
+export const deleteCita = async (id) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al eliminar cita");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error al eliminar cita:", error);
+        throw error;
+    }
+};
+
