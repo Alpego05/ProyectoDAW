@@ -4,7 +4,7 @@ import { useDashboardData } from '../../hooks/useDashboardData';
 const Dashboard = () => {
   const usuarioId = localStorage.getItem("userId");
   const tipoUsuario = localStorage.getItem("rol");
-  
+
   const {
     usuario,
     paciente,
@@ -71,10 +71,10 @@ const Dashboard = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Información médica */}
+            {/* Información del paciente */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">Información Médica</h3>
+                <h3 className="text-lg font-semibold text-gray-800">Información Personal</h3>
                 <span className="text-xs font-medium bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded">General</span>
               </div>
               <div className="space-y-4">
@@ -92,6 +92,9 @@ const Dashboard = () => {
                   <h4 className="text-sm font-medium text-gray-800 mb-1">Alergias</h4>
                   <p className="text-sm text-gray-600">{paciente?.alergias || 'No se han registrado alergias'}</p>
                 </div>
+                 <button className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  Editar información médica
+                </button>
               </div>
             </div>
 
@@ -124,8 +127,8 @@ const Dashboard = () => {
               )}
 
               <div className="mt-4 text-center">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  Solicitar cita
+                <button className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  Solicitar nueva cita
                 </button>
               </div>
             </div>
@@ -160,7 +163,7 @@ const Dashboard = () => {
               )}
             </div>
 
-            {/* Recetas - Ocupa 2 columnas */}
+            {/* Recetas */}
             <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-3">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800">Recetas Médicas</h3>
@@ -213,19 +216,11 @@ const Dashboard = () => {
       {tipoUsuario === 'paciente' ? (
         <PatientDashboard />
       ) : tipoUsuario === 'admin' ? (
-        <div className="bg-gray-50 min-h-screen p-10">
-          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Panel de administrador</h1>
-            <p className="text-gray-600">Implementación pendiente</p>
-          </div>
-        </div>
+        <h1>Panel de administrador</h1>
+
       ) : tipoUsuario === 'doctor' ? (
-        <div className="bg-gray-50 min-h-screen p-10">
-          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Panel de doctor</h1>
-            <p className="text-gray-600">Implementación pendiente</p>
-          </div>
-        </div>
+        <h1>Panel de doctor</h1>
+
       ) : (
         <div className="text-center p-10">
           <p className="text-xl text-red-500">Tipo de usuario no reconocido</p>
