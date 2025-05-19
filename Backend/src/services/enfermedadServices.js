@@ -10,9 +10,9 @@ const getAllEnfermedades = async () => {
 };
 
 // Obtener una enfermedad por ID
-const getEnfermedadById = async (id) => {
+const getEnfermedadById = async (id_enfermedad) => {
     try {
-        const enfermedad = await Enfermedad.findByPk(id);
+        const enfermedad = await Enfermedad.findByPk(id_enfermedad);
         if (!enfermedad) {
             throw new Error('Enfermedad no encontrada');
         }
@@ -48,9 +48,9 @@ const createEnfermedad = async (enfermedadData) => {
 };
 
 // Actualizar una enfermedad
-const updateEnfermedad = async (id, enfermedadData) => {
+const updateEnfermedad = async (id_enfermedad, enfermedadData) => {
     try {
-        const enfermedad = await Enfermedad.findByPk(id);
+        const enfermedad = await Enfermedad.findByPk(id_enfermedad);
 
         if (!enfermedad) {
             throw new Error('Enfermedad no encontrada');
@@ -72,9 +72,9 @@ const updateEnfermedad = async (id, enfermedadData) => {
 };
 
 // Eliminar una enfermedad
-const deleteEnfermedad = async (id) => {
+const deleteEnfermedad = async (id_enfermedad) => {
     try {
-        const enfermedad = await Enfermedad.findByPk(id);
+        const enfermedad = await Enfermedad.findByPk(id_enfermedad);
 
         if (!enfermedad) {
             throw new Error('Enfermedad no encontrada');

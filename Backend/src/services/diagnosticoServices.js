@@ -10,9 +10,9 @@ const getAllDiagnosticos = async () => {
 };
 
 // Obtener un diagnóstico por ID
-const getDiagnosticoById = async (id) => {
+const getDiagnosticoById = async (id_diagnostico) => {
     try {
-        const diagnostico = await Diagnostico.findByPk(id);
+        const diagnostico = await Diagnostico.findByPk(id_diagnostico);
         if (!diagnostico) {
             throw new Error('Diagnóstico no encontrado');
         }
@@ -25,21 +25,38 @@ const getDiagnosticoById = async (id) => {
 // Crear un nuevo diagnóstico
 const createDiagnostico = async (diagnosticoData) => {
     try {
-        const { id_cita, id_paciente, sintomas, id_receta } = diagnosticoData;
+        const { cita_id, paciente_id, doctor_id, enfermedad_id, nombre, sintomas, observaciones } = diagnosticoData;
 
         // Validar que los campos obligatorios estén presentes
-        if (!id_cita || !id_paciente || !sintomas) {
+        if (!cita_id || !paciente_id || !doctor_id || !enfermedad_id || !nombre) {
             const error = new Error('Faltan campos requeridos');
             error.statusCode = 400;
             throw error;
         }
 
-        // Crear el diagnóstico
+        //comprobación de que existe el paciente, la cita el doctor y la enfermedad
+        const paciente = await paciente.findByPk(paciente_id);
+        const cita = await cita.findByPk(cita_id);
+        const doctor = await doctor.findByPk(doctor_id);
+        const enfermedad = await enfermedad.findByPk(enfermedad_id);
+
+        if (!paciente || !cita || !doctor || !enfermedad) {
+            const error = new Error('No se encontraron los datos del paciente, la cita, el doctor o la enfermedad');
+            error.statusCode = 404;
+            throw error;
+        }
+
+
+        //crear el diagnóstico
         const newDiagnostico = await Diagnostico.create({
-            id_cita,
-            id_paciente,
+            //cita_id, paciente_id, doctor_id, enfermedad_id, nombre, sintomas, observaciones
+            cita_id,
+            paciente_id,
+            doctor_id,
+            enfermedad_id,
+            nombre,
             sintomas,
-            id_receta // Este puede ser null
+            observaciones
         });
 
         return newDiagnostico;
@@ -49,24 +66,24 @@ const createDiagnostico = async (diagnosticoData) => {
 };
 
 // Actualizar un diagnóstico
-const updateDiagnostico = async (id, diagnosticoData) => {
+const updateDiagnostico = async (id_diagnostico, diagnosticoData) => {
     try {
-        const diagnostico = await Diagnostico.findByPk(id);
+        const diagnostico = await Diagnostico.findByPk(id_diagnostico);
 
         if (!diagnostico) {
             throw new Error('Diagnóstico no encontrado');
         }
 
         // Actualizar los campos si están presentes
-        const { id_cita, id_paciente, sintomas, id_receta } = diagnosticoData;
-
-        if (id_cita) diagnostico.id_cita = id_cita;
-        if (id_paciente) diagnostico.id_paciente = id_paciente;
+        const { cita_id, paciente_id, doctor_id, enfermedad_id, nombre, sintomas, observaciones } = diagnosticoData;
+        
+        if (cita_id) diagnostico.cita_id = cita_id;
+        if (paciente_id) diagnostico.paciente_id = paciente_id;
+        if (doctor_id) diagnostico.doctor_id = doctor_id;
+        if (enfermedad_id) diagnostico.enfermedad_id = enfermedad_id;
+        if (nombre) diagnostico.nombre = nombre;
         if (sintomas) diagnostico.sintomas = sintomas;
-        // id_receta puede ser null, así que verificamos si está definido
-        if (diagnosticoData.hasOwnProperty('id_receta')) {
-            diagnostico.id_receta = id_receta;
-        }
+        if (observaciones) diagnostico.observaciones = observaciones;
 
         await diagnostico.save();
 
@@ -77,9 +94,9 @@ const updateDiagnostico = async (id, diagnosticoData) => {
 };
 
 // Eliminar un diagnóstico
-const deleteDiagnostico = async (id) => {
+const deleteDiagnostico = async (id_diagnostico) => {
     try {
-        const diagnostico = await Diagnostico.findByPk(id);
+        const diagnostico = await Diagnostico.findByPk(id_diagnostico);
 
         if (!diagnostico) {
             throw new Error('Diagnóstico no encontrado');
@@ -93,10 +110,10 @@ const deleteDiagnostico = async (id) => {
 };
 
 // Obtener diagnósticos por ID de paciente
-const getDiagnosticosByPacienteId = async (id_paciente) => {
+const getDiagnosticosByPacienteId = async (paciente_id) => {
     try {
         const diagnosticos = await Diagnostico.findAll({
-            where: { id_paciente }
+            where: { paciente_id }
         });
         return diagnosticos;
     } catch (error) {
@@ -105,16 +122,16 @@ const getDiagnosticosByPacienteId = async (id_paciente) => {
 };
 
 // Obtener diagnóstico por ID de cita
-const getDiagnosticoByCitaId = async (id_cita) => {
+const getDiagnosticoByCitaId = async (cita_id) => {
     try {
         const diagnostico = await Diagnostico.findOne({
-            where: { id_cita }
+            where: { cita_id }
         });
-        
+
         if (!diagnostico) {
             throw new Error('No se encontró diagnóstico para esta cita');
         }
-        
+
         return diagnostico;
     } catch (error) {
         throw new Error(`Error al obtener el diagnóstico de la cita: ${error.message}`);
@@ -122,15 +139,15 @@ const getDiagnosticoByCitaId = async (id_cita) => {
 };
 
 // Actualizar la receta de un diagnóstico
-const updateRecetaDiagnostico = async (id, id_receta) => {
+const updateRecetaDiagnostico = async (id_diagnostico, receta_id) => {
     try {
-        const diagnostico = await Diagnostico.findByPk(id);
+        const diagnostico = await Diagnostico.findByPk(id_diagnostico);
 
         if (!diagnostico) {
             throw new Error('Diagnóstico no encontrado');
         }
 
-        diagnostico.id_receta = id_receta;
+        diagnostico.id_receta = receta_id;
         await diagnostico.save();
 
         return diagnostico;

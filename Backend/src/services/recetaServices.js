@@ -10,9 +10,11 @@ const getAllRecetas = async () => {
 };
 
 // Obtener una receta por ID
-const getRecetaById = async (id) => {
+const getRecetaById = async (id_receta) => {
     try {
-        const receta = await Receta.findByPk(id);
+        const receta = await Receta.findByPk(id_receta
+
+        );
         if (!receta) {
             throw new Error('Receta no encontrada');
         }
@@ -25,10 +27,10 @@ const getRecetaById = async (id) => {
 // Crear una nueva receta
 const createReceta = async (recetaData) => {
     try {
-        const { id_diagnostico, id_paciente, id_medicamento, id_enfermedad, dosis, duracion } = recetaData;
+        const { diagnostico_id, id_paciente, medicamento_id, id_enfermedad, dosis, duracion } = recetaData;
 
         // Validar que los campos obligatorios estén presentes
-        if (!id_diagnostico || !id_paciente || !id_medicamento || !id_enfermedad || !dosis || !duracion) {
+        if (!diagnostico_id || !id_paciente || !medicamento_id || !id_enfermedad || !dosis || !duracion) {
             const error = new Error('Faltan campos requeridos');
             error.statusCode = 400;
             throw error;
@@ -36,9 +38,9 @@ const createReceta = async (recetaData) => {
 
         // Crear la receta
         const newReceta = await Receta.create({
-            id_diagnostico,
+            diagnostico_id,
             id_paciente,
-            id_medicamento,
+            medicamento_id,
             id_enfermedad,
             dosis,
             duracion
@@ -51,20 +53,20 @@ const createReceta = async (recetaData) => {
 };
 
 // Actualizar una receta
-const updateReceta = async (id, recetaData) => {
+const updateReceta = async (id_receta, recetaData) => {
     try {
-        const receta = await Receta.findByPk(id);
+        const receta = await Receta.findByPk(id_receta);
 
         if (!receta) {
             throw new Error('Receta no encontrada');
         }
 
         // Actualizar los campos si están presentes
-        const { id_diagnostico, id_paciente, id_medicamento, id_enfermedad, dosis, duracion } = recetaData;
+        const { diagnostico_id, id_paciente, medicamento_id, id_enfermedad, dosis, duracion } = recetaData;
 
-        if (id_diagnostico) receta.id_diagnostico = id_diagnostico;
+        if (diagnostico_id) receta.id_diagnostico = id_diagnostico;
         if (id_paciente) receta.id_paciente = id_paciente;
-        if (id_medicamento) receta.id_medicamento = id_medicamento;
+        if (medicamento_id) receta.id_medicamento = id_medicamento;
         if (id_enfermedad) receta.id_enfermedad = id_enfermedad;
         if (dosis) receta.dosis = dosis;
         if (duracion) receta.duracion = duracion;
@@ -78,9 +80,9 @@ const updateReceta = async (id, recetaData) => {
 };
 
 // Eliminar una receta
-const deleteReceta = async (id) => {
+const deleteReceta = async (id_receta) => {
     try {
-        const receta = await Receta.findByPk(id);
+        const receta = await Receta.findByPk(id_receta);
 
         if (!receta) {
             throw new Error('Receta no encontrada');
@@ -106,10 +108,10 @@ const getRecetasByPacienteId = async (id_paciente) => {
 };
 
 // Obtener recetas por ID de diagnóstico
-const getRecetasByDiagnosticoId = async (id_diagnostico) => {
+const getRecetasByDiagnosticoId = async (diagnostico_id) => {
     try {
         const recetas = await Receta.findAll({
-            where: { id_diagnostico }
+            where: { diagnostico_id }
         });
         return recetas;
     } catch (error) {

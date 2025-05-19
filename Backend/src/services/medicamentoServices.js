@@ -11,9 +11,9 @@ const getAllMedicamentos = async () => {
 };
 
 // Obtener un medicamento por ID
-const getMedicamentoById = async (id) => {
+const getMedicamentoById = async (id_medicamento) => {
     try {
-        const medicamento = await Medicamento.findByPk(id);
+        const medicamento = await Medicamento.findByPk(id_medicamento);
         
         if (!medicamento) {
             throw new Error('Medicamento no encontrado');
@@ -51,9 +51,9 @@ const createMedicamento = async (medicamentoData) => {
 };
 
 // Actualizar un medicamento
-const updateMedicamento = async (id, medicamentoData) => {
+const updateMedicamento = async (id_medicamento, medicamentoData) => {
     try {
-        const medicamento = await Medicamento.findByPk(id);
+        const medicamento = await Medicamento.findByPk(id_medicamento);
         
         if (!medicamento) {
             throw new Error('Medicamento no encontrado');
@@ -75,9 +75,9 @@ const updateMedicamento = async (id, medicamentoData) => {
 };
 
 // Eliminar un medicamento
-const deleteMedicamento = async (id) => {
+const deleteMedicamento = async (id_medicamento) => {
     try {
-        const medicamento = await Medicamento.findByPk(id);
+        const medicamento = await Medicamento.findByPk(id_medicamento);
 
         if (!medicamento) {
             throw new Error('Medicamento no encontrado');

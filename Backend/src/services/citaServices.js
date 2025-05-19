@@ -12,9 +12,9 @@ const getAllCitas = async () => {
 };
 
 // Obtener citas de un paciente por ID
-const getCitasByPatient = async (patientId) => {
+const getCitasByPatient = async (paciente_id) => {
     try {
-        const citas = await Cita.findAll({where: { patientId },});
+        const citas = await Cita.findAll({where: { paciente_id },});
 
         if (!citas || citas.length === 0) {
             throw new Error('No se encontraron citas para este paciente');
@@ -27,9 +27,9 @@ const getCitasByPatient = async (patientId) => {
 };
 
 // Obtener citas de un doctor por ID
-const getCitasByDoctor = async (doctorId) => {
+const getCitasByDoctor = async (doctor_id) => {
     try {
-        const citas = await Cita.findAll({ where: { doctorId }});
+        const citas = await Cita.findAll({ where: { doctor_id }});
 
         if (!citas || citas.length === 0) {
             throw new Error('No se encontraron citas para este doctor');
@@ -44,18 +44,18 @@ const getCitasByDoctor = async (doctorId) => {
 // Crear una nueva cita
 const createCita = async (citaData) => {
     try {
-        const { id_paciente, id_doctor, fecha, hora_inicio, hora_fin, estado } = citaData;
+        const { paciente_id, doctor_id, fecha, hora_inicio, hora_fin, estado } = citaData;
 
         // Validar que los campos obligatorios estén presentes
-        if (!id_paciente || !id_doctor || !fecha || !hora_inicio || !hora_fin || !estado) {
+        if (!paciente_id || !doctor_id || !fecha || !hora_inicio || !hora_fin || !estado) {
             const error = new Error('Faltan campos requeridos');
             error.statusCode = 400;
             throw error;
         }
 
         // Verificar que el paciente y el doctor existan
-        const patient = await db.Patient.findByPk(id_paciente);
-        const doctor = await db.Doctor.findByPk(id_doctor);
+        const patient = await db.Patient.findByPk(paciente_id);
+        const doctor = await db.Doctor.findByPk(doctor_id);
 
         if (!patient) {
             const error = new Error('Paciente no encontrado');
@@ -71,8 +71,8 @@ const createCita = async (citaData) => {
 
         // Crear la cita
         const newCita = await Cita.create({
-            id_paciente,
-            id_doctor,
+            paciente_id,
+            doctor_id,
             fecha,
             hora_inicio,
             hora_fin,
@@ -88,7 +88,7 @@ const createCita = async (citaData) => {
 // Actualizar una cita
 const updateCita = async (id, citaData) => {
     try {
-        const { id_paciente, id_doctor, fecha, hora_inicio, hora_fin, estado } = citaData;
+        const { paciente_id, doctor_id, fecha, hora_inicio, hora_fin, estado } = citaData;
 
         const cita = await Cita.findByPk(id);
 
@@ -97,8 +97,8 @@ const updateCita = async (id, citaData) => {
         }
 
         // Actualizar los campos si están presentes
-        if (id_paciente) cita.id_paciente = id_paciente;
-        if (id_doctor) cita.id_doctor = id_doctor;
+        if (paciente_id) cita.paciente_id = paciente_id;
+        if (doctor_id) cita.doctor_id = doctor_id;
         if (fecha) cita.fecha = fecha;
         if (hora_inicio) cita.hora = hora_inicio;
         if (hora_fin) cita.hora_fin = hora_fin;
@@ -112,9 +112,9 @@ const updateCita = async (id, citaData) => {
 };
 
 // Eliminar una cita
-const deleteCita = async (id) => {
+const deleteCita = async (id_cita) => {
     try {
-        const cita = await Cita.findByPk(id);
+        const cita = await Cita.findByPk(id_cita);
 
         if (!cita) {
             throw new Error('Cita no encontrada');

@@ -11,7 +11,7 @@ const getAllHorarios = async () => {
 };
 
 // Obtener horarios de un doctor por ID
-const getHorarioByDoctor = async (id_doctor) => {
+const getHorarioByDoctor = async (doctor_id) => {
     try {
         const horarios = await Horario.findAll({
             where: { id_doctor }

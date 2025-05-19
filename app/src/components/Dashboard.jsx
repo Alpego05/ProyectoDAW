@@ -1,271 +1,315 @@
 import React, { useEffect, useState } from 'react';
-import { getUserById } from './../services/apiClient';
+import { 
+  getUserById, 
+  getCitaByPatient, 
+  getRecetasByPacienteId, 
+  getDiagnosticoByCitaId,
+  getPatientById
+} from './../services/apiClient';
 
 const Dashboard = () => {
   const [usuario, setUsuario] = useState(null);
+  const [paciente, setPaciente] = useState(null);
+  const [citas, setCitas] = useState([]);
+  const [recetas, setRecetas] = useState([]);
+  const [diagnosticos, setDiagnosticos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
   const usuarioId = localStorage.getItem("userId");
   const tipoUsuario = localStorage.getItem("rol");
 
   useEffect(() => {
-    const fetchUsuario = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const datos = await getUserById(usuarioId);
-        setUsuario(datos);
+        
+        //obtener datos del usuario siempre
+        const datosUsuario = await getUserById(usuarioId);
+        setUsuario(datosUsuario);
+        
+        //comprobar si es paciente
+        if (tipoUsuario === 'paciente') {
+          const datosPaciente = await getPatientById(usuarioId);
+          setPaciente(datosPaciente);
+          
+          try {
+            //citas del paciente
+            const citasPaciente = await getCitaByPatient(usuarioId);
+            if (citasPaciente) {
+              setCitas(citasPaciente);
+              
+              //obtener diagnostico por cita
+              if (citasPaciente.length > 0) {
+                const diagnosticosPromises = citasPaciente.map(cita => 
+                  getDiagnosticoByCitaId(cita.id_cita).catch(() => null)
+                );
+                const diagnosticosResultados = await Promise.all(diagnosticosPromises);
+                setDiagnosticos(diagnosticosResultados.filter(d => d !== null));
+              }
+            }
+          } catch (citasError) {
+            console.warn('No se pudieron cargar las citas:', citasError);
+          }
+          
+          try {
+            //obtener recetas del paciente
+            const recetasPaciente = await getRecetasByPacienteId(usuarioId);
+            if (recetasPaciente) {
+              setRecetas(recetasPaciente);
+            }
+          } catch (recetasError) {
+            console.warn('No se pudieron cargar las recetas:', recetasError);
+          }
+        }
+        
         setError(null);
       } catch (error) {
-        console.error('Error al obtener el usuario:', error);
-        setError('No se pudo cargar la información del usuario');
+        console.error('Error al obtener datos:', error);
+        setError('No se pudieron cargar todos los datos correctamente');
       } finally {
         setLoading(false);
       }
     };
 
     if (usuarioId) {
-      fetchUsuario();
+      fetchData();
     } else {
       setLoading(false);
       setError('No se encontró ID de usuario');
     }
-  }, [usuarioId]);
+  }, [usuarioId, tipoUsuario]);
 
   if (loading) {
-    return <div>Cargando información del usuario...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+          <p className="mt-2">Cargando información...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mx-auto max-w-lg mt-10">
+        <p className="font-bold">Error</p>
+        <p>{error}</p>
+      </div>
+    );
   }
 
   if (!usuario) {
-    return <div>No se encontraron datos del usuario</div>;
+    return (
+      <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mx-auto max-w-lg mt-10">
+        <p>No se encontraron datos del usuario</p>
+      </div>
+    );
   }
 
-  return (
-    <div>
-      <h1>Home</h1>
-      <p>Nombre: {usuario.nombre} {usuario.apellido1} </p>
-      <p>email: {usuario.email}</p>
+  //formateo de fecha 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES');
+  };
 
-      {tipoUsuario === 'admin' && (
-        <div>
-          <h1>Panel de administrador</h1>
-        </div>
-      )}
-
-      {tipoUsuario === 'paciente' && (
-        <div>
-          <h1>Panel de paciente</h1>
-          <div class="max-w-6xl mx-auto px-4 py-6">
-            <div class="max-w-6xl mx-auto px-4 py-6">
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-              {/* Historial Médico */}
-                <div class="bg-white rounded-lg shadow p-6">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Historial Médico</h3>
-                    <span class="text-xs font-medium bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded">Actualizado</span>
-                  </div>
-                  <div class="space-y-3">
-                    <div class="flex items-start">
-                      <div class="flex-shrink-0 w-5 h-5 text-red-500 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                      <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-900">Hipertensión</p>
-                        <p class="text-xs text-gray-500">Diagnóstico: 15/03/2022</p>
-                      </div>
-                    </div>
-                    <div class="flex items-start">
-                      <div class="flex-shrink-0 w-5 h-5 text-amber-500 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                      <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-900">Diabetes Tipo 2</p>
-                        <p class="text-xs text-gray-500">Diagnóstico: 23/07/2021</p>
-                      </div>
-                    </div>
-                    <div class="flex items-start">
-                      <div class="flex-shrink-0 w-5 h-5 text-purple-500 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                      <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-900">Alergia a la penicilina</p>
-                        <p class="text-xs text-gray-500">Registrado: 10/01/2020</p>
-                      </div>
-                    </div>
-                    <div class="flex items-start">
-                      <div class="flex-shrink-0 w-5 h-5 text-blue-500 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                      <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-900">Hipotiroidismo</p>
-                        <p class="text-xs text-gray-500">Diagnóstico: 08/09/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Próximas Citas */}
-                <div class="bg-white rounded-lg shadow p-6">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Próximas Citas</h3>
-                    <span class="text-xs font-medium bg-green-100 text-green-800 px-2.5 py-0.5 rounded">Programadas</span>
-                  </div>
-                  <div class="space-y-4">
-                    <div class="flex justify-between border-l-4 border-blue-400 bg-blue-50 p-3 rounded">
-                      <div>
-                        <p class="text-sm font-medium text-gray-900">Consulta general</p>
-                        <p class="text-xs text-gray-600">Dr. García Martínez</p>
-                      </div>
-                      <div class="text-right">
-                        <p class="text-sm font-medium text-gray-900">20/05/2025</p>
-                        <p class="text-xs text-gray-600">10:00 AM</p>
-                      </div>
-                    </div>
-                    <div class="flex justify-between border-l-4 border-purple-400 bg-purple-50 p-3 rounded">
-                      <div>
-                        <p class="text-sm font-medium text-gray-900">Control de presión arterial</p>
-                        <p class="text-xs text-gray-600">Dra. López Sánchez</p>
-                      </div>
-                      <div class="text-right">
-                        <p class="text-sm font-medium text-gray-900">02/06/2025</p>
-                        <p class="text-xs text-gray-600">09:30 AM</p>
-                      </div>
-                    </div>
-                    <div class="flex justify-between border-l-4 border-amber-400 bg-amber-50 p-3 rounded">
-                      <div>
-                        <p class="text-sm font-medium text-gray-900">Control de diabetes</p>
-                        <p class="text-xs text-gray-600">Dr. Rodríguez Gómez</p>
-                      </div>
-                      <div class="text-right">
-                        <p class="text-sm font-medium text-gray-900">15/06/2025</p>
-                        <p class="text-xs text-gray-600">11:15 AM</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Información Médica */}
-                <div class="bg-white rounded-lg shadow p-6">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Información Médica</h3>
-                    <span class="text-xs font-medium bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded">General</span>
-                  </div>
-                  <div class="space-y-4">
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                      <h4 class="text-sm font-medium text-gray-800 mb-2">Grupo Sanguíneo</h4>
-                      <p class="text-sm text-gray-600">A Positivo</p>
-                    </div>
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                      <h4 class="text-sm font-medium text-gray-800 mb-2">Alergias Conocidas</h4>
-                      <p class="text-sm text-gray-600">Penicilina, Sulfamidas</p>
-                    </div>
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                      <h4 class="text-sm font-medium text-gray-800 mb-2">Tratamiento Crónico</h4>
-                      <p class="text-sm text-gray-600">Metformina, Enalapril, Levotiroxina</p>
-                    </div>
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                      <h4 class="text-sm font-medium text-gray-800 mb-2">Vacunas</h4>
-                      <p class="text-sm text-gray-600">Gripe (12/11/2024), COVID-19 (15/02/2025)</p>
-                    </div>
-                  </div>
-                </div>
-
-               {/* Solicitar Cita  */}
-                <div class="bg-white rounded-lg shadow p-6">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Solicitar Cita</h3>
-                    <span class="text-xs font-medium bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded">Online</span>
-                  </div>
-                   <button className="appointment-button">Solicitar cita</button>
-                </div>
-
-                {/*  Recetas  */}
-                <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Recetas</h3>
-                    <span class="text-xs font-medium bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded">Activas</span>
-                  </div>
-                  <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-50">
-                        <tr>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Medicamento</th>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha prescripción</th>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Posología</th>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Metformina 850mg</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">05/03/2025</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 comp c/12h con comidas</td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activa</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Enalapril 10mg</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10/03/2025</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 comp c/día en la mañana</td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activa</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Levotiroxina 50mcg</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/03/2025</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 comp c/día en ayunas</td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activa</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Atorvastatina 20mg</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20/02/2025</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 comp c/día por la noche</td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Renovar pronto</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Ibuprofeno 600mg</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">18/04/2025</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 comp c/8h si dolor</td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activa</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+  // Componente que solo muestra el dashboard de paciente
+  const PatientDashboard = () => {
+    //ordenar citas por fecha 
+    const citasOrdenadas = [...citas].sort((a, b) => 
+      new Date(b.fecha) - new Date(a.fecha) 
+    );
+    
+    //3 primeras citas pendientes
+    const proximasCitas = citasOrdenadas
+      .filter(cita => cita.estado === 'Pendiente')
+      .slice(0, 3);
+    
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Encabezado del dashboard */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">Bienvenido, {usuario.nombre} {usuario.apellido1}</h1>
+                <p className="text-gray-600">{usuario.email}</p>
+              </div>
+              <div className="mt-4 md:mt-0">
+                <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
+                  Paciente
+                </span>
               </div>
             </div>
           </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Información médica */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Información Médica</h3>
+                <span className="text-xs font-medium bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded">General</span>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <h4 className="text-sm font-medium text-gray-800 mb-1">Datos personales</h4>
+                  <p className="text-sm text-gray-600">Género: {paciente?.genero || 'No especificado'}</p>
+                  <p className="text-sm text-gray-600">Fecha de nacimiento: {formatDate(paciente?.fecha_nacimiento) || 'No especificada'}</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <h4 className="text-sm font-medium text-gray-800 mb-1">Contacto</h4>
+                  <p className="text-sm text-gray-600">Teléfono: {paciente?.telefono || 'No especificado'}</p>
+                  <p className="text-sm text-gray-600">Dirección: {paciente?.direccion || 'No especificada'}</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <h4 className="text-sm font-medium text-gray-800 mb-1">Alergias</h4>
+                  <p className="text-sm text-gray-600">{paciente?.alergias || 'No se han registrado alergias'}</p>
+                </div>
+              
+              </div>
+            </div>
+
+            {/* Próximas Citas */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Próximas Citas</h3>
+                <span className="text-xs font-medium bg-green-100 text-green-800 px-2.5 py-0.5 rounded">Programadas</span>
+              </div>
+              
+              {proximasCitas && proximasCitas.length > 0 ? (
+                <div className="space-y-4">
+                  {proximasCitas.map((cita, index) => (
+                    <div key={cita.id_cita || index} className="flex justify-between border-l-4 border-blue-400 bg-blue-50 p-3 rounded">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{cita.nombre || 'Cita médica'}</p>
+                        <p className="text-xs text-gray-600">Doctor ID: {cita.doctor_id}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
+                        <p className="text-xs text-gray-600">{cita.hora_inicio} - {cita.hora_fin}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <p className="text-gray-500">No tienes citas programadas</p>
+                </div>
+              )}
+              
+              <div className="mt-4 text-center">
+                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  Solicitar cita
+                </button>
+              </div>
+            </div>
+
+            {/* Historial Médico */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Historial Médico</h3>
+                <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded">Diagnósticos</span>
+              </div>
+              
+              {diagnosticos && diagnosticos.length > 0 ? (
+                <div className="space-y-3">
+                  {diagnosticos.map((diagnostico, index) => (
+                    <div key={diagnostico.id_diagnostico || index} className="flex items-start">
+                      <div className="flex-shrink-0 w-5 h-5 text-blue-500 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-gray-900">{diagnostico.nombre}</p>
+                        <p className="text-xs text-gray-500">{diagnostico.sintomas}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <p className="text-gray-500">No hay diagnósticos registrados</p>
+                </div>
+              )}
+            </div>
+
+            {/* Recetas - Ocupa 2 columnas */}
+            <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Recetas Médicas</h3>
+                <span className="text-xs font-medium bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded">Medicamentos</span>
+              </div>
+              
+              {recetas && recetas.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diagnóstico</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Medicamento</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dosis</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {recetas.map((receta, index) => (
+                        <tr key={receta.id_receta || index}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{receta.diagnostico_id}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.medicamento_id}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.dosis}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.duración || receta.duracion}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                              Activa
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <p className="text-gray-500">No hay recetas médicas registradas</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+      </div>
+    );
+  };
 
-
-      )}
-
-      {tipoUsuario === 'doctor' && (
-        <div>
-          <h1>Panel de doctor</h1>
+  return (
+    <div>
+      {tipoUsuario === 'paciente' ? (
+        <PatientDashboard />
+      ) : tipoUsuario === 'admin' ? (
+        <div className="bg-gray-50 min-h-screen p-10">
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Panel de administrador</h1>
+            <p className="text-gray-600">Implementación pendiente</p>
+          </div>
+        </div>
+      ) : tipoUsuario === 'doctor' ? (
+        <div className="bg-gray-50 min-h-screen p-10">
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Panel de doctor</h1>
+            <p className="text-gray-600">Implementación pendiente</p>
+          </div>
+        </div>
+      ) : (
+        <div className="text-center p-10">
+          <p className="text-xl text-red-500">Tipo de usuario no reconocido</p>
         </div>
       )}
-
     </div>
   );
 };

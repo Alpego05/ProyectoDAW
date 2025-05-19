@@ -1,9 +1,9 @@
 const { Medicamento, Enfermedad, MedicamentoEnfermedad } = require("../database/models/associations")
 
 // Obtener medicamentos que pueden ayudar a una enfermedad específica
-const getMedicamentosByEnfermedad = async (enfermedadId) => {
+const getMedicamentosByEnfermedad = async (id_enfermedad) => {
   try {
-    const enfermedad = await Enfermedad.findByPk(enfermedadId, {
+    const enfermedad = await Enfermedad.findByPk(id_enfermedad, {
       include: {
         model: Medicamento,
         as: "medicamentos",
@@ -24,9 +24,9 @@ const getMedicamentosByEnfermedad = async (enfermedadId) => {
 }
 
 // Obtener enfermedades que pueden ser tratadas por un medicamento específico
-const getEnfermedadesByMedicamento = async (medicamentoId) => {
+const getEnfermedadesByMedicamento = async (id_medicamento) => {
   try {
-    const medicamento = await Medicamento.findByPk(medicamentoId, {
+    const medicamento = await Medicamento.findByPk(id_medicamento, {
       include: {
         model: Enfermedad,
         as: "enfermedades",
@@ -47,18 +47,18 @@ const getEnfermedadesByMedicamento = async (medicamentoId) => {
 }
 
 // Asignar un medicamento a una enfermedad
-const asignarMedicamentoAEnfermedad = async (medicamentoId, enfermedadId, datos = {}) => {
+const asignarMedicamentoAEnfermedad = async (id_medicamento, id_enfermedad, datos = {}) => {
   try {
     const { dosis_recomendada, eficacia } = datos
 
     // Verificar que el medicamento existe
-    const medicamento = await Medicamento.findByPk(medicamentoId)
+    const medicamento = await Medicamento.findByPk(id_medicamento)
     if (!medicamento) {
       throw new Error("Medicamento no encontrado")
     }
 
     // Verificar que la enfermedad existe
-    const enfermedad = await Enfermedad.findByPk(enfermedadId)
+    const enfermedad = await Enfermedad.findByPk(id_enfermedad)
     if (!enfermedad) {
       throw new Error("Enfermedad no encontrada")
     }
@@ -66,8 +66,8 @@ const asignarMedicamentoAEnfermedad = async (medicamentoId, enfermedadId, datos 
     // Crear o actualizar la relación
     const [relacion, created] = await MedicamentoEnfermedad.findOrCreate({
       where: {
-        id_medicamento: medicamentoId,
-        id_enfermedad: enfermedadId,
+        id_medicamento: id_medicamento,
+        id_enfermedad: id_enfermedad,
       },
       defaults: {
         dosis_recomendada,
@@ -89,12 +89,12 @@ const asignarMedicamentoAEnfermedad = async (medicamentoId, enfermedadId, datos 
 }
 
 // Eliminar la asignación de un medicamento a una enfermedad
-const eliminarAsignacion = async (medicamentoId, enfermedadId) => {
+const eliminarAsignacion = async (id_medicamento, id_enfermedad) => {
   try {
     const deleted = await MedicamentoEnfermedad.destroy({
       where: {
-        id_medicamento: medicamentoId,
-        id_enfermedad: enfermedadId,
+        id_medicamento: id_medicamento,
+        id_enfermedad: id_enfermedad,
       },
     })
 

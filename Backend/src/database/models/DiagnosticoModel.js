@@ -40,6 +40,14 @@ Diagnostico.init(
         key: "usuario_id",
       },
     },
+    enfermedad_id:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "enfermedades",
+        key: "id_enfermedad",
+        },
+    },
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,
