@@ -1,29 +1,58 @@
 const Receta = require('../database/models/RecetaModel');
 const Medicamento = require('../database/models/MedicamentoModel');
+const Enfermedad = require('../database/models/EnfermedadModel');
 
 // Obtener todas las recetas
 const getAllRecetas = async () => {
     try {
-        return await Receta.findAll();
+        return await Receta.findAll({
+            include: [
+                {
+                    model: Medicamento,
+                    as: "medicamento",
+                    attributes: ["nombre"]
+                },
+                {
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                }
+            ]
+        });
     } catch (error) {
         throw new Error(`Error al obtener las recetas: ${error.message}`);
     }
 };
 
+
 // Obtener una receta por ID
 const getRecetaById = async (id_receta) => {
     try {
-        const receta = await Receta.findByPk(id_receta
+        const receta = await Receta.findByPk(id_receta, {
+            include: [
+                {
+                    model: Medicamento,
+                    as: "medicamento",
+                    attributes: ["nombre"]
+                },
+                {
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                }
+            ]
+        });
 
-        );
         if (!receta) {
             throw new Error('Receta no encontrada');
         }
+
         return receta;
     } catch (error) {
         throw new Error(`Error al obtener la receta: ${error.message}`);
     }
 };
+
 
 // Crear una nueva receta
 const createReceta = async (recetaData) => {
@@ -101,11 +130,18 @@ const getRecetasByPacienteId = async (id_paciente) => {
   try {
     const recetas = await Receta.findAll({
       where: { id_paciente },
-      include: {
-        model: Medicamento,
-        as: "medicamento", // Asegúrate que coincida con el alias definido
-        attributes: ["nombre"] // Solo queremos el nombre
-      }
+     include: [
+    {
+      model: Medicamento,
+      as: "medicamento",
+      attributes: ["nombre"]
+    },
+    {
+      model: Enfermedad,
+      as: "enfermedad",
+      attributes: ["nombre"]
+    }
+  ]
     });
     return recetas;
   } catch (error) {

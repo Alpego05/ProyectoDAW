@@ -1,9 +1,17 @@
 const Diagnostico = require('../database/models/DiagnosticoModel');
+const Enfermedad = require('../database/models/EnfermedadModel');
 
 // Obtener todos los diagnósticos
 const getAllDiagnosticos = async () => {
     try {
-        return await Diagnostico.findAll();
+        return await Diagnostico.findAll({
+             include:{
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                }
+            
+        });
     } catch (error) {
         throw new Error(`Error al obtener los diagnósticos: ${error.message}`);
     }
@@ -12,7 +20,13 @@ const getAllDiagnosticos = async () => {
 // Obtener un diagnóstico por ID
 const getDiagnosticoById = async (id_diagnostico) => {
     try {
-        const diagnostico = await Diagnostico.findByPk(id_diagnostico);
+        const diagnostico = await Diagnostico.findByPk(id_diagnostico,{
+             include:{
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                } 
+        });
         if (!diagnostico) {
             throw new Error('Diagnóstico no encontrado');
         }
@@ -117,7 +131,12 @@ const getDiagnosticosByPacienteId = async (paciente_id) => {
 
     try {
         const diagnosticos = await Diagnostico.findAll({
-            where: { paciente_id }
+            where: { paciente_id },
+              include:{
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                } 
         });
         return diagnosticos;
     } catch (error) {
@@ -130,7 +149,12 @@ const getDiagnosticosByPacienteId = async (paciente_id) => {
 const getDiagnosticoByCitaId = async (cita_id) => {
     try {
         const diagnostico = await Diagnostico.findOne({
-            where: { cita_id }
+            where: { cita_id },
+              include:{
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                } 
         });
 
         if (!diagnostico) {

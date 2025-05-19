@@ -1,6 +1,7 @@
 const Cita = require('../database/models/CitaModel');
 const db = require('../database/models/associations');
 
+
 // Obtener todas las citas
 const getAllCitas = async () => {
     try {
@@ -14,7 +15,10 @@ const getAllCitas = async () => {
 // Obtener citas de un paciente por ID
 const getCitasByPatient = async (paciente_id) => {
     try {
-        const citas = await Cita.findAll({where: { paciente_id },});
+        const citas = await Cita.findAll({
+            where: { paciente_id },
+
+        });
 
         if (!citas || citas.length === 0) {
             throw new Error('No se encontraron citas para este paciente');
@@ -29,7 +33,7 @@ const getCitasByPatient = async (paciente_id) => {
 // Obtener citas de un doctor por ID
 const getCitasByDoctor = async (doctor_id) => {
     try {
-        const citas = await Cita.findAll({ where: { doctor_id }});
+        const citas = await Cita.findAll({ where: { doctor_id } });
 
         if (!citas || citas.length === 0) {
             throw new Error('No se encontraron citas para este doctor');

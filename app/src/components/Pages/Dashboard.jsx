@@ -110,7 +110,7 @@ const Dashboard = () => {
                     <div key={cita.id_cita || index} className="flex justify-between border-l-4 border-blue-400 bg-blue-50 p-3 rounded">
                       <div>
                         <p className="text-sm font-medium text-gray-900">{cita.nombre || 'Cita médica'}</p>
-                        <p className="text-xs text-gray-600">Doctor ID: {cita.doctor_id}</p>
+                        
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
@@ -148,7 +148,7 @@ const Dashboard = () => {
                       </div>
                       <div className="ml-3">
                         <p className="text-sm font-medium text-gray-900">{diagnostico.nombre}</p>
-                        <p className="text-xs text-gray-500">Enfermedad: {diagnostico.enfermedad_id}</p>
+                        <p className="text-xs text-gray-500">Enfermedad: {diagnostico.enfermedad.nombre}</p>
                       </div>
                     </div>
                   ))}
@@ -183,7 +183,7 @@ const Dashboard = () => {
                       {recetas.map((receta, index) => (
                         <tr key={receta.id_receta || index}>
                           
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.medicamento_id}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.medicamento.nombre}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.dosis}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.duración || receta.duracion}</td>
                           <td className="px-6 py-4 whitespace-nowrap">
