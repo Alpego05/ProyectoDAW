@@ -14,7 +14,7 @@ import SolicitarCita from './components/Pages/patients/SolicitarCita'
 import DashboardCitas from './components/Pages/admins/DashboardCitas'
 import DashboardUsuarios from './components/Pages/admins/DashboardUsuarios'
 import DashboardDiagnosticos from './components/Pages/admins/DashboardDiagnosticos'
-import Calendario from './components/Pages/doctors/Calendario'
+import AgendaDoctor from './components/Pages/doctors/AgendaDoctor'
 import Glosario from './components/Pages/doctors/Glosario'
 import Pacientes from './components/Pages/doctors/Pacientes'
 
@@ -50,7 +50,7 @@ function App() {
           {rol === "doctor" && (
             <>
             <Route index element={<Dashboard />} />
-            <Route path='Calendario' element={<Calendario/>} />
+            <Route path='Calendario' element={<AgendaDoctor/>} />
             <Route path='Glosario' element={<Glosario/>} />
             <Route path='Pacientes' element={<Pacientes/>} />
             </>

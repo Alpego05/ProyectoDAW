@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { Check, CircleUserRound, CircleX, User } from 'lucide-react';
+import  instalaciones  from '../../assets/images/instalaciones.jpg';
 
 const Dashboard = () => {
   const usuarioId = localStorage.getItem("userId");
@@ -12,11 +13,18 @@ const Dashboard = () => {
     citas,
     recetas,
     diagnosticos,
+    formatDate,
     loading,
     error,
-    formatDate,
     getProximasCitas
   } = useDashboardData(usuarioId, tipoUsuario);
+
+
+
+
+
+
+
 
   if (loading) {
     return (
@@ -58,10 +66,10 @@ const Dashboard = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">Bienvenido, {usuario.nombre} {usuario.apellido1}</h1>
-                <p className="text-gray-600">{usuario.email}</p>
+                <p className="text-gray-600" >{usuario.email}</p>
               </div>
               <div className="mt-4 md:mt-0">
-                <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                <span className="inline-flex items-center px-3 py-1 bg-blue-100 rounded-full text-sm font-medium" style={{ color: "var(--primary-color)" }}>
                   <User  className="w-4 h-4 mr-1" />
                   Paciente
                 </span>
@@ -69,12 +77,12 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-20">
             {/* Información del paciente */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800">Información Personal</h3>
-                <span className="text-xs font-medium bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded">General</span>
+                <span className="text-xs font-medium bg-indigo-100  px-2.5 py-0.5 rounded" style={{ color: "var(--primary-color)" }}>General</span>
               </div>
               <div className="space-y-4">
                 <div className="bg-gray-50 p-3 rounded-lg">
@@ -91,9 +99,7 @@ const Dashboard = () => {
                   <h4 className="text-sm font-medium text-gray-800 mb-1">Alergias</h4>
                   <p className="text-sm text-gray-600">{paciente?.alergias || 'No se han registrado alergias'}</p>
                 </div>
-                 <button className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  Editar información médica
-                </button>
+                
               </div>
             </div>
 
@@ -126,7 +132,7 @@ const Dashboard = () => {
               )}
 
               <div className="mt-4 text-center">
-                <button className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <button className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" style={{ backgroundColor: "var(--primary-color)" }}>
                   Solicitar nueva cita
                 </button>
               </div>
@@ -135,8 +141,8 @@ const Dashboard = () => {
             {/* Historial Médico */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">Historial Médico</h3>
-                <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded">Diagnósticos</span>
+                <h3 className="text-lg font-semibold text-gray-800" >Historial Médico</h3>
+                <span className="text-xs font-medium bg-blue-100  px-2.5 py-0.5 rounded" style={{ color: "var(--primary-color)" }}>Diagnósticos</span>
               </div>
 
               {diagnosticos && diagnosticos.length > 0 ? (
@@ -164,7 +170,7 @@ const Dashboard = () => {
             <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-3">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800">Recetas Médicas</h3>
-                <span className="text-xs font-medium bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded">Medicamentos</span>
+                <span className="text-xs font-medium bg-indigo-100  px-2.5 py-0.5 rounded" style={{ color: "var(--primary-color)" }}>Medicamentos</span>
               </div>
 
               {recetas && recetas.length > 0 ? (
@@ -223,6 +229,32 @@ const Dashboard = () => {
           <p className="text-xl text-red-500">Tipo de usuario no reconocido</p>
         </div>
       )}
+
+      
+    <section className="bg-white py-16 px-6 md:px-12 lg:px-24">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 className="text-4xl font-bold  mb-4" style={{ color: "var(--primary-color)" }}>Hospital Medinet</h2>
+          <p className="text-gray-700 text-lg mb-6">
+            El Hospital Medinet es un centro médico de referencia, comprometido con la salud y el bienestar de nuestros pacientes desde hace más de 30 años.
+          </p>
+          <ul className="list-disc pl-5 text-gray-600 space-y-2">
+            <li>Emergencias 24/7</li>
+            <li>Unidad de cuidados intensivos (UCI)</li>
+            <li>Laboratorio clínico y diagnóstico por imágenes</li>
+            <li>Atención especializada en más de 20 disciplinas médicas</li>
+          </ul>
+        </div>
+        <div>
+          <img
+            src={instalaciones}
+            alt="Hospital"
+            className="rounded-2xl shadow-lg w-full h-auto object-cover"
+          />
+        </div>
+      </div>
+    </section>
+
     </div>
   );
 };

@@ -7,6 +7,13 @@ import {
     getPatientById
 } from '../services/apiPatientClient';
 
+export const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES');
+};
+
+
 
 export const useDashboardData = (userId, userRole) => {
     const [estado, setEstado] = useState({
@@ -76,12 +83,22 @@ export const useDashboardData = (userId, userRole) => {
         fetchData();
     }, [userId, userRole]);
 
-    // Funciones auxiliares que podrían ser útiles
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
         return date.toLocaleDateString('es-ES');
     };
+
+    const formatHours = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+};
+
 
     const getProximasCitas = () => {
         if (!estado.citas.length) return [];
