@@ -477,3 +477,168 @@ export const deletePatient = async (id) => {
     }
 };
 
+// === RECETAS ===
+// Obtener todas las recetas
+export const getAllRecetas = async () => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener recetas");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar recetas:", error);
+        throw error;
+    }
+};
+
+// Obtener receta por ID
+export const getRecetaById = async (id) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener receta");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar receta:", error);
+        throw error;
+    }
+};
+
+// Obtener recetas por diagnóstico
+export const getRecetasByDiagnosticoId = async (diagnosticoId) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/bydiagnostico/${diagnosticoId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener recetas por diagnóstico");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar recetas por diagnóstico:", error);
+        throw error;
+    }
+};
+
+// Obtener recetas por paciente
+export const getRecetasByPacienteId = async (pacienteId) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/bypatient/${pacienteId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener recetas del paciente");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar recetas del paciente:", error);
+        throw error;
+    }
+};
+
+// Crear una receta
+export const createReceta = async (recetaData) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${getToken()}`
+            },
+            body: JSON.stringify(recetaData)
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al crear receta");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al crear receta:", error);
+        throw error;
+    }
+};
+
+// Actualizar una receta - Corregí esta función ya que hay un error en recetaRoutes.js
+export const updateReceta = async (id, recetaData) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/edit/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${getToken()}`
+            },
+            body: JSON.stringify(recetaData)
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al actualizar receta");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al actualizar receta:", error);
+        throw error;
+    }
+};
+
+// Eliminar una receta
+export const deleteReceta = async (id) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al eliminar receta");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error al eliminar receta:", error);
+        throw error;
+    }
+};
