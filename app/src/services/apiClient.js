@@ -166,6 +166,30 @@ export const getDiagnosticoByCitaId = async (citaId) => {
     }
 };
 
+//conseguir diagnosticos por paciente
+export const getDiagnosticosByPacienteId = async (id) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/diagnosticos/byPatient/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener diagnósticos por paciente");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar diagnosticos por paciente:", error);
+        throw error;
+    }
+};
+
+
 // Crear un diagnóstico
 export const createDiagnostico = async (diagnosticoData) => {
 

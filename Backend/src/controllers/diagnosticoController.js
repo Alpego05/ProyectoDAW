@@ -94,8 +94,8 @@ const deleteDiagnostico = async (req, res) => {
 // Obtener diagnósticos por ID de paciente
 const getDiagnosticosByPacienteId = async (req, res) => {
     try {
-        const { id_paciente } = req.params;
-        const diagnosticos = await diagnosticoService.getDiagnosticosByPacienteId(id_paciente);
+        const { id } = req.params;
+        const diagnosticos = await diagnosticoService.getDiagnosticosByPacienteId(id);
         
         return res.status(200).json({
             data: diagnosticos
@@ -111,8 +111,8 @@ const getDiagnosticosByPacienteId = async (req, res) => {
 // Obtener diagnóstico por ID de cita
 const getDiagnosticoByCitaId = async (req, res) => {
     try {
-        const { id_cita } = req.params;
-        const diagnostico = await diagnosticoService.getDiagnosticoByCitaId(id_cita);
+        const { id } = req.params;
+        const diagnostico = await diagnosticoService.getDiagnosticoByCitaId(id);
         
         return res.status(200).json({
             data: diagnostico

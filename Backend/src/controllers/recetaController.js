@@ -94,8 +94,8 @@ const deleteReceta = async (req, res) => {
 // Obtener recetas por ID de paciente
 const getRecetasByPacienteId = async (req, res) => {
     try {
-        const { id_paciente } = req.params;
-        const recetas = await recetaService.getRecetasByPacienteId(id_paciente);
+        const { id } = req.params;
+        const recetas = await recetaService.getRecetasByPacienteId(id);
         
         return res.status(200).json({
             data: recetas

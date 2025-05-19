@@ -111,6 +111,10 @@ const deleteDiagnostico = async (id_diagnostico) => {
 
 // Obtener diagnósticos por ID de paciente
 const getDiagnosticosByPacienteId = async (paciente_id) => {
+    if (!paciente_id) {
+        throw new Error('El ID del paciente es requerido y no puede ser undefined o null.');
+    }
+
     try {
         const diagnosticos = await Diagnostico.findAll({
             where: { paciente_id }
@@ -120,6 +124,7 @@ const getDiagnosticosByPacienteId = async (paciente_id) => {
         throw new Error(`Error al obtener los diagnósticos del paciente: ${error.message}`);
     }
 };
+
 
 // Obtener diagnóstico por ID de cita
 const getDiagnosticoByCitaId = async (cita_id) => {
