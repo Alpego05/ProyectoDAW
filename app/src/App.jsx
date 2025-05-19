@@ -5,9 +5,7 @@ import Layout from "./components/Layout"
 import Login from "./components/Login"
 
 // rutas páginas
-import PatientDashboard from "./components/patients/Dashboard";
-import DoctorDashboard from "./components/doctors/Dashboard";
-import AdminDashboard from "./components/admins/Dashboard";
+import Dashboard from "./components/Dashboard";
 import AgendaPaciente from './components/patients/AgendaPaciente'
 import HistorialPaciente from './components/patients/HistorialPaciente'
 import RecetasPaciente from './components/patients/RecetasPaciente'
@@ -39,7 +37,7 @@ function App() {
           {/* rutas pacientes */}
           {rol === "paciente" && (
               <>
-              <Route index element={<PatientDashboard />} />
+              <Route index element={<Dashboard />} />
               <Route path='Agenda' element={<AgendaPaciente />} />
               <Route path='Historial' element={<HistorialPaciente />} />
               <Route path='Recetas' element={< RecetasPaciente/>} />
@@ -51,7 +49,7 @@ function App() {
           {/* Rutas Doctores */}
           {rol === "doctor" && (
             <>
-            <Route index element={<DoctorDashboard />} />
+            <Route index element={<Dashboard />} />
             <Route path='Calendario' element={<Calendario/>} />
             <Route path='Glosario' element={<Glosario/>} />
             <Route path='Pacientes' element={<Pacientes/>} />
@@ -64,7 +62,7 @@ function App() {
           {/* Rutas Admins */}
           {rol === "admin" && (
             <>
-            <Route index element={<AdminDashboard />} />
+            <Route index element={<Dashboard />} />
             <Route path='DashboardCitas' element={< DashboardCitas/>} />
             <Route path='DashboardUsuarios' element={<DashboardUsuarios/>} />
             <Route path='DashboardDiagnosticos' element={<DashboardDiagnosticos/>} />

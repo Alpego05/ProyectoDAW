@@ -1,8 +1,8 @@
-const API_BASE_URL = "http://localhost:3000/";
+const API_BASE_URL = "http://localhost:3000";
 
 // función para obtener el token
 const getToken = () => {
-    return sessionStorage.getItem("token") || "";
+    return localStorage.getItem("authToken") || "";
 };
 
 // === USUARIOS ===
@@ -23,7 +23,7 @@ export const getAllUsers = async () => {
         }
 
         const data = await response.json();
-        return data;
+        return data.data;
     } catch (error) {
         console.error("Error al cargar usuarios:", error);
         throw error;
@@ -32,8 +32,6 @@ export const getAllUsers = async () => {
 
 // función para obtener un usuario por id
 export const getUserById = async (id) => {
-    if (!verificarSesion()) return;
-
     try {
         const response = await fetch(`${API_BASE_URL}/users/${id}`, {
             method: 'GET',
@@ -47,7 +45,7 @@ export const getUserById = async (id) => {
         }
 
         const data = await response.json();
-        return data;
+        return data.data;
     } catch (error) {
         console.error("Error al cargar usuario:", error);
         throw error;
@@ -56,8 +54,6 @@ export const getUserById = async (id) => {
 
 // función para editar un usuario
 export const updateUser = async (id, userData) => {
-    if (!verificarSesion()) return;
-
     try {
         const response = await fetch(`${API_BASE_URL}/users/edit/${id}`, {
             method: 'PATCH',
@@ -73,7 +69,7 @@ export const updateUser = async (id, userData) => {
         }
 
         const data = await response.json();
-        return data;
+        return data.data;
     } catch (error) {
         console.error("Error al actualizar usuario:", error);
         throw error;
@@ -82,8 +78,6 @@ export const updateUser = async (id, userData) => {
 
 // función para eliminar un usuario
 export const deleteUser = async (id) => {
-    if (!verificarSesion()) return;
-
     try {
         const response = await fetch(`${API_BASE_URL}/users/delete/${id}`, {
             method: 'DELETE',
