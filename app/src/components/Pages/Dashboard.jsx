@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDashboardData } from '../../hooks/useDashboardData';
+import { Check, CircleUserRound, CircleX, User } from 'lucide-react';
 
 const Dashboard = () => {
   const usuarioId = localStorage.getItem("userId");
@@ -61,9 +62,7 @@ const Dashboard = () => {
               </div>
               <div className="mt-4 md:mt-0">
                 <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
+                  <User  className="w-4 h-4 mr-1" />
                   Paciente
                 </span>
               </div>
@@ -145,13 +144,11 @@ const Dashboard = () => {
                   {diagnosticos.map((diagnostico, index) => (
                     <div key={diagnostico.id_diagnostico || index} className="flex items-start">
                       <div className="flex-shrink-0 w-5 h-5 text-blue-500 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
-                        </svg>
+                        <Check />
                       </div>
                       <div className="ml-3">
                         <p className="text-sm font-medium text-gray-900">{diagnostico.nombre}</p>
-                        <p className="text-xs text-gray-500">{diagnostico.sintomas}</p>
+                        <p className="text-xs text-gray-500">Enfermedad: {diagnostico.enfermedad_id}</p>
                       </div>
                     </div>
                   ))}
@@ -175,7 +172,7 @@ const Dashboard = () => {
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diagnóstico</th>
+                        
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Medicamento</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dosis</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
@@ -185,7 +182,7 @@ const Dashboard = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {recetas.map((receta, index) => (
                         <tr key={receta.id_receta || index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{receta.diagnostico_id}</td>
+                          
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.medicamento_id}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.dosis}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.duración || receta.duracion}</td>
