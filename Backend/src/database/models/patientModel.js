@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../dbConfig");
 
-class Patient extends Model {}
+class Patient extends Model { }
 
 Patient.init(
   {
@@ -69,6 +69,13 @@ Patient.init(
       allowNull: true,
       validate: {
         len: { args: [0, 1000], msg: "Las alergias no pueden exceder los 1000 caracteres" },
+      },
+    },
+    historial: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      validate: {
+        len: { args: [0, 1000], msg: "El historial médico no puede exceder los 1000 caracteres" },
       },
     },
     doctor_id: {

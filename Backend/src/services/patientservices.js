@@ -98,7 +98,7 @@ const updatePatient = async (id, patientData) => {
             throw new Error('Paciente no encontrado');
         }
 
-        const { genero, direccion, telefono, tipo_sangre, alergias } = patientData;
+        const { genero, direccion, telefono, tipo_sangre, alergias, historial, id_medico } = patientData;
 
         // Actualizar campos si existen en la solicitud
         if (genero) patient.genero = genero;
@@ -106,7 +106,8 @@ const updatePatient = async (id, patientData) => {
         if (telefono) patient.telefono = telefono;
         if (tipo_sangre !== undefined) patient.tipo_sangre = tipo_sangre;
         if (alergias !== undefined) patient.alergias = alergias;
-
+        if (historial !== undefined) patient.historial = historial;
+        if (id_medico !== undefined) patient.id_medico = id_medico;
         await patient.save();
 
         return patient;

@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../dbConfig');
 
-class Receta extends Model {}
+class Receta extends Model { }
 
 Receta.init(
     {
@@ -28,11 +28,13 @@ Receta.init(
         },
         medicamento_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'medicamentos',
                 key: 'id_medicamento'
-            }
+            },
+            onDelete: 'SET NULL',
+            onUpdate: 'CASCADE'
         },
         id_enfermedad: {
             type: DataTypes.INTEGER,
@@ -40,7 +42,9 @@ Receta.init(
             references: {
                 model: 'enfermedades',
                 key: 'id_enfermedad'
-            }
+            },
+            onDelete: 'NO ACTION',
+            onUpdate: 'CASCADE'
         },
         dosis: {
             type: DataTypes.STRING,
@@ -49,8 +53,7 @@ Receta.init(
         duracion: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        
+        }
     },
     {
         sequelize,
@@ -62,3 +65,4 @@ Receta.init(
 );
 
 module.exports = Receta;
+
