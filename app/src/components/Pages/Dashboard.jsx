@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { Check, CircleUserRound, CircleX, User } from 'lucide-react';
-import  instalaciones  from '../../assets/images/instalaciones.jpg';
+import instalaciones from '../../assets/images/instalaciones.jpg';
+import LoadingSpinner from '../Common/LoadingSpinner';
 
 const Dashboard = () => {
   const usuarioId = localStorage.getItem("userId");
@@ -10,7 +11,6 @@ const Dashboard = () => {
   const {
     usuario,
     paciente,
-    citas,
     recetas,
     diagnosticos,
     formatDate,
@@ -19,21 +19,9 @@ const Dashboard = () => {
     getProximasCitas
   } = useDashboardData(usuarioId, tipoUsuario);
 
-
-
-
-
-
-
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
-          <p className="mt-2">Cargando información...</p>
-        </div>
-      </div>
+      <LoadingSpinner message="Cargando citas..." />
     );
   }
 
@@ -70,7 +58,7 @@ const Dashboard = () => {
               </div>
               <div className="mt-4 md:mt-0">
                 <span className="inline-flex items-center px-3 py-1 bg-blue-100 rounded-full text-sm font-medium" style={{ color: "var(--primary-color)" }}>
-                  <User  className="w-4 h-4 mr-1" />
+                  <User className="w-4 h-4 mr-1" />
                   Paciente
                 </span>
               </div>
@@ -99,7 +87,7 @@ const Dashboard = () => {
                   <h4 className="text-sm font-medium text-gray-800 mb-1">Alergias</h4>
                   <p className="text-sm text-gray-600">{paciente?.alergias || 'No se han registrado alergias'}</p>
                 </div>
-                
+
               </div>
             </div>
 
@@ -116,7 +104,7 @@ const Dashboard = () => {
                     <div key={cita.id_cita || index} className="flex justify-between border-l-4 border-blue-400 bg-blue-50 p-3 rounded">
                       <div>
                         <p className="text-sm font-medium text-gray-900">{cita.nombre || 'Cita médica'}</p>
-                        
+
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
@@ -178,7 +166,7 @@ const Dashboard = () => {
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        
+
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Medicamento</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dosis</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
@@ -188,7 +176,7 @@ const Dashboard = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {recetas.map((receta, index) => (
                         <tr key={receta.id_receta || index}>
-                          
+
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.medicamento.nombre}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.dosis}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{receta.duración || receta.duracion}</td>
@@ -230,30 +218,30 @@ const Dashboard = () => {
         </div>
       )}
 
-      
-    <section className="bg-white py-16 px-6 md:px-12 lg:px-24">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div>
-          <h2 className="text-4xl font-bold  mb-4" style={{ color: "var(--primary-color)" }}>Hospital Medinet</h2>
-          <p className="text-gray-700 text-lg mb-6">
-            El Hospital Medinet es un centro médico de referencia, comprometido con la salud y el bienestar de nuestros pacientes desde hace más de 30 años.
-          </p>
-          <ul className="list-disc pl-5 text-gray-600 space-y-2">
-            <li>Emergencias 24/7</li>
-            <li>Unidad de cuidados intensivos (UCI)</li>
-            <li>Laboratorio clínico y diagnóstico por imágenes</li>
-            <li>Atención especializada en más de 20 disciplinas médicas</li>
-          </ul>
+
+      <section className="bg-white py-16 px-6 md:px-12 lg:px-24">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-4xl font-bold  mb-4" style={{ color: "var(--primary-color)" }}>Hospital Medinet</h2>
+            <p className="text-gray-700 text-lg mb-6">
+              El Hospital Medinet es un centro médico de referencia, comprometido con la salud y el bienestar de nuestros pacientes desde hace más de 30 años.
+            </p>
+            <ul className="list-disc pl-5 text-gray-600 space-y-2">
+              <li>Emergencias 24/7</li>
+              <li>Unidad de cuidados intensivos (UCI)</li>
+              <li>Laboratorio clínico y diagnóstico por imágenes</li>
+              <li>Atención especializada en más de 20 disciplinas médicas</li>
+            </ul>
+          </div>
+          <div>
+            <img
+              src={instalaciones}
+              alt="Hospital"
+              className="rounded-2xl shadow-lg w-full h-auto object-cover"
+            />
+          </div>
         </div>
-        <div>
-          <img
-            src={instalaciones}
-            alt="Hospital"
-            className="rounded-2xl shadow-lg w-full h-auto object-cover"
-          />
-        </div>
-      </div>
-    </section>
+      </section>
 
     </div>
   );

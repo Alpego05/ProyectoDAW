@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Calendario from "./../Calendario"
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
+import LoadingSpinner from "../../Common/LoadingSpinner"
 
 const AgendaDoctor = () => {
   const [appointments, setAppointments] = useState([])
@@ -23,12 +24,12 @@ const AgendaDoctor = () => {
       }
 
       // Hacer la llamada a la API para obtener citas por doctor
-      const response = await fetch(`http://localhost:3000/citas/bydoctor/${doctorId}`,{
-        
-            method: 'GET',
-            headers: {
-                'Authorization': `${token}`
-            }
+      const response = await fetch(`http://localhost:3000/citas/bydoctor/${doctorId}`, {
+
+        method: 'GET',
+        headers: {
+          'Authorization': `${token}`
+        }
       })
 
       if (!response.ok) {
@@ -66,9 +67,7 @@ const AgendaDoctor = () => {
         </div>
         <div className="p-4">
           {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            </div>
+            <LoadingSpinner message="Cargando citas..." />
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
               <div className="flex items-start">
@@ -91,9 +90,8 @@ const AgendaDoctor = () => {
             <button
               onClick={fetchAppointments}
               disabled={isLoading}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${
-                isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+                }`}
             >
               {isLoading ? (
                 <>

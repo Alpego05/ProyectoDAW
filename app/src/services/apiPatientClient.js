@@ -252,3 +252,70 @@ export const getRecetasByPacienteId = async (pacienteId) => {
         throw error;
     }
 };
+
+
+export const getDoctorById = async (id) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/doctors/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Error al obtener doctor");
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al obtener doctor:", error);
+        throw error;
+    }
+}
+
+
+export const getRecetasByCitaId = async (citaId) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/bycita/${citaId
+            }`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Error al obtener recetas del paciente");
+        }
+        const data = await response.json();
+        console.log(data)
+        return data.data;
+    } catch (error) {
+        console.error("Error al obtener recetas del paciente:", error);
+        throw error;
+    }
+};
+
+
+
+export const getRecetasByDiagnosticoId = async (id) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/bydiagnostico/${id}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `${getToken()}`
+                }
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Error al obtener recetas del paciente");
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al obtener recetas del paciente:", error);
+        throw error;
+        }
+    }
+
+
