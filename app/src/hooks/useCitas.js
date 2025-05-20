@@ -5,7 +5,7 @@ import {
     getDiagnosticosByPacienteId, 
     getRecetasByDiagnosticoId 
 } from "../services/apiPatientClient";
-
+import useFormat from "./useFormat";
 
 export const useCitas = () => {
     const [citas, setCitas] = useState([]);
@@ -107,13 +107,10 @@ export const useCitas = () => {
 };
 
 export const useFormatCita = () => {
-    const formatDate = (dateString) => {
-        const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-        return new Date(dateString).toLocaleDateString("es-ES", options);
-    };
-
+    const { formatDay } = useFormat();
+    
     const formatTime = (timeString) => {
-        return timeString.substring(0, 5); // Obtiene solo HH:MM del formato HH:MM:SS
+        return timeString?.substring(0, 5) || ''; 
     };
 
     const getEstadoClassName = (estado) => {
@@ -130,7 +127,7 @@ export const useFormatCita = () => {
     };
 
     return {
-        formatDate,
+        formatDate: formatDay, 
         formatTime,
         getEstadoClassName,
     };

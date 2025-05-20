@@ -6,16 +6,11 @@ import {
     getDiagnosticosByPacienteId,
     getPatientById
 } from '../services/apiPatientClient';
-
-export const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES');
-};
-
-
+import useFormat from './useFormat';
 
 export const useDashboardData = (userId, userRole) => {
+    const { formatDate, formatDateTime } = useFormat();
+    
     const [estado, setEstado] = useState({
         usuario: null,
         paciente: null,
@@ -83,22 +78,15 @@ export const useDashboardData = (userId, userRole) => {
         fetchData();
     }, [userId, userRole]);
 
-    const formatDate = (dateString) => {
+    const formatHours = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toLocaleDateString('es-ES');
+        return date.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
     };
-
-    const formatHours = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-};
-
 
     const getProximasCitas = () => {
         if (!estado.citas.length) return [];
@@ -113,6 +101,7 @@ export const useDashboardData = (userId, userRole) => {
     return {
         ...estado,
         formatDate,
+        formatHours,
         getProximasCitas
     };
 };
