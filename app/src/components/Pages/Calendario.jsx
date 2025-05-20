@@ -2,6 +2,7 @@ import { useState } from "react"
 import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 import { Clock, User, CalendarIcon, UserRound } from "lucide-react"
+import "./../../index.css"
 
 const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   const [date, setDate] = useState(new Date())
@@ -125,17 +126,6 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
                           {formatTime(cita.hora_inicio)} - {formatTime(cita.hora_fin)}
                         </span>
                       </div>
-                      {viewType === "doctor" ? (
-                        <div className="flex items-center">
-                          <UserRound className="h-3 w-3 mr-2" />
-                          <span>Paciente ID: {cita.paciente_id}</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center">
-                          <User className="h-3 w-3 mr-2" />
-                          <span>Doctor ID: {cita.doctor_id}</span>
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}
@@ -145,7 +135,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
         </div>
       </div>
 
-      <style jsx global>{`
+      <style >{`
         .react-calendar {
           width: 100%;
           font-family: inherit;

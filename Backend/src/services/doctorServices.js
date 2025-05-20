@@ -2,17 +2,36 @@ const Doctor = require('../database/models/doctorModel');
 const User = require('../database/models/userModel');
 
 const getAllDoctors = async () => {
-    return await Doctor.findAll();
+    return await Doctor.findAll({
+        include: {
+            model: User,
+            as: "usuario",
+            attributes: ["nombre", "apellido1"]
+        }
+    });
 };
 
 const getDoctorById = async (id) => {
-    const doctor = await Doctor.findByPk(id);
+    const doctor = await Doctor.findByPk(id, {
+        include: {
+            model: User,
+            as: "usuario",
+            attributes: ["nombre", "apellido1"]
+        }
+    });
     if (!doctor) throw new Error('Doctor no encontrado');
     return doctor;
 };
 
 const getDoctorsBySpecialty = async (especialidad) => {
-    return await Doctor.findAll({ where: { especialidad } });
+    return await Doctor.findAll({
+        where: { especialidad },
+        include: {
+            model: User,
+            as: "usuario",
+            attributes: ["nombre", "apellido1"]
+        }
+    });
 };
 
 const updateDoctor = async (id, data) => {

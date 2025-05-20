@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import Calendario from "./../Calendario"
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
 import { getCitaByPatient } from "./../../../services/apiPatientClient";
+
+
 const AgendaPaciente = () => {
    const [citas, setCitas] = useState([])
   const [isLoading, setIsLoading] = useState(true)

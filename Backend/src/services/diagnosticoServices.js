@@ -5,12 +5,12 @@ const Enfermedad = require('../database/models/EnfermedadModel');
 const getAllDiagnosticos = async () => {
     try {
         return await Diagnostico.findAll({
-             include:{
-                    model: Enfermedad,
-                    as: "enfermedad",
-                    attributes: ["nombre"]
-                }
-            
+            include: {
+                model: Enfermedad,
+                as: "enfermedad",
+                attributes: ["nombre"]
+            }
+
         });
     } catch (error) {
         throw new Error(`Error al obtener los diagnósticos: ${error.message}`);
@@ -20,12 +20,12 @@ const getAllDiagnosticos = async () => {
 // Obtener un diagnóstico por ID
 const getDiagnosticoById = async (id_diagnostico) => {
     try {
-        const diagnostico = await Diagnostico.findByPk(id_diagnostico,{
-             include:{
-                    model: Enfermedad,
-                    as: "enfermedad",
-                    attributes: ["nombre"]
-                } 
+        const diagnostico = await Diagnostico.findByPk(id_diagnostico, {
+            include: {
+                model: Enfermedad,
+                as: "enfermedad",
+                attributes: ["nombre"]
+            }
         });
         if (!diagnostico) {
             throw new Error('Diagnóstico no encontrado');
@@ -90,7 +90,7 @@ const updateDiagnostico = async (id_diagnostico, diagnosticoData) => {
 
         // Actualizar los campos si están presentes
         const { cita_id, paciente_id, doctor_id, enfermedad_id, nombre, sintomas, observaciones } = diagnosticoData;
-        
+
         if (cita_id) diagnostico.cita_id = cita_id;
         if (paciente_id) diagnostico.paciente_id = paciente_id;
         if (doctor_id) diagnostico.doctor_id = doctor_id;
@@ -132,11 +132,11 @@ const getDiagnosticosByPacienteId = async (paciente_id) => {
     try {
         const diagnosticos = await Diagnostico.findAll({
             where: { paciente_id },
-              include:{
-                    model: Enfermedad,
-                    as: "enfermedad",
-                    attributes: ["nombre"]
-                } 
+            include: {
+                model: Enfermedad,
+                as: "enfermedad",
+                attributes: ["nombre"]
+            }
         });
         return diagnosticos;
     } catch (error) {
@@ -150,11 +150,11 @@ const getDiagnosticoByCitaId = async (cita_id) => {
     try {
         const diagnostico = await Diagnostico.findOne({
             where: { cita_id },
-              include:{
-                    model: Enfermedad,
-                    as: "enfermedad",
-                    attributes: ["nombre"]
-                } 
+            include: {
+                model: Enfermedad,
+                as: "enfermedad",
+                attributes: ["nombre"]
+            }
         });
 
         if (!diagnostico) {

@@ -40,4 +40,23 @@
 }
 
 
+.react-calendar {
+  width: 100%;
+  font-family: inherit;
+  border: none;
+}
 
+.react-calendar__tile {
+  position: relative;
+  height: 60px;
+}
+
+.react-calendar__tile--active {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: #e0f2fe;
+}

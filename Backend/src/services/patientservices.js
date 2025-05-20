@@ -1,10 +1,16 @@
 const Patient = require('../database/models/patientModel');
-const User = require('../database/models/UserModel');
+const User = require('../database/models/userModel');
 
 // Obtener todos los pacientes
 const getAllPatients = async () => {
     try {
-        return await Patient.findAll( );
+        return await Patient.findAll({
+            include: {
+                model: User,
+                as: "usuario",
+                attributes: ["nombre", "apellido1"]
+            }
+        });
 
 
     } catch (error) {
@@ -15,7 +21,13 @@ const getAllPatients = async () => {
 // Obtener un paciente por ID
 const getPatientById = async (id) => {
     try {
-        const patient = await Patient.findByPk(id);
+        const patient = await Patient.findByPk(id, {
+            include: {
+                model: User,
+                as: "usuario",
+                attributes: ["nombre", "apellido1"]
+            }
+        });
 
         if (!patient) {
             throw new Error('Paciente no encontrado');
