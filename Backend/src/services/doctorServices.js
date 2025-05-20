@@ -11,8 +11,8 @@ const getAllDoctors = async () => {
     });
 };
 
-const getDoctorById = async (id) => {
-    const doctor = await Doctor.findByPk(id, {
+const getDoctorById = async (id_usuario) => {
+    const doctor = await Doctor.findByPk(id_usuario, {
         include: {
             model: User,
             as: "usuario",

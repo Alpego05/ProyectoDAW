@@ -127,26 +127,26 @@ const deleteReceta = async (id_receta) => {
 
 // Obtener recetas por ID de paciente
 const getRecetasByPacienteId = async (id_paciente) => {
-  try {
-    const recetas = await Receta.findAll({
-      where: { id_paciente },
-     include: [
-    {
-      model: Medicamento,
-      as: "medicamento",
-      attributes: ["nombre"]
-    },
-    {
-      model: Enfermedad,
-      as: "enfermedad",
-      attributes: ["nombre"]
+    try {
+        const recetas = await Receta.findAll({
+            where: { id_paciente },
+            include: [
+                {
+                    model: Medicamento,
+                    as: "medicamento",
+                    attributes: ["nombre"]
+                },
+                {
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                }
+            ]
+        });
+        return recetas;
+    } catch (error) {
+        throw new Error(`Error al obtener las recetas del paciente: ${error.message}`);
     }
-  ]
-    });
-    return recetas;
-  } catch (error) {
-    throw new Error(`Error al obtener las recetas del paciente: ${error.message}`);
-  }
 };
 
 
@@ -154,7 +154,19 @@ const getRecetasByPacienteId = async (id_paciente) => {
 const getRecetasByDiagnosticoId = async (diagnostico_id) => {
     try {
         const recetas = await Receta.findAll({
-            where: { diagnostico_id }
+            where: { diagnostico_id },
+            include: [
+                {
+                    model: Medicamento,
+                    as: "medicamento",
+                    attributes: ["nombre"]
+                },
+                {
+                    model: Enfermedad,
+                    as: "enfermedad",
+                    attributes: ["nombre"]
+                }
+            ]
         });
         return recetas;
     } catch (error) {

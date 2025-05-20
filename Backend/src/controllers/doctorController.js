@@ -13,16 +13,21 @@ const getAllDoctors = async (req, res) => {
 };
 
 const getDoctorById = async (req, res) => {
-    try {
-        const doctor = await doctorService.getDoctorById(req.params.id);
-        res.status(200).json(doctor);  
+      try {
+        const { id } = req.params;
+        const recetas = await  doctorService.getDoctorById(id);
+        
+        return res.status(200).json({
+            data: recetas
+        });
     } catch (error) {
-        res.status(404).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
     }
 };
+
 
 const getDoctorsBySpecialty = async (req, res) => {
     try {

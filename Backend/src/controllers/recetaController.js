@@ -111,8 +111,8 @@ const getRecetasByPacienteId = async (req, res) => {
 // Obtener recetas por ID de diagnóstico
 const getRecetasByDiagnosticoId = async (req, res) => {
     try {
-        const { id_diagnostico } = req.params;
-        const recetas = await recetaService.getRecetasByDiagnosticoId(id_diagnostico);
+        const { id } = req.params;
+        const recetas = await recetaService.getRecetasByDiagnosticoId(id);
         
         return res.status(200).json({
             data: recetas

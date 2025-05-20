@@ -3,7 +3,7 @@ const doctorController = require("./../controllers/doctorController");
 const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 doctorRouter.get("/", verifyToken, doctorController.getAllDoctors);
-doctorRouter.get("/:id", verifyToken, doctorController.getDoctorById);
+doctorRouter.get("/:id",  doctorController.getDoctorById);
 doctorRouter.patch("/edit/:id", verifyToken, doctorController.updateDoctor);
 doctorRouter.delete("/delete/:id", verifyToken, doctorController.deleteDoctor);
 

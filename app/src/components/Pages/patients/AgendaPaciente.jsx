@@ -10,6 +10,9 @@ const AgendaPaciente = () => {
     isLoading,
     error,
     selectedCita,
+    citaDetails,
+    loadingDetails,
+    detailsError,
     cargarCitas,
     handleCitaClick,
     closeDetails
@@ -43,30 +46,8 @@ const AgendaPaciente = () => {
           )}
 
           {selectedCita && (
-            <DetallesCita
-              cita={selectedCita} 
-              onClose={closeDetails} 
-            />
+            <DetallesCita cita={selectedCita} onClose={closeDetails} citaDetails={citaDetails} loadingDetails={loadingDetails} detailsError={detailsError}/>
           )}
-
-          <div className="mt-6 flex justify-end">
-            <button
-              onClick={cargarCitas}
-              disabled={isLoading}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${
-                isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-              }`}
-            >
-              {isLoading ? (
-               <LoadingSpinner message="Cargando citas..." />
-              ) : (
-                <>
-                  <RefreshCw className="h-4 w-4" />
-                  Actualizar citas
-                </>
-              )}
-            </button>
-          </div>
         </div>
       </div>
     </div>

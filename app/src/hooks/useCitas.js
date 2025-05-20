@@ -6,10 +6,7 @@ import {
     getRecetasByDiagnosticoId 
 } from "../services/apiPatientClient";
 
-/**
- * Hook personalizado para gestionar las citas médicas
- * @returns {Object} Estado y funciones para gestionar citas
- */
+
 export const useCitas = () => {
     const [citas, setCitas] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -52,16 +49,17 @@ export const useCitas = () => {
         setDetailsError(null);
         
         try {
-            // 1. Obtener información del doctor
+            //información del doctor
+            console.log(cita.doctor_id)
             const doctorData = await getDoctorById(cita.doctor_id);
             
-            // 2. Obtener diagnósticos asociados al paciente
+            //diagnósticos asociados al paciente
             const diagnosticosData = await getDiagnosticosByPacienteId(cita.paciente_id);
             
-            // Filtrar el diagnóstico que corresponde a esta cita específica
+            // Filtrar el diagnóstico 
             const citaDiagnostico = diagnosticosData.find(d => d.cita_id === cita.id_cita);
             
-            // 3. Si hay diagnóstico, obtener recetas asociadas
+            // obtener recetas 
             let recetasData = [];
             if (citaDiagnostico) {
                 recetasData = await getRecetasByDiagnosticoId(citaDiagnostico.id_diagnostico);
@@ -108,10 +106,6 @@ export const useCitas = () => {
     };
 };
 
-/**
- * Hook para formatear información de citas
- * @returns {Object} Funciones utilitarias para formatear datos de citas
- */
 export const useFormatCita = () => {
     const formatDate = (dateString) => {
         const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };

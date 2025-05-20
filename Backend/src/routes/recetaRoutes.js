@@ -4,8 +4,8 @@ const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 
 RecetaRouter.get("/", verifyToken, RecetaController.getAllRecetas);
-RecetaRouter.get("/:id", verifyToken, RecetaController.getRecetaById);
-RecetaRouter.get("/bydiagnostico/:id", verifyToken, RecetaController.getRecetasByDiagnosticoId);
+RecetaRouter.get("/:id", RecetaController.getRecetaById);
+RecetaRouter.get("/bydiagnostico/:id", RecetaController.getRecetasByDiagnosticoId);
 RecetaRouter.get("/bypatient/:id", verifyToken, RecetaController.getRecetasByPacienteId);
 RecetaRouter.delete("/delete/:id", verifyToken, RecetaController.deleteReceta);
 RecetaRouter.post("/create", verifyToken, RecetaController.createReceta);
