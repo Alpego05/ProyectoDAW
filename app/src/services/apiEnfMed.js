@@ -17,7 +17,7 @@ export const getAllMedicamentos = async () => {
     return data.data;
 };
 
-export const getMedById = async (id) => {
+export const getMedicamentoById = async (id) => {
     try {
         const response = await fetch(`${API_BASE_URL}/med/${id}`, {
             method: 'GET',
@@ -50,7 +50,7 @@ export const getAllEnfermedades = async () => {
     return data.data;
 };
 
-export const getEnfById = async (id) => {
+export const getEnfermedadById = async (id) => {
     try {
         const response = await fetch(`${API_BASE_URL}/enf/${id}`, {
             method: 'GET',
@@ -71,9 +71,51 @@ export const getEnfById = async (id) => {
     }
 };
 
+// Obtener medicamentos para una enfermedad específica
+export const getMedicamentosByEnfermedad = async (enfermedadId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/enf/med/${enfermedadId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `${getToken()}`,
+      },
+    })
+    if (!response.ok) {
+      throw new Error("Error al obtener medicamentos para la enfermedad")
+    }
+    const data = await response.json()
+    return data.data
+  } catch (error) {
+    console.error("Error al obtener medicamentos para la enfermedad:", error)
+    throw error
+  }
+}
+
+// Obtener enfermedades tratadas por un medicamento específico
+export const getEnfermedadesByMedicamento = async (medicamentoId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/med/enf/${medicamentoId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `${getToken()}`,
+      },
+    })
+    if (!response.ok) {
+      throw new Error("Error al obtener enfermedades para el medicamento")
+    }
+    const data = await response.json()
+    return data.data
+  } catch (error) {
+    console.error("Error al obtener enfermedades para el medicamento:", error)
+    throw error
+  }
+}
+
 export default {
     getAllMedicamentos,
+    getMedicamentosByEnfermedad,
+    getEnfermedadesByMedicamento,
     getAllEnfermedades,
-    getMedById,
-    getEnfById,
+    getMedicamentoById,
+    getEnfermedadById,
 }

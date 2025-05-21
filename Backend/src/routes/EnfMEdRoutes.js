@@ -4,9 +4,9 @@ const medicamentoEnfermedadController = require("../controllers/MedicamentoEnfer
 const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 // medicamentos que pueden ayudar a una enfermedad específica
-EnfMEdRouter.get("/enf/:id/med", verifyToken,  medicamentoEnfermedadController.getMedicamentosByEnfermedad)
+EnfMEdRouter.get("/enf/med/:id", verifyToken,  medicamentoEnfermedadController.getMedicamentosByEnfermedad)
 // enfermedades tratadas por un medicamento específico
-EnfMEdRouter.get("/med/:id/enf", verifyToken, medicamentoEnfermedadController.getEnfermedadesByMedicamento)
+EnfMEdRouter.get("/med/enf/:id", verifyToken, medicamentoEnfermedadController.getEnfermedadesByMedicamento)
 // asignar un medicamento a una enfermedad
 EnfMEdRouter.post("/med/:medicamentoId/enf/:enfermedadId", verifyToken, medicamentoEnfermedadController.asignarMedicamentoAEnfermedad,)
 // eliminar la asignación
