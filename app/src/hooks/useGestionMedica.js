@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-import { 
-    getCitaByPatient, 
-    getDoctorById, 
-    getDiagnosticosByPacienteId, 
-    getRecetasByDiagnosticoId 
-} from "../services/apiPatientClient";
-import useFormat from "./useFormat";
+import { useState, useEffect } from 'react';
+import {
+    getCitaByPatient,
+    getDiagnosticosByPacienteId,
+    getRecetasByPacienteId,
+    getRecetasByDiagnosticoId,
+    getDoctorById
+} from '../services/apiPatientClient';
+import useFormat from './useFormat';
 
 export const useCitas = () => {
     const [citas, setCitas] = useState([]);
@@ -130,5 +131,122 @@ export const useFormatCita = () => {
         formatDate: formatDay, 
         formatTime,
         getEstadoClassName,
+    };
+};
+
+
+
+export const useDiagnosticos = () => {
+    const [diagnosticos, setDiagnosticos] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedDiagnostico, setSelectedDiagnostico] = useState(null);
+
+    const cargarDiagnosticos = async (pacienteId) => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const id = pacienteId || localStorage.getItem("userId");
+            if (!id) throw new Error("No se encontró el ID del paciente");
+
+            const data = await getDiagnosticosByPacienteId(id);
+            setDiagnosticos(data);
+        } catch (err) {
+            console.error("Error al obtener diagnósticos:", err);
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener los diagnósticos");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        cargarDiagnosticos();
+    }, []);
+
+    const handleDiagnosticoClick = (diagnostico) => {
+        setSelectedDiagnostico(diagnostico);
+    };
+
+    const closeDetails = () => {
+        setSelectedDiagnostico(null);
+    };
+
+    return {
+        diagnosticos,
+        isLoading,
+        error,
+        selectedDiagnostico,
+        cargarDiagnosticos,
+        handleDiagnosticoClick,
+        closeDetails
+    };
+};
+
+export const useRecetas = () => {
+    const [recetas, setRecetas] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedReceta, setSelectedReceta] = useState(null);
+
+    const cargarRecetasPorPaciente = async (pacienteId) => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const id = pacienteId || localStorage.getItem("userId");
+            if (!id) throw new Error("No se encontró el ID del paciente");
+
+            const data = await getRecetasByPacienteId(id);
+            setRecetas(data);
+        } catch (err) {
+            console.error("Error al obtener recetas:", err);
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener las recetas");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const cargarRecetasPorDiagnostico = async (diagnosticoId) => {
+        if (!diagnosticoId) {
+            setError('No se proporcionó ID de diagnóstico');
+            return;
+        }
+
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const data = await getRecetasByDiagnosticoId(diagnosticoId);
+            setRecetas(data);
+        } catch (err) {
+            console.error("Error al obtener recetas por diagnóstico:", err);
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener las recetas");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        cargarRecetasPorPaciente();
+    }, []);
+
+    const handleRecetaClick = (receta) => {
+        setSelectedReceta(receta);
+    };
+
+    const closeDetails = () => {
+        setSelectedReceta(null);
+    };
+
+    return {
+        recetas,
+        isLoading,
+        error,
+        selectedReceta,
+        cargarRecetasPorPaciente,
+        cargarRecetasPorDiagnostico,
+        handleRecetaClick,
+        closeDetails
     };
 };

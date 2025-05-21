@@ -1,5 +1,5 @@
 import { Clock, User, FileText, CheckCircle, Stethoscope, Pill, AlertCircle, Calendar, Activity, Folder, Tablets, TestTube, } from "lucide-react";
-import { useFormatCita } from "./../../../hooks/useCitas";
+import { useFormatCita } from "./../../../hooks/useGestionMedica";
 import LoadingSpinner from "./../../Common/LoadingSpinner";
 
 const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError }) => {

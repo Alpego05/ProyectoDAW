@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDashboardData } from '../../hooks/useDashboardData';
+import { getData } from '../../hooks/useUsuarios';
 import { Check, CircleUserRound, CircleX, User } from 'lucide-react';
 import instalaciones from '../../assets/images/instalaciones.jpg';
 import LoadingSpinner from '../Common/LoadingSpinner';
@@ -17,7 +17,7 @@ const Dashboard = () => {
     loading,
     error,
     getProximasCitas
-  } = useDashboardData(usuarioId, tipoUsuario);
+  } = getData(usuarioId, tipoUsuario);
 
   if (loading) {
     return (
