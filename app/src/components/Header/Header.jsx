@@ -40,8 +40,8 @@ const Header = () => {
         return (
           <>
             <li className="nav-item"><Link to={"Agenda"} className="nav-link"><CalendarCheck size={18} /> Citas</Link></li>
-            <li className="nav-item"><Link to={"Historial"} className="nav-link"><FileText size={18} /> Historial</Link></li>
-            <li className="nav-item"><Link to={"Recetas"} className="nav-link"><Pill size={18} /> Recetas</Link></li>
+            <li className="nav-item"><Link to={"SolicitarCita"} className="nav-link"><FileText size={18} /> Solicitar Cita</Link></li>
+            
           </>
         )
       default:

@@ -7,8 +7,8 @@ import Login from "./components/Pages/Login"
 // rutas páginas
 import Dashboard from "./components/Pages/Dashboard";
 import AgendaPaciente from './components/Pages/patients/AgendaPaciente'
-import HistorialPaciente from './components/Pages/patients/HistorialPaciente'
-import RecetasPaciente from './components/Pages/patients/RecetasPaciente'
+// import HistorialPaciente from './components/Pages/patients/HistorialPaciente'
+// import RecetasPaciente from './components/Pages/patients/RecetasPaciente'
 import Perfil from './components/Pages/Perfil'
 import SolicitarCita from './components/Pages/patients/SolicitarCita'
 import DashboardCitas from './components/Pages/admins/DashboardCitas'
@@ -39,8 +39,7 @@ function App() {
               <>
               <Route index element={<Dashboard />} />
               <Route path='Agenda' element={<AgendaPaciente />} />
-              <Route path='Historial' element={<HistorialPaciente />} />
-              <Route path='Recetas' element={< RecetasPaciente/>} />
+              {/* <Route path='Recetas' element={< RecetasPaciente/>} /> */}
               <Route path='SolicitarCita' element={<SolicitarCita/>} />
             </>
             
