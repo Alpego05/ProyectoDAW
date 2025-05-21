@@ -111,9 +111,7 @@ function Login() {
                             </div>
                         )}
 
-                        <button
-                            type="submit"
-                            disabled={isLoading}
+                        <button disabled={isLoading}
                             className="w-full font-semibold py-3 px-4 rounded-md cursor-pointer"
                             style={{
                                 backgroundColor: "var(--primary-color)",

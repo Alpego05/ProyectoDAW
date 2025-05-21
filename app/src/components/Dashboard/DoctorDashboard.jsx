@@ -130,8 +130,7 @@ const DoctorDashboard = ({ doctorId }) => {
                             <h3 className="text-lg font-semibold text-gray-800">Información Profesional</h3>
                             <span
                                 className="text-xs font-medium bg-indigo-100 px-2.5 py-0.5 rounded"
-                                style={{ color: "var(--primary-color)" }}
-                            >
+                                style={{ color: "var(--primary-color)" }}>
                                 Médico
                             </span>
                         </div>
@@ -156,11 +155,7 @@ const DoctorDashboard = ({ doctorId }) => {
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-800">Agenda de Citas</h3>
                             <div className="flex space-x-2">
-                                <button
-                                    onClick={() => setActiveTab("hoy")}
-                                    className={`px-3 py-1 text-xs font-medium rounded-full ${activeTab === "hoy" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600"}`}
-                                    style={activeTab === "hoy" ? { backgroundColor: "var(--primary-color)" } : {}}
-                                >
+                                <button onClick={() => setActiveTab("hoy")} className={`px-3 py-1 text-xs font-medium rounded-full ${activeTab === "hoy" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600"}`} style={activeTab === "hoy" ? { backgroundColor: "var(--primary-color)" } : {}}>
                                     Hoy
                                 </button>
                                 <button
@@ -208,7 +203,7 @@ const DoctorDashboard = ({ doctorId }) => {
                                     >
                                         <div>
                                             <p className="text-sm font-medium text-gray-900">{cita.nombre || "Consulta médica"}</p>
-                                            <p className="text-xs text-gray-600">Paciente: {getNombrePaciente(cita)}</p>
+                                            <p className="text-xs text-gray-600">Paciente: </p>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
@@ -233,8 +228,7 @@ const DoctorDashboard = ({ doctorId }) => {
                         <h3 className="text-lg font-semibold text-gray-800">Mis Pacientes</h3>
                         <span
                             className="text-xs font-medium bg-blue-100 px-2.5 py-0.5 rounded"
-                            style={{ color: "var(--primary-color)" }}
-                        >
+                            style={{ color: "var(--primary-color)" }}>
                             Total: {pacientes.length}
                         </span>
                     </div>
@@ -244,23 +238,14 @@ const DoctorDashboard = ({ doctorId }) => {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th
-                                            scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                        >
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Nombre
                                         </th>
-                                        <th
-                                            scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                        >
+                                        <th scope="col"
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Teléfono
                                         </th>
-
-                                        <th
-                                            scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                        >
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Acciones
                                         </th>
                                     </tr>

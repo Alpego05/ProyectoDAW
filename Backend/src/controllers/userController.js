@@ -128,7 +128,7 @@ const login = async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Error en el servidor: " + errorMessage
+            message:  errorMessage
         });
     }
 };
