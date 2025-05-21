@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCitaByPatient } from '../services/apiCitas';
+import { getCitasByPatient } from '../services/apiCitas';
 import { getDoctorById } from '../services/apiDoctor';
 import { getDiagnosticosByPacienteId } from '../services/apiDiagnosticos';
 import { getRecetasByPacienteId, getRecetasByDiagnosticoId } from '../services/apiRecetas';
@@ -27,7 +27,7 @@ export const useCitas = () => {
             const userId = localStorage.getItem("userId");
             if (!userId) throw new Error("No se encontró el ID del usuario en localStorage");
 
-            const data = await getCitaByPatient(userId);
+            const data = await getCitasByPatient(userId);
             setCitas(data);
         } catch (err) {
             console.error("Error al obtener citas:", err);

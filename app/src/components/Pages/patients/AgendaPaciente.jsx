@@ -1,5 +1,5 @@
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
-import Calendario from "./../Calendario"
+import Calendario from "../../Common/Calendario"
 import LoadingSpinner from "./../../Common/LoadingSpinner"
 import { useCitas } from "./../../../hooks/useGestionMedica"
 import DetallesCita from "./DetallesCita"

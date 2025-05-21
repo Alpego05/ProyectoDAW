@@ -1,9 +1,25 @@
+import { getAllCitas } from "./apiCitas";
+
 const API_BASE_URL = "http://localhost:3000";
 
 // función para obtener el token
 const getToken = () => {
     return localStorage.getItem("authToken") || "";
 };
+
+
+export const getAllRecetas = async () => {
+    const response = await fetch(`${API_BASE_URL}/recetas`, {
+        method: "GET",
+        headers: {
+             'Authorization': `${getToken()}`
+             }
+             });
+             const data = await response.json();
+             return data.data;
+             };
+
+
 
 export const getRecetasByPacienteId = async (pacienteId) => {
 
@@ -76,6 +92,7 @@ export const getRecetasByDiagnosticoId = async (id) => {
 }
 
 export default {
+    getAllRecetas,
     getRecetasByCitaId,
     getRecetasByDiagnosticoId
 }

@@ -5,7 +5,7 @@ import Layout from "./components/Pages/layout/Layout"
 import Login from "./components/Pages/Login"
 
 // rutas páginas
-import Dashboard from "./components/Pages/Dashboard";
+import Dashboard from "./components/Dashboard/Dashboard";
 import AgendaPaciente from './components/Pages/patients/AgendaPaciente'
 // import HistorialPaciente from './components/Pages/patients/HistorialPaciente'
 // import RecetasPaciente from './components/Pages/patients/RecetasPaciente'

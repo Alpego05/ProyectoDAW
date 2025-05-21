@@ -5,6 +5,18 @@ const getToken = () => {
     return localStorage.getItem("authToken") || "";
 };
 
+
+export const getAllUsers = async () => {
+    const response = await fetch(`${API_BASE_URL}/users`, {
+        method: "GET",
+        headers: {
+             'Authorization': `${getToken()}`
+        }
+    });
+    const data = await response.json();
+    return data.data;
+};
+
 // función para obtener un usuario por id
 export const getUserById = async (id) => {
     try {
@@ -52,6 +64,7 @@ export const updateUser = async (id, userData) => {
 };
 
 export default {
+    getAllUsers,
     getUserById,
     updateUser
 }

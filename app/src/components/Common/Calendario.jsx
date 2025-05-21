@@ -7,7 +7,7 @@ import "./../../index.css"
 const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   const [date, setDate] = useState(new Date())
 
-  // Agrupar citas por fecha
+  // agrupamos citas por fecha
   const citasPorFecha = {}
 
   citas.forEach((cita) => {

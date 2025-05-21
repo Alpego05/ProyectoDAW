@@ -5,8 +5,23 @@ const getToken = () => {
     return localStorage.getItem("authToken") || "";
 };
 
+export const getAllCitas = async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas`, {
+            method: "GET",
+            headers: {
+                'Authorization': `${getToken()}`
+            },
+        });
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error(error);
 
-export const getCitaByPatient = async (patientId) => {
+    }
+};
+
+export const getCitasByPatient = async (patientId) => {
 
     try {
         const response = await fetch(`${API_BASE_URL}/citas/bypatient/${patientId}`, {
@@ -24,6 +39,28 @@ export const getCitaByPatient = async (patientId) => {
         return data.data;
     } catch (error) {
         console.error("Error al cargar citas del paciente:", error);
+        throw error;
+    }
+};
+
+export const getCitasByDoctor = async (doctorId) => {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/citas/bypatient/${doctorId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener citas del doctor");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar citas del doctor:", error);
         throw error;
     }
 };
@@ -101,8 +138,11 @@ export const deleteCita = async (id) => {
     }
 };
 export default {
-    getCitaByPatient,
+    getCitasByPatient,
+    getCitasByDoctor,
     createCita,
     updateCita,
-    deleteCita
+    deleteCita,
+    getAllCitas
+
 };

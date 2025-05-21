@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Calendario from "./../Calendario"
+import Calendario from "../../Common/Calendario"
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
 import LoadingSpinner from "../../Common/LoadingSpinner"
 

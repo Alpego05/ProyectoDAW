@@ -5,6 +5,17 @@ const getToken = () => {
     return localStorage.getItem("authToken") || "";
 };
 
+export const getAllDiagnosticos = async () => {
+    const response = await fetch(`${API_BASE_URL}/diagnosticos`, {
+        method: "GET",
+        headers: {
+             'Authorization': `${getToken()}`
+        }
+    });
+    const data = await response.json();
+    return data.data;
+};
+
 //conseguir diagnosticos por paciente
 export const getDiagnosticosByPacienteId = async (id) => {
 
@@ -29,5 +40,6 @@ export const getDiagnosticosByPacienteId = async (id) => {
 };
 
 export default {
-    getDiagnosticosByPacienteId
+    getDiagnosticosByPacienteId,
+    getAllDiagnosticos
 }
