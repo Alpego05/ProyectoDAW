@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import {
-    getCitaByPatient,
-    getDiagnosticosByPacienteId,
-    getRecetasByPacienteId,
-    getRecetasByDiagnosticoId,
-    getDoctorById
-} from '../services/apiPatientClient';
+import { getCitaByPatient } from '../services/apiCitas';
+import { getDoctorById } from '../services/apiDoctor';
+import { getDiagnosticosByPacienteId } from '../services/apiEnfMed';
+import { getRecetasByPacienteId, getRecetasByDiagnosticoId } from '../services/apiEnfMed';
+
 import useFormat from './useFormat';
 
 export const useCitas = () => {
@@ -53,11 +51,7 @@ export const useCitas = () => {
             //información del doctor
             console.log(cita.doctor_id)
             const doctorData = await getDoctorById(cita.doctor_id);
-            
-            //diagnósticos asociados al paciente
             const diagnosticosData = await getDiagnosticosByPacienteId(cita.paciente_id);
-            
-            // Filtrar el diagnóstico 
             const citaDiagnostico = diagnosticosData.find(d => d.cita_id === cita.id_cita);
             
             // obtener recetas 

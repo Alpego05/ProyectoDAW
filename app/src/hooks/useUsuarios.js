@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
-import { getUserById, getPatientById, getDoctorById, getCitaByPatient, getDiagnosticosByPacienteId, getRecetasByPacienteId } from '../services/apiPatientClient';
 import useFormat from './useFormat';
+
+import getUserById from './../services/apiUser';
+import getPatientById from './../services/apiPatient';
+import getDoctorById from './../services/apiDoctor';
+import { getCitaByPatient } from '/src/services/apiCitas.js';
+import getDiagnosticosByPacienteId from './../services/apiDiagnosticos';
+import getRecetasByPacienteId from './../services/apiRecetas';
 
 export const useUsuarios = () => {
     const [usuario, setUsuario] = useState(null);
@@ -137,7 +143,6 @@ export const useDoctores = () => {
 };
 
 export const getData = (userId, userRole) => {
-    // Obtener todas las funciones de formato del hook useFormat
     const { formatDate, formatDay, formatDateTime } = useFormat();
     
     const [estado, setEstado] = useState({
@@ -158,10 +163,8 @@ export const getData = (userId, userRole) => {
             }
 
             try {
-                // Obtener datos del usuario siempre
                 const datosUsuario = await getUserById(userId);
 
-                // Objeto para almacenar los resultados
                 const resultado = {
                     usuario: datosUsuario,
                     paciente: null,
@@ -172,9 +175,8 @@ export const getData = (userId, userRole) => {
                     error: null
                 };
 
-                // Si es paciente, cargar datos específicos
                 if (userRole === 'paciente') {
-                    // Cargar datos en paralelo para mejor rendimiento
+                    //paralelo para mejor rendimiento
                     const [
                         datosPaciente,
                         citasPaciente,

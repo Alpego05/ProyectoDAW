@@ -40,7 +40,7 @@ const useFormat = () => {
         return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     };
 
-    // mostrar solo un número específico de caracteres
+    //número específico de caracteres
     const truncateText = (text, maxLength = 100) => {
         if (!text || text.length <= maxLength) return text;
         return text.substring(0, maxLength) + '...';
