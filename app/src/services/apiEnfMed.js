@@ -5,6 +5,18 @@ const getToken = () => {
     return localStorage.getItem("authToken") || "";
 };
 
+
+export const getAllMedicamentos = async () => {
+    const response = await fetch(`${API_BASE_URL}/med`, {
+        method: "GET",
+        headers: {
+             'Authorization': `${getToken()}`
+        }
+    });
+    const data = await response.json();
+    return data.data;
+};
+
 export const getMedById = async (id) => {
     try {
         const response = await fetch(`${API_BASE_URL}/med/${id}`, {
@@ -24,6 +36,18 @@ export const getMedById = async (id) => {
         console.error("Error al cargar medicamento:", error);
         throw error;
     }
+};
+
+
+export const getAllEnfermedades = async () => {
+    const response = await fetch(`${API_BASE_URL}/enf`, {
+        method: "GET",
+        headers: {
+             'Authorization': `${getToken()}`
+        }
+    });
+    const data = await response.json();
+    return data.data;
 };
 
 export const getEnfById = async (id) => {
@@ -48,6 +72,8 @@ export const getEnfById = async (id) => {
 };
 
 export default {
+    getAllMedicamentos,
+    getAllEnfermedades,
     getMedById,
     getEnfById,
 }

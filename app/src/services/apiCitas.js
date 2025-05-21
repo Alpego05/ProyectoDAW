@@ -46,7 +46,7 @@ export const getCitasByPatient = async (patientId) => {
 export const getCitasByDoctor = async (doctorId) => {
 
     try {
-        const response = await fetch(`${API_BASE_URL}/citas/bypatient/${doctorId}`, {
+        const response = await fetch(`${API_BASE_URL}/citas/bydoctor/${doctorId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `${getToken()}`

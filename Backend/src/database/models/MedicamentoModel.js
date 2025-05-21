@@ -19,6 +19,28 @@ Medicamento.init(
                 len: { args: [3, 100], msg: "El nombre del medicamento debe tener entre 3 y 100 caracteres" },
             },
         },
+        categoria: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: { msg: "La categoría no puede estar vacía" },
+                isIn: {
+                    args: [[
+                        "Analgésico",
+                        "Antibiótico",
+                        "Antiinflamatorio",
+                        "Antihipertensivo",
+                        "Antidiabético",
+                        "Antidepresivo",
+                        "Anticonvulsivante",
+                        "Antihistamínico",
+                        "Antiviral",
+                        "Vacuna"
+                    ]],
+                    msg: "Categoría no válida",
+                },
+            },
+        },
         efectos_secundarios: {
             type: DataTypes.TEXT,
             allowNull: true,
@@ -51,6 +73,14 @@ Medicamento.init(
                     ],
                     msg: "La forma/vía debe ser una de las formas de administración válidas",
                 },
+            },
+        },
+
+        desc: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+            validate: {
+                len: { args: [0, 500], msg: "La descripción no puede exceder los 500 caracteres" },
             },
         },
     },

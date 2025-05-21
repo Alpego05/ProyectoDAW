@@ -25,6 +25,15 @@ Enfermedad.init(
                 len: { args: [0, 2000], msg: "Los síntomas no pueden exceder los 2000 caracteres" },
             },
         },
+
+        desc: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+            validate: {
+                len: { args: [0, 500], msg: "La descripción no puede exceder los 500 caracteres" },
+            },
+        },
+
         codigo_cie: {
             type: DataTypes.STRING,
             allowNull: false,
