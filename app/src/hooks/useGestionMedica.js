@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getCitaByPatient } from '../services/apiCitas';
 import { getDoctorById } from '../services/apiDoctor';
-import { getDiagnosticosByPacienteId } from '../services/apiEnfMed';
-import { getRecetasByPacienteId, getRecetasByDiagnosticoId } from '../services/apiEnfMed';
+import { getDiagnosticosByPacienteId } from '../services/apiDiagnosticos';
+import { getRecetasByPacienteId, getRecetasByDiagnosticoId } from '../services/apiRecetas';
 
 import useFormat from './useFormat';
 

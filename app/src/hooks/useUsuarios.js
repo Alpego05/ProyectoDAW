@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import useFormat from './useFormat';
 
-import getUserById from './../services/apiUser';
-import getPatientById from './../services/apiPatient';
-import getDoctorById from './../services/apiDoctor';
+import { getUserById } from './../services/apiUser';
+import { getPatientById } from './../services/apiPatient';
+import { getDoctorById } from './../services/apiDoctor';
 import { getCitaByPatient } from '/src/services/apiCitas.js';
-import getDiagnosticosByPacienteId from './../services/apiDiagnosticos';
-import getRecetasByPacienteId from './../services/apiRecetas';
+import { getDiagnosticosByPacienteId } from './../services/apiDiagnosticos';
+import { getRecetasByPacienteId } from './../services/apiRecetas';
 
 export const useUsuarios = () => {
     const [usuario, setUsuario] = useState(null);

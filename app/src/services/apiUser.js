@@ -52,8 +52,6 @@ export const updateUser = async (id, userData) => {
 };
 
 export default {
-    login,
-    register,
     getUserById,
     updateUser
 }
