@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import useMedicamentos from '../../../hooks/useMedicamentos'
+import useMedicamentos from '../../../../hooks/useMedicamentos'
 
 const EnfermedadDetalle = () => {
     const { id } = useParams()

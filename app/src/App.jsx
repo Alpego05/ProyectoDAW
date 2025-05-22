@@ -15,10 +15,10 @@ import DashboardCitas from './components/Pages/admins/DashboardCitas'
 import DashboardUsuarios from './components/Pages/admins/DashboardUsuarios'
 import DashboardDiagnosticos from './components/Pages/admins/DashboardDiagnosticos'
 import AgendaDoctor from './components/Pages/doctors/AgendaDoctor'
-import Glosario from './components/Pages/doctors/Glosario'
+import Glosario from './components/Pages/doctors/Glosario/Glosario'
 import Pacientes from './components/Pages/doctors/Pacientes'
-import MedicamentoDetalle from './components/Pages/doctors/MedicamentoDetalle'
-import EnfermedadDetalle from './components/Pages/doctors/EnfermedadDetalle'
+import MedicamentoDetalle from './components/Pages/doctors/Glosario/MedicamentoDetalle'
+import EnfermedadDetalle from './components/Pages/doctors/Glosario/EnfermedadDetalle'
 
 
 

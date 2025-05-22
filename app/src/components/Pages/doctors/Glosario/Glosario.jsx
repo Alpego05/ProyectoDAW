@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Search, Pill, WormIcon as Virus, AlertCircle, Filter, ChevronRight, ChevronLeft } from "lucide-react"
-import LoadingSpinner from "../../Common/LoadingSpinner"
-import useMedicamentos from "../../../hooks/useMedicamentos"
-import useFilters from "../../../hooks/useFilters"
+import LoadingSpinner from "../../../Common/LoadingSpinner"
+import useMedicamentos from "../../../../hooks/useMedicamentos"
+import useFilters from "../../../../hooks/useFilters"
+import TarjetaMedicamento from "./TarjetaMedicamento"
+import TarjetaEnfermedad from "./TarjetaEnfermedad"
 
 const Glosario = () => {
   const navigate = useNavigate()
@@ -337,70 +339,6 @@ const PagBoton = ({ isActive, onClick, icon, label }) => (
   </button>
 )
 
-const TarjetaMedicamento = ({ medicamento, onClick }) => (
-  <div
-    className="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-    onClick={onClick}
-  >
-    <div className="flex items-start">
-      <div className="p-2 rounded-full bg-blue-100 mr-3">
-        <Pill className="h-5 w-5 text-blue-600" />
-      </div>
-      <div className="flex-1">
-        <div className="flex justify-between items-start">
-          <h4 className="font-medium">{medicamento.nombre}</h4>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-        </div>
-        <p className="text-sm text-gray-500 mt-1">{medicamento.categoria || "Sin categoría"}</p>
-        <p className="text-sm mt-2 line-clamp-2">{medicamento.desc || "Sin descripción disponible"}</p>
-        <div className="mt-2 flex items-center">
-          <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded-full">
-            {medicamento.forma_via || "No especificada"}
-          </span>
-        </div>
-        <p className="text-xs text-blue-600 mt-2 flex items-center">
-          Ver eficacia y detalles
-          <ChevronRight className="h-3 w-3 ml-1" />
-        </p>
-      </div>
-    </div>
-  </div>
-)
-
-const TarjetaEnfermedad = ({ enfermedad, onClick }) => (
-  <div
-    className="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-    onClick={onClick}
-  >
-    <div className="flex items-start">
-      <div className="p-2 rounded-full bg-red-100 mr-3">
-        <Virus className="h-5 w-5 text-red-600" />
-      </div>
-      <div>
-        <div className="flex justify-between items-start">
-          <h4 className="font-medium">{enfermedad.nombre}</h4>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-        </div>
-        <div className="flex items-center mt-1">
-          <span className="text-xs px-2 py-1 bg-red-50 text-red-600 rounded-full">
-            CIE: {enfermedad.codigo_cie}
-          </span>
-        </div>
-        <p className="text-sm mt-2">{enfermedad.desc || "Sin descripción disponible"}</p>
-        {enfermedad.sintomas && (
-          <p className="text-sm mt-2">
-            <span className="font-medium">Síntomas:</span> {enfermedad.sintomas}
-          </p>
-        )}
-        <p className="text-xs text-red-600 mt-2 flex items-center">
-          Ver detalles completos
-          <ChevronRight className="h-3 w-3 ml-1" />
-        </p>
-      </div>
-    </div>
-  </div>
-)
-
 const MensajeSinResultados = ({ tipo }) => (
   <div className="text-center p-8 bg-gray-50 rounded-lg">
     <p className="text-gray-500">
@@ -469,7 +407,7 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
         Anterior
       </button>
 
-      {/* Números de página */}
+      {/* numeros de página */}
       <div className="flex gap-1">
         {obtenerPaginasVisibles().map((pagina, index) => (
           <button
@@ -488,7 +426,7 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
         ))}
       </div>
 
-      {/* Botón siguiente */}
+      {/* button siguiente */}
       <button
         onClick={() => onCambioPagina(paginaActual + 1)}
         disabled={paginaActual === totalPaginas}

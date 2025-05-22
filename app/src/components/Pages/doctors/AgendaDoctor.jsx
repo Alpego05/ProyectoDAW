@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import Calendario from "../../Common/Calendario"
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
 import LoadingSpinner from "../../Common/LoadingSpinner"
+import CitasHoy from "./CitasHoy"
 
 const AgendaDoctor = () => {
   const [Citas, setCitas] = useState([])
@@ -105,6 +106,8 @@ const AgendaDoctor = () => {
           </div>
         </div>
       </div>
+
+      <CitasHoy></CitasHoy>
     </div>
   )
 }
