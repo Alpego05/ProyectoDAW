@@ -14,7 +14,6 @@ const AgendaDoctor = () => {
     setError(null)
 
     try {
-      // Obtener el ID del doctor del localStorage
       const doctorId = localStorage.getItem("userId")
       const token = localStorage.getItem("authtoken")
 
@@ -22,7 +21,6 @@ const AgendaDoctor = () => {
         throw new Error("No se encontró el ID del doctor en localStorage")
       }
 
-      // Hacer la llamada a la API para obtener citas por doctor
       const response = await fetch(`http://localhost:3000/citas/bydoctor/${doctorId}`, {
         method: 'GET',
         headers: {
@@ -50,7 +48,6 @@ const AgendaDoctor = () => {
 
   const handleCitasClick = (Citas) => {
     console.log("Cita seleccionada:", Citas)
-    // Aquí puedes implementar la lógica para mostrar detalles o acciones
   }
 
   return (
@@ -83,27 +80,6 @@ const AgendaDoctor = () => {
               viewType="doctor"
             />
           )}
-
-          <div className="mt-6 flex justify-end">
-            <button
-              onClick={fetchCitas}
-              disabled={isLoading}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-                }`}
-            >
-              {isLoading ? (
-                <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  Cargando...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="h-4 w-4" />
-                  Actualizar citas
-                </>
-              )}
-            </button>
-          </div>
         </div>
       </div>
 

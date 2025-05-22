@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getCitasByPatient } from '../services/apiCitas';
+import { getCitasByPatient, getCitasByDoctor } from '../services/apiCitas';
+import { getPatientById } from '../services/apiPatient';
 import { getDoctorById } from '../services/apiDoctor';
 import { getDiagnosticosByPacienteId } from '../services/apiDiagnosticos';
 import { getRecetasByPacienteId, getRecetasByDiagnosticoId } from '../services/apiRecetas';
@@ -43,17 +44,17 @@ export const useCitas = () => {
 
     const cargarDetallesCita = async (cita) => {
         if (!cita) return;
-        
+
         setLoadingDetails(true);
         setDetailsError(null);
-        
+
         try {
             //información del doctor
             console.log(cita.doctor_id)
             const doctorData = await getDoctorById(cita.doctor_id);
             const diagnosticosData = await getDiagnosticosByPacienteId(cita.paciente_id);
             const citaDiagnostico = diagnosticosData.find(d => d.cita_id === cita.id_cita);
-            
+
             // obtener recetas 
             let recetasData = [];
             if (citaDiagnostico) {
@@ -103,9 +104,9 @@ export const useCitas = () => {
 
 export const useFormatCita = () => {
     const { formatDay } = useFormat();
-    
+
     const formatTime = (timeString) => {
-        return timeString?.substring(0, 5) || ''; 
+        return timeString?.substring(0, 5) || '';
     };
 
     const getEstadoClassName = (estado) => {
@@ -122,13 +123,122 @@ export const useFormatCita = () => {
     };
 
     return {
-        formatDate: formatDay, 
+        formatDate: formatDay,
         formatTime,
         getEstadoClassName,
     };
 };
 
+export const useCitasHoyDoctor = () => {
+    const [citasHoy, setCitasHoy] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedCita, setSelectedCita] = useState(null);
+    const [showPatientInfo, setShowPatientInfo] = useState(false);
 
+    const obtenerFechaHoy = () => {
+        const hoy = new Date();
+        return hoy.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    };
+
+    const cargarCitasHoy = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const doctorId = localStorage.getItem("userId");
+            if (!doctorId) {
+                throw new Error("No se encontró el ID del doctor");
+            }
+
+            // Obtener todas las citas del doctor
+            const todasLasCitas = await getCitasByDoctor(doctorId);
+            const fechaHoy = obtenerFechaHoy();
+            
+            // Filtrar solo las citas de hoy
+            const citasDelDia = todasLasCitas.filter(cita => 
+                cita.fecha === fechaHoy
+            );
+
+            // Obtener datos del paciente para cada cita
+            const citasConPacientes = await Promise.all(
+                citasDelDia.map(async (cita) => {
+                    try {
+                        const pacienteData = await getPatientById(cita.paciente_id);
+                        return {
+                            ...cita,
+                            paciente: pacienteData
+                        };
+                    } catch (err) {
+                        console.error(`Error al obtener datos del paciente ${cita.paciente_id}:`, err);
+                        return {
+                            ...cita,
+                            paciente: null
+                        };
+                    }
+                })
+            );
+
+            setCitasHoy(citasConPacientes);
+        } catch (err) {
+            console.error("Error al cargar citas de hoy:", err);
+            setError(err instanceof Error ? err.message : "Error desconocido al cargar las citas");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        cargarCitasHoy();
+    }, []);
+
+    const recargarCitas = async () => {
+        await cargarCitasHoy();
+    };
+
+    const handleCitaClick = (cita) => {
+        setSelectedCita(cita);
+        setShowPatientInfo(true);
+    };
+
+    const closePatientInfo = () => {
+        setSelectedCita(null);
+        setShowPatientInfo(false);
+    };
+
+    const verHistorial = (pacienteId) => {
+        console.log("Ver historial del paciente:", pacienteId);
+        // Aquí puedes agregar la lógica para ver el historial
+        // Por ejemplo, navegar a otra página o abrir un modal
+    };
+
+    const asignarDiagnostico = (citaId, pacienteId) => {
+        console.log("Asignar diagnóstico - Cita:", citaId, "Paciente:", pacienteId);
+        // Aquí puedes agregar la lógica para asignar diagnóstico
+        // Por ejemplo, abrir un formulario o modal
+    };
+
+    const asignarCita = (pacienteId) => {
+        console.log("Asignar nueva cita al paciente:", pacienteId);
+        // Aquí puedes agregar la lógica para asignar nueva cita
+        // Por ejemplo, abrir un formulario de cita
+    };
+
+    return {
+        citasHoy,
+        isLoading,
+        error,
+        selectedCita,
+        showPatientInfo,
+        cargarCitasHoy,
+        recargarCitas,
+        handleCitaClick,
+        closePatientInfo,
+        verHistorial,
+        asignarDiagnostico,
+        asignarCita
+    };
+};
 
 export const useDiagnosticos = () => {
     const [diagnosticos, setDiagnosticos] = useState([]);
