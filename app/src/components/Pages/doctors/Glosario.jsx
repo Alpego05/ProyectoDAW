@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Search, Pill, WormIcon as Virus, AlertCircle, Filter, ChevronRight, ChevronLeft } from "lucide-react"
 import LoadingSpinner from "../../Common/LoadingSpinner"
 import useMedicamentos from "../../../hooks/useMedicamentos"
+import useFilters from "../../../hooks/useFilters"
 
 const Glosario = () => {
   const navigate = useNavigate()
@@ -12,9 +13,28 @@ const Glosario = () => {
   const [filtroFormaMedicamento, setFiltroFormaMedicamento] = useState("todas")
   const [filtroCategoriaMedicamento, setFiltroCategoriaMedicamento] = useState("todas")
   const [filtroCategoriaEnfermedad, setFiltroCategoriaEnfermedad] = useState("todas")
-  const [paginaActualMedicamentos, setPaginaActualMedicamentos] = useState(1)
-  const [paginaActualEnfermedades, setPaginaActualEnfermedades] = useState(1)
-  const ELEMENTOS_POR_PAGINA = 20
+
+  // Use the useFilters hook
+  const {
+    paginaActualMedicamentos,
+    setPaginaActualMedicamentos,
+    paginaActualEnfermedades,
+    setPaginaActualEnfermedades,
+    ELEMENTOS_POR_PAGINA,
+    medicamentosFiltrados,
+    enfermedadesFiltradas,
+    medicamentosPaginados,
+    enfermedadesPaginadas,
+    totalPaginasMedicamentos,
+    totalPaginasEnfermedades
+  } = useFilters(
+    medicamentos,
+    enfermedades,
+    searchTerm,
+    filtroFormaMedicamento,
+    filtroCategoriaMedicamento,
+    filtroCategoriaEnfermedad
+  )
 
   useEffect(() => {
     cargarDatosIniciales()
@@ -39,45 +59,8 @@ const Glosario = () => {
       setPaginaActualEnfermedades(1)
     }
   }
-  // reset
-  useEffect(() => {
-    setPaginaActualMedicamentos(1)
-  }, [searchTerm, filtroFormaMedicamento, filtroCategoriaMedicamento])
 
-  useEffect(() => {
-    setPaginaActualEnfermedades(1)
-  }, [searchTerm, filtroCategoriaEnfermedad])
-
-  const filtrarMedicamentos = () => {
-    return medicamentos.filter((med) => {
-      // Filtro por nombre
-      const matchesSearch = med.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-
-      // Filtro por forma/vía
-      const matchesForma = filtroFormaMedicamento === "todas" || med.forma_via === filtroFormaMedicamento
-
-      // Filtro por categoría
-      const matchesCategoria = filtroCategoriaMedicamento === "todas" || med.categoria === filtroCategoriaMedicamento
-
-      return matchesSearch && matchesForma && matchesCategoria
-    })
-  }
-
-  const filtrarEnfermedades = () => {
-    return enfermedades.filter((enf) => {
-      // Filtro nombre y codigo CIE
-      const matchesSearch = 
-        enf.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (enf.codigo_cie && enf.codigo_cie.toLowerCase().includes(searchTerm.toLowerCase()))
-
-      // Filtro por categoría
-      const matchesCategoria = filtroCategoriaEnfermedad === "todas" || enf.categoria === filtroCategoriaEnfermedad
-
-      return matchesSearch && matchesCategoria
-    })
-  }
-
-  // Obtener opciones únicas para filtros
+  // Functions to get filter options (kept in Glosario as requested)
   const getFormasViaMedicamentos = () => {
     return ["todas", ...new Set(medicamentos.map((med) => med.forma_via).filter(Boolean))]
   }
@@ -89,29 +72,6 @@ const Glosario = () => {
   const getCategoriasEnfermedades = () => {
     return ["todas", ...new Set(enfermedades.map((enf) => enf.categoria).filter(Boolean))]
   }
-
-  // Datos filtrados
-  const medicamentosFiltrados = filtrarMedicamentos()
-  const enfermedadesFiltradas = filtrarEnfermedades()
-
-  // Funciones de paginación
-  const calcularTotalPaginas = (totalElementos) => {
-    return Math.ceil(totalElementos / ELEMENTOS_POR_PAGINA)
-  }
-
-  const obtenerElementosPaginados = (elementos, paginaActual) => {
-    const inicio = (paginaActual - 1) * ELEMENTOS_POR_PAGINA
-    const fin = inicio + ELEMENTOS_POR_PAGINA
-    return elementos.slice(inicio, fin)
-  }
-
-  // Datos paginados
-  const medicamentosPaginados = obtenerElementosPaginados(medicamentosFiltrados, paginaActualMedicamentos)
-  const enfermedadesPaginadas = obtenerElementosPaginados(enfermedadesFiltradas, paginaActualEnfermedades)
-
-  // Información de paginación
-  const totalPaginasMedicamentos = calcularTotalPaginas(medicamentosFiltrados.length)
-  const totalPaginasEnfermedades = calcularTotalPaginas(enfermedadesFiltradas.length)
 
   // Renderizado condicional del contenido principal
   const renderContenido = () => {
@@ -143,7 +103,7 @@ const Glosario = () => {
           Medicamentos ({medicamentosFiltrados.length})
         </h3>
         {totalPaginasMedicamentos > 1 && (
-          <InfoPaginacion 
+          <InfoPaginacion
             paginaActual={paginaActualMedicamentos}
             totalPaginas={totalPaginasMedicamentos}
             totalElementos={medicamentosFiltrados.length}
@@ -151,19 +111,19 @@ const Glosario = () => {
           />
         )}
       </div>
-      
+
       {medicamentosPaginados.length > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {medicamentosPaginados.map((med) => (
-              <TarjetaMedicamento 
-                key={med.id_medicamento} 
-                medicamento={med} 
-                onClick={() => handleMedicamentoClick(med)} 
+              <TarjetaMedicamento
+                key={med.id_medicamento}
+                medicamento={med}
+                onClick={() => handleMedicamentoClick(med)}
               />
             ))}
           </div>
-          
+
           {totalPaginasMedicamentos > 1 && (
             <Paginacion
               paginaActual={paginaActualMedicamentos}
@@ -185,7 +145,7 @@ const Glosario = () => {
           Enfermedades ({enfermedadesFiltradas.length})
         </h3>
         {totalPaginasEnfermedades > 1 && (
-          <InfoPaginacion 
+          <InfoPaginacion
             paginaActual={paginaActualEnfermedades}
             totalPaginas={totalPaginasEnfermedades}
             totalElementos={enfermedadesFiltradas.length}
@@ -193,19 +153,19 @@ const Glosario = () => {
           />
         )}
       </div>
-      
+
       {enfermedadesPaginadas.length > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {enfermedadesPaginadas.map((enf) => (
-              <TarjetaEnfermedad 
-                key={enf.id_enfermedad} 
-                enfermedad={enf} 
-                onClick={() => handleEnfermedadClick(enf)} 
+              <TarjetaEnfermedad
+                key={enf.id_enfermedad}
+                enfermedad={enf}
+                onClick={() => handleEnfermedadClick(enf)}
               />
             ))}
           </div>
-          
+
           {totalPaginasEnfermedades > 1 && (
             <Paginacion
               paginaActual={paginaActualEnfermedades}
@@ -231,7 +191,7 @@ const Glosario = () => {
           <div className="flex flex-col gap-4">
             {/* Barra de búsqueda */}
             <BarraBusqueda searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            
+
             {/* Filtros */}
             <FiltrosGlosario
               activeTab={activeTab}
@@ -249,7 +209,7 @@ const Glosario = () => {
         </div>
 
         {/* Pestañas */}
-        <PestanasGlosario activeTab={activeTab} onTabChange={handleTabChange} />
+        <PagGlosario activeTab={activeTab} onTabChange={handleTabChange} />
 
         {/* Contenido principal */}
         <div className="p-4">
@@ -346,15 +306,15 @@ const FiltroSelect = ({ icon, value, onChange, options, placeholder, label }) =>
   </div>
 )
 
-const PestanasGlosario = ({ activeTab, onTabChange }) => (
+const PagGlosario = ({ activeTab, onTabChange }) => (
   <div className="flex border-b">
-    <PestanaBoton
+    <PagBoton
       isActive={activeTab === "medicamentos"}
       onClick={() => onTabChange("medicamentos")}
       icon={<Pill className="h-4 w-4" />}
       label="Medicamentos"
     />
-    <PestanaBoton
+    <PagBoton
       isActive={activeTab === "enfermedades"}
       onClick={() => onTabChange("enfermedades")}
       icon={<Virus className="h-4 w-4" />}
@@ -363,13 +323,12 @@ const PestanasGlosario = ({ activeTab, onTabChange }) => (
   </div>
 )
 
-const PestanaBoton = ({ isActive, onClick, icon, label }) => (
+const PagBoton = ({ isActive, onClick, icon, label }) => (
   <button
-    className={`flex items-center gap-2 px-4 py-2 font-medium text-sm ${
-      isActive
-        ? "border-b-2 border-blue-500 text-blue-600"
-        : "text-gray-500 hover:text-gray-700"
-    }`}
+    className={`flex items-center gap-2 px-4 py-2 font-medium text-sm ${isActive
+      ? "border-b-2 border-blue-500 text-blue-600"
+      : "text-gray-500 hover:text-gray-700"
+      }`}
     onClick={onClick}
     style={isActive ? { borderColor: "var(--primary-color)", color: "var(--primary-color)" } : {}}
   >
@@ -454,7 +413,7 @@ const MensajeSinResultados = ({ tipo }) => (
 const InfoPaginacion = ({ paginaActual, totalPaginas, totalElementos, elementosPorPagina }) => {
   const inicio = (paginaActual - 1) * elementosPorPagina + 1
   const fin = Math.min(paginaActual * elementosPorPagina, totalElementos)
-  
+
   return (
     <div className="text-sm text-gray-500">
       Mostrando {inicio}-{fin} de {totalElementos} resultados
@@ -467,7 +426,7 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
   const obtenerPaginasVisibles = () => {
     const paginas = []
     const rango = 2 // Páginas a mostrar a cada lado de la actual
-    
+
     // Siempre mostrar primera página
     if (paginaActual > rango + 2) {
       paginas.push(1)
@@ -475,15 +434,15 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
         paginas.push('...')
       }
     }
-    
+
     // Páginas alrededor de la actual
     const inicio = Math.max(1, paginaActual - rango)
     const fin = Math.min(totalPaginas, paginaActual + rango)
-    
+
     for (let i = inicio; i <= fin; i++) {
       paginas.push(i)
     }
-    
+
     // Siempre mostrar última página
     if (paginaActual < totalPaginas - rango - 1) {
       if (paginaActual < totalPaginas - rango - 2) {
@@ -491,7 +450,7 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
       }
       paginas.push(totalPaginas)
     }
-    
+
     return paginas
   }
 
@@ -501,11 +460,10 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
       <button
         onClick={() => onCambioPagina(paginaActual - 1)}
         disabled={paginaActual === 1}
-        className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md ${
-          paginaActual === 1
-            ? 'text-gray-400 cursor-not-allowed'
-            : 'text-gray-700 hover:bg-gray-100'
-        }`}
+        className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md ${paginaActual === 1
+          ? 'text-gray-400 cursor-not-allowed'
+          : 'text-gray-700 hover:bg-gray-100'
+          }`}
       >
         <ChevronLeft className="h-4 w-4" />
         Anterior
@@ -518,13 +476,12 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
             key={index}
             onClick={() => typeof pagina === 'number' && onCambioPagina(pagina)}
             disabled={typeof pagina !== 'number'}
-            className={`px-3 py-2 text-sm font-medium rounded-md ${
-              pagina === paginaActual
-                ? 'bg-blue-600 text-white'
-                : typeof pagina === 'number'
+            className={`px-3 py-2 text-sm font-medium rounded-md ${pagina === paginaActual
+              ? 'bg-blue-600 text-white'
+              : typeof pagina === 'number'
                 ? 'text-gray-700 hover:bg-gray-100'
                 : 'text-gray-400 cursor-default'
-            }`}
+              }`}
           >
             {pagina}
           </button>
@@ -535,11 +492,10 @@ const Paginacion = ({ paginaActual, totalPaginas, onCambioPagina }) => {
       <button
         onClick={() => onCambioPagina(paginaActual + 1)}
         disabled={paginaActual === totalPaginas}
-        className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md ${
-          paginaActual === totalPaginas
-            ? 'text-gray-400 cursor-not-allowed'
-            : 'text-gray-700 hover:bg-gray-100'
-        }`}
+        className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md ${paginaActual === totalPaginas
+          ? 'text-gray-400 cursor-not-allowed'
+          : 'text-gray-700 hover:bg-gray-100'
+          }`}
       >
         Siguiente
         <ChevronRight className="h-4 w-4" />

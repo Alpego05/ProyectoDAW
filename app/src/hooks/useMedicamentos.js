@@ -4,6 +4,7 @@ import {
     getAllEnfermedades,
     getMedicamentoById,
     getEnfermedadesByMedicamento,
+    getEnfermedadById, // Asumiendo que existe esta función en la API
 } from "../services/apiEnfMed"
 
 // Hook personalizado para gestionar medicamentos y sus relaciones
@@ -69,6 +70,40 @@ export const useMedicamentos = () => {
         }
     }
 
+    // Función para obtener medicamento por ID (para componente de detalle)
+    const obtenerMedicamentoPorId = async (medicamentoId) => {
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const medicamento = await getMedicamentoById(medicamentoId)
+            return medicamento
+        } catch (err) {
+            console.error("Error al obtener medicamento:", err)
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener medicamento")
+            return null
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    // Función para obtener enfermedad por ID (para componente de detalle)
+    const obtenerEnfermedadPorId = async (enfermedadId) => {
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const enfermedad = await getEnfermedadById(enfermedadId)
+            return enfermedad
+        } catch (err) {
+            console.error("Error al obtener enfermedad:", err)
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener enfermedad")
+            return null
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     // Cargar enfermedades tratadas por un medicamento
     const cargarEnfermedadesPorMedicamento = async (medicamentoId) => {
         setIsLoading(true)
@@ -102,8 +137,6 @@ export const useMedicamentos = () => {
         }
     }
 
-    
-
     return {
         medicamentos,
         enfermedades,
@@ -115,6 +148,8 @@ export const useMedicamentos = () => {
         cargarEnfermedades,
         cargarDetalleMedicamento,
         cargarEnfermedadesPorMedicamento,
+        obtenerMedicamentoPorId,
+        obtenerEnfermedadPorId,
         setSelectedMedicamento,
         cargarDatosIniciales,
     }
