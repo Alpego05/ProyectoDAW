@@ -26,6 +26,30 @@ Enfermedad.init(
             },
         },
 
+        categoria: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isIn: {
+                    args: [[
+                        "Infecciosas",
+                        "Genéticas",
+                        "Crónicas",
+                        "Degenerativas",
+                        "Autoinmunes",
+                        "Metabólicas",
+                        "Neoplásicas",
+                        "Mentales",
+                        "Traumáticas",
+                        "Cardiovasculares",
+                        "Respiratorias",
+                        "Digestivas"
+                    ]],
+                    msg: "La enfermedad no entra en ninguna categoría'",
+                },
+            },
+        },
+
         desc: {
             type: DataTypes.TEXT,
             allowNull: true,

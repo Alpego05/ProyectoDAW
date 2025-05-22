@@ -1,16 +1,14 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import Calendario from "../../Common/Calendario"
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
 import LoadingSpinner from "../../Common/LoadingSpinner"
 
 const AgendaDoctor = () => {
-  const [appointments, setAppointments] = useState([])
+  const [Citas, setCitas] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const fetchAppointments = async () => {
+  const fetchCitas = async () => {
     setIsLoading(true)
     setError(null)
 
@@ -25,7 +23,6 @@ const AgendaDoctor = () => {
 
       // Hacer la llamada a la API para obtener citas por doctor
       const response = await fetch(`http://localhost:3000/citas/bydoctor/${doctorId}`, {
-
         method: 'GET',
         headers: {
           'Authorization': `${token}`
@@ -37,9 +34,9 @@ const AgendaDoctor = () => {
       }
 
       const data = await response.json()
-      setAppointments(data.data)
+      setCitas(data.data)
     } catch (err) {
-      console.error("Error fetching appointments:", err)
+      console.error(err)
       setError(err instanceof Error ? err.message : "Error desconocido al obtener las citas")
     } finally {
       setIsLoading(false)
@@ -47,11 +44,11 @@ const AgendaDoctor = () => {
   }
 
   useEffect(() => {
-    fetchAppointments()
+    fetchCitas()
   }, [])
 
-  const handleAppointmentClick = (appointment) => {
-    console.log("Cita seleccionada:", appointment)
+  const handleCitasClick = (Citas) => {
+    console.log("Cita seleccionada:", Citas)
     // Aquí puedes implementar la lógica para mostrar detalles o acciones
   }
 
@@ -80,15 +77,15 @@ const AgendaDoctor = () => {
             </div>
           ) : (
             <Calendario
-              appointments={appointments}
-              onAppointmentClick={handleAppointmentClick}
-              viewType="doctor" // Indicar que es vista de doctor
+              citas={Citas}
+              onCitaClick={handleCitasClick}
+              viewType="doctor"
             />
           )}
 
           <div className="mt-6 flex justify-end">
             <button
-              onClick={fetchAppointments}
+              onClick={fetchCitas}
               disabled={isLoading}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-white ${isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
                 }`}
@@ -100,7 +97,7 @@ const AgendaDoctor = () => {
                 </>
               ) : (
                 <>
-                  <RefreshCw className="h-4 w-4" style={{ backgroundColor: "var(--primary-color)" }} />
+                  <RefreshCw className="h-4 w-4" />
                   Actualizar citas
                 </>
               )}
