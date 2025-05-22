@@ -106,15 +106,7 @@ Cita.belongsTo(Doctor, {
 });
 
 // Cita - Diagnostico (1:1)
-Cita.hasOne(Diagnostico, {
-  foreignKey: "cita_id",
-  as: "diagnostico",
-  onDelete: "CASCADE",
-});
-Diagnostico.belongsTo(Cita, {
-  foreignKey: "cita_id",
-  onDelete: "CASCADE",
-});
+
 
 // Doctor - Diagnostico
 Doctor.hasMany(Diagnostico, {
