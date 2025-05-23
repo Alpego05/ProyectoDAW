@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Search, Pill, WormIcon as Virus, AlertCircle, Filter, ChevronRight, ChevronLeft } from "lucide-react"
+import { Search, Pill, WormIcon as Virus, AlertCircle, Filter } from "lucide-react"
 import LoadingSpinner from "../../../Common/LoadingSpinner"
 import useMedicamentos from "../../../../hooks/useMedicamentos"
 import useFilters from "../../../../hooks/useFilters"
-import TarjetaMedicamento from "./TarjetaMedicamento"
-import TarjetaEnfermedad from "./TarjetaEnfermedad"
+import TabMedicamentos from "./TabMedicamentos"
+import TabEnfermedades from "./TabEnfermedades"
 
 const Glosario = () => {
   const navigate = useNavigate()
   const { medicamentos, enfermedades, isLoading, error, cargarDatosIniciales } = useMedicamentos()
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("medicamentos")
-  const [filtroForma, setFiltroForma] = useState("todas")
-  const [filtroCatMed, setFiltroCatMed] = useState("todas")
-  const [filtroCatEnf, setFiltroCatEnf] = useState("todas")
+  const [filtroFormaMedicamento, setFiltroFormaMedicamento] = useState("todas")
+  const [filtroCategoriaMedicamento, setFiltroCategoriaMedicamento] = useState("todas")
+  const [filtroCategoriaEnfermedad, setFiltroCategoriaEnfermedad] = useState("todas")
 
   const {
     paginaActualMedicamentos,
@@ -25,30 +25,80 @@ const Glosario = () => {
     medicamentosFiltrados,
     enfermedadesFiltradas,
     medicamentosPaginados,
-    enfermedadesPaginados,
+    enfermedadesPaginadas,
     totalPaginasMedicamentos,
     totalPaginasEnfermedades
   } = useFilters(
     medicamentos,
     enfermedades,
     searchTerm,
-    filtroForma,
-    filtroCatMed,
-    filtroCatEnf
+    filtroFormaMedicamento,
+    filtroCategoriaMedicamento,
+    filtroCategoriaEnfermedad
   )
 
   useEffect(() => {
     cargarDatosIniciales()
   }, [])
 
-  const formas = ["todas", ...new Set(medicamentos.map(m => m.forma_via).filter(Boolean))]
-  const catMed = ["todas", ...new Set(medicamentos.map(m => m.categoria).filter(Boolean))]
-  const catEnf = ["todas", ...new Set(enfermedades.map(e => e.categoria).filter(Boolean))]
+  const handleMedicamentoClick = (medicamento) => {
+    navigate(`/Home/medicamentos/${medicamento.id_medicamento}`)
+  }
+
+  const handleEnfermedadClick = (enfermedad) => {
+    navigate(`/Home/enfermedades/${enfermedad.id_enfermedad}`)
+  }
+
+  const handleTabChange = (newTab) => {
+    setActiveTab(newTab)
+    if (newTab === "medicamentos") {
+      setFiltroFormaMedicamento("todas")
+      setFiltroCategoriaMedicamento("todas")
+      setPaginaActualMedicamentos(1)
+    } else {
+      setFiltroCategoriaEnfermedad("todas")
+      setPaginaActualEnfermedades(1)
+    }
+  }
+
+  // Obtener opciones de filtros
+  const formasViaMedicamentos = ["todas", ...new Set(medicamentos.map((med) => med.forma_via).filter(Boolean))]
+  const categoriasMedicamentos = ["todas", ...new Set(medicamentos.map((med) => med.categoria).filter(Boolean))]
+  const categoriasEnfermedades = ["todas", ...new Set(enfermedades.map((enf) => enf.categoria).filter(Boolean))]
+
+  // Función para obtener páginas visibles en paginación
+  const obtenerPaginasVisibles = (paginaActual, totalPaginas) => {
+    const paginas = []
+    const rango = 2
+
+    if (paginaActual > rango + 2) {
+      paginas.push(1)
+      if (paginaActual > rango + 3) {
+        paginas.push('...')
+      }
+    }
+    const inicio = Math.max(1, paginaActual - rango)
+    const fin = Math.min(totalPaginas, paginaActual + rango)
+
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i)
+    }
+
+    if (paginaActual < totalPaginas - rango - 1) {
+      if (paginaActual < totalPaginas - rango - 2) {
+        paginas.push('...')
+      }
+      paginas.push(totalPaginas)
+    }
+
+    return paginas
+  }
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen mt-12">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        {/* Encabezado */}
+
+        {/* Header */}
         <div className="p-4 border-b">
           <h2 className="text-xl font-semibold">Glosario Médico</h2>
           <p className="text-gray-500 text-sm mt-1">
@@ -56,50 +106,100 @@ const Glosario = () => {
           </p>
         </div>
 
-        {/* Buscador y filtros */}
-        <div className="p-4 border-b space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-3 py-2 w-full border rounded-md shadow-sm"
-              placeholder="Buscar por nombre o CIE..."
-            />
-          </div>
+        {/* Barra de búsqueda y filtros */}
+        <div className="p-4 border-b">
+          <div className="flex flex-col gap-4">
 
-          <div className="flex gap-4 flex-wrap">
-            {activeTab === "medicamentos" ? (
-              <>
-                <select value={filtroForma} onChange={(e) => setFiltroForma(e.target.value)} className="border rounded-md p-2">
-                  {formas.map((op) => <option key={op} value={op}>{op === "todas" ? "Todas las formas/vías" : op}</option>)}
-                </select>
-                <select value={filtroCatMed} onChange={(e) => setFiltroCatMed(e.target.value)} className="border rounded-md p-2">
-                  {catMed.map((op) => <option key={op} value={op}>{op === "todas" ? "Todas las categorías" : op}</option>)}
-                </select>
-              </>
-            ) : (
-              <select value={filtroCatEnf} onChange={(e) => setFiltroCatEnf(e.target.value)} className="border rounded-md p-2">
-                {catEnf.map((op) => <option key={op} value={op}>{op === "todas" ? "Todas las categorías" : op}</option>)}
-              </select>
-            )}
+            {/* Barra de búsqueda */}
+            <div className="relative flex-grow">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Buscar por nombre o código CIE..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Filtros */}
+            <div className="flex flex-col md:flex-row gap-4">
+              {activeTab === "medicamentos" ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-5 w-5 text-gray-400" />
+                    <select
+                      className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      value={filtroFormaMedicamento}
+                      onChange={(e) => setFiltroFormaMedicamento(e.target.value)}
+                    >
+                      {formasViaMedicamentos.map((option) => (
+                        <option key={option} value={option}>
+                          {option === "todas" ? "Todas las formas/vías" : option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-5 w-5 text-gray-400" />
+                    <select
+                      className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      value={filtroCategoriaMedicamento}
+                      onChange={(e) => setFiltroCategoriaMedicamento(e.target.value)}
+                    >
+                      {categoriasMedicamentos.map((option) => (
+                        <option key={option} value={option}>
+                          {option === "todas" ? "Todas las categorías" : option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Filter className="h-5 w-5 text-gray-400" />
+                  <select
+                    className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    value={filtroCategoriaEnfermedad}
+                    onChange={(e) => setFiltroCategoriaEnfermedad(e.target.value)}
+                  >
+                    {categoriasEnfermedades.map((option) => (
+                      <option key={option} value={option}>
+                        {option === "todas" ? "Todas las categorías" : option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Tabs */}
+        {/* Pestañas */}
         <div className="flex border-b">
           <button
-            onClick={() => { setActiveTab("medicamentos"); setFiltroForma("todas"); setFiltroCatMed("todas"); setPaginaActualMedicamentos(1) }}
-            className={`px-4 py-2 font-medium text-sm ${activeTab === "medicamentos" ? "border-b-2 border-blue-500 text-blue-600" : "text-gray-500"}`}
+            className={`flex items-center gap-2 px-4 py-2 font-medium text-sm ${activeTab === "medicamentos"
+                ? "border-b-2 border-blue-500 text-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+              }`}
+            onClick={() => handleTabChange("medicamentos")}
+            style={activeTab === "medicamentos" ? { borderColor: "var(--primary-color)", color: "var(--primary-color)" } : {}}
           >
-            <Pill className="inline h-4 w-4 mr-1" /> Medicamentos
+            <Pill className="h-4 w-4" />
+            Medicamentos
           </button>
           <button
-            onClick={() => { setActiveTab("enfermedades"); setFiltroCatEnf("todas"); setPaginaActualEnfermedades(1) }}
-            className={`px-4 py-2 font-medium text-sm ${activeTab === "enfermedades" ? "border-b-2 border-blue-500 text-blue-600" : "text-gray-500"}`}
+            className={`flex items-center gap-2 px-4 py-2 font-medium text-sm ${activeTab === "enfermedades"
+                ? "border-b-2 border-blue-500 text-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+              }`}
+            onClick={() => handleTabChange("enfermedades")}
+            style={activeTab === "enfermedades" ? { borderColor: "var(--primary-color)", color: "var(--primary-color)" } : {}}
           >
-            <Virus className="inline h-4 w-4 mr-1" /> Enfermedades
+            <Virus className="h-4 w-4" />
+            Enfermedades
           </button>
         </div>
 
@@ -108,52 +208,37 @@ const Glosario = () => {
           {isLoading ? (
             <LoadingSpinner message="Cargando datos del glosario..." />
           ) : error ? (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 flex items-start">
-              <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-              <div>
-                <h3 className="text-red-800 font-medium">Error</h3>
-                <p className="text-red-700 text-sm">{error}</p>
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+              <div className="flex items-start">
+                <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+                <div>
+                  <h3 className="text-red-800 font-medium">Error</h3>
+                  <p className="text-red-700 text-sm">{error}</p>
+                </div>
               </div>
             </div>
           ) : activeTab === "medicamentos" ? (
-            <>
-              <h3 className="text-lg font-medium mb-4">Medicamentos ({medicamentosFiltrados.length})</h3>
-              {medicamentosPaginados.length > 0 ? (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {medicamentosPaginados.map(med => (
-                      <TarjetaMedicamento
-                        key={med.id_medicamento}
-                        medicamento={med}
-                        onClick={() => navigate(`/Home/medicamentos/${med.id_medicamento}`)}
-                      />
-                    ))}
-                  </div>
-                  {/* Aquí puedes incluir la paginación simplificada si quieres */}
-                </>
-              ) : (
-                <p className="text-gray-500 text-center mt-8">No se encontraron medicamentos</p>
-              )}
-            </>
+            <TabMedicamentos
+              medicamentosFiltrados={medicamentosFiltrados}
+              medicamentosPaginados={medicamentosPaginados}
+              totalPaginasMedicamentos={totalPaginasMedicamentos}
+              paginaActualMedicamentos={paginaActualMedicamentos}
+              setPaginaActualMedicamentos={setPaginaActualMedicamentos}
+              ELEMENTOS_POR_PAGINA={ELEMENTOS_POR_PAGINA}
+              handleMedicamentoClick={handleMedicamentoClick}
+              obtenerPaginasVisibles={obtenerPaginasVisibles}
+            />
           ) : (
-            <>
-              <h3 className="text-lg font-medium mb-4">Enfermedades ({enfermedadesFiltradas.length})</h3>
-              {enfermedadesPaginados.length > 0 ? (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {enfermedadesPaginados.map(enf => (
-                      <TarjetaEnfermedad
-                        key={enf.id_enfermedad}
-                        enfermedad={enf}
-                        onClick={() => navigate(`/Home/enfermedades/${enf.id_enfermedad}`)}
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <p className="text-gray-500 text-center mt-8">No se encontraron enfermedades</p>
-              )}
-            </>
+            <TabEnfermedades
+              enfermedadesFiltradas={enfermedadesFiltradas}
+              enfermedadesPaginadas={enfermedadesPaginadas}
+              totalPaginasEnfermedades={totalPaginasEnfermedades}
+              paginaActualEnfermedades={paginaActualEnfermedades}
+              setPaginaActualEnfermedades={setPaginaActualEnfermedades}
+              ELEMENTOS_POR_PAGINA={ELEMENTOS_POR_PAGINA}
+              handleEnfermedadClick={handleEnfermedadClick}
+              obtenerPaginasVisibles={obtenerPaginasVisibles}
+            />
           )}
         </div>
       </div>
