@@ -52,7 +52,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
                     : "bg-green-500 text-white"
                 }`}
             >
-              {dayCitas.length} {dayCitas.length === 1 ? "cita" : "citas"}
+              {dayCitas.length} 
             </span>
           </div>
         )}
