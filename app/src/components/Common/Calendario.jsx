@@ -7,6 +7,14 @@ import "./../../index.css"
 const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   const [date, setDate] = useState(new Date())
 
+  // Función para convertir fecha a string local (sin UTC)
+  const formatDate = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   // agrupamos citas por fecha
   const citasPorFecha = {}
 
@@ -27,7 +35,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   const tileContent = ({ date, view }) => {
     if (view !== "month") return null
 
-    const dateStr = date.toISOString().split("T")[0]
+    const dateStr = formatDate(date)
     const dayCitas = citasPorFecha[dateStr] || []
 
     if (dayCitas.length === 0) return null
@@ -37,11 +45,12 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
         {dayCitas.length > 0 && (
           <div className="text-xs">
             <span
-              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                dayCitas.some((c) => c.estado === "Pendiente")
-                  ? "bg-amber-500 text-white"
-                  : "bg-green-500 text-white"
-              }`}
+              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${dayCitas.some((c) => c.estado === "No asistida")
+                  ? "bg-red-500 text-white"
+                  : dayCitas.some((c) => c.estado === "Pendiente")
+                    ? "bg-amber-500 text-white"
+                    : "bg-green-500 text-white"
+                }`}
             >
               {dayCitas.length} {dayCitas.length === 1 ? "cita" : "citas"}
             </span>
@@ -55,7 +64,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   const tileClassName = ({ date, view }) => {
     if (view !== "month") return ""
 
-    const dateStr = date.toISOString().split("T")[0]
+    const dateStr = formatDate(date)
     const dayCitas = citasPorFecha[dateStr] || []
 
     if (dayCitas.length === 0) return ""
@@ -64,7 +73,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   }
 
   // Mostrar detalles de las citas del día seleccionado
-  const selectedDateStr = date.toISOString().split("T")[0]
+  const selectedDateStr = formatDate(date)
   const citasSeleccionadas = citasPorFecha[selectedDateStr] || []
 
   return (
@@ -112,9 +121,8 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
                     <div className="flex justify-between items-start">
                       <div className="font-medium">{cita.nombre}</div>
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                          cita.estado === "Completada" ? "bg-green-500 text-white" : "bg-amber-500 text-white"
-                        }`}
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cita.estado === "Completada" ? "bg-green-500 text-white" : "bg-amber-500 text-white"
+                          }`}
                       >
                         {cita.estado}
                       </span>
@@ -159,4 +167,3 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
 }
 
 export default Calendario
-
