@@ -52,7 +52,7 @@ Medicamento.init(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                notEmpty: { msg: "La forma/vía de administración no puede estar vacía" },
+                notEmpty: { msg: "La forma/vía de administración no puede estar vacío" },
                 len: { args: [3, 100], msg: "La forma/vía debe tener entre 3 y 100 caracteres" },
                 isIn: {
                     args: [
