@@ -12,12 +12,12 @@ export const getAllRecetas = async () => {
     const response = await fetch(`${API_BASE_URL}/recetas`, {
         method: "GET",
         headers: {
-             'Authorization': `${getToken()}`
-             }
-             });
-             const data = await response.json();
-             return data.data;
-             };
+            'Authorization': `${getToken()}`
+        }
+    });
+    const data = await response.json();
+    return data.data;
+};
 
 
 

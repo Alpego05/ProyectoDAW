@@ -13,7 +13,7 @@ const useFilters = (
     const [paginaActualMedicamentos, setPaginaActualMedicamentos] = useState(1)
     const [paginaActualEnfermedades, setPaginaActualEnfermedades] = useState(1)
 
-    const ELEMENTOS_POR_PAGINA = 20
+    const ELEMENTOS_POR_PAGINA = 21
 
     //reinicia paginación para evitar detalles
     useEffect(() => {

@@ -13,7 +13,6 @@ const TabEnfermedades = ({
 }) => {
     return (
         <>
-            {/* Header de enfermedades */}
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-medium">
                     Enfermedades ({enfermedadesFiltradas.length})
@@ -27,7 +26,6 @@ const TabEnfermedades = ({
 
             {enfermedadesPaginadas.length > 0 ? (
                 <>
-                    {/* Grid de enfermedades */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {enfermedadesPaginadas.map((enf) => (
                             <TarjetaEnfermedad
@@ -38,7 +36,6 @@ const TabEnfermedades = ({
                         ))}
                     </div>
 
-                    {/* Paginación de enfermedades */}
                     {totalPaginasEnfermedades > 1 && (
                         <div className="flex items-center justify-center gap-2 mt-6">
                             <button

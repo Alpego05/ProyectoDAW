@@ -6,6 +6,8 @@ import {
     Worm
 } from 'lucide-react'
 import useMedicamentos from '../../../../hooks/useMedicamentos'
+import MedicamentoAsociado from './MedicamentoAsociado'
+import LoadingSpinner from '../../../Common/LoadingSpinner'
 
 const EnfermedadDetalle = () => {
     const { id } = useParams()
@@ -49,11 +51,7 @@ const EnfermedadDetalle = () => {
     if (isLoading) {
         return (
             <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-                <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full mx-4 text-center space-y-6">
-                    <div className="animate-spin rounded-full h-14 w-14 border-4 border-gray-200 border-t-blue-600 mx-auto" 
-                         style={{ borderTopColor: "var(--primary-color)" }}></div>
-                    <p className="text-gray-700 text-lg font-medium">Cargando enfermedad...</p>
-                </div>
+                <LoadingSpinner></LoadingSpinner>
             </div>
         )
     }
@@ -108,7 +106,7 @@ const EnfermedadDetalle = () => {
                     <div className="bg-white rounded-lg shadow-md p-6">
                         <div className="flex items-start">
                             <div className="p-3 rounded-full bg-red-100 mr-4" style={{ color: "var(--danger-color)" }}>
-                              <Worm className="h-7 w-7 text-red-500" />
+                                <Worm className="h-7 w-7 text-red-500" />
                             </div>
                             <div className="flex-1">
                                 <h1 className="text-2xl font-bold text-gray-800 mb-2">{enfermedad.nombre}</h1>
@@ -118,7 +116,7 @@ const EnfermedadDetalle = () => {
                                 {enfermedad.desc && <p className="text-gray-700 mb-4 leading-relaxed">{enfermedad.desc}</p>}
                                 {enfermedad.codigo_cie && (
                                     <span className="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium"
-                                          style={{ backgroundColor: "rgba(239, 68, 68, 0.1)", color: "var(--danger-color" }}>
+                                        style={{ backgroundColor: "rgba(239, 68, 68, 0.1)", color: "var(--danger-color" }}>
                                         CIE: {enfermedad.codigo_cie}
                                     </span>
                                 )}
@@ -159,46 +157,11 @@ const EnfermedadDetalle = () => {
                                         </div>
                                     ) : (
                                         <div className="mt-4 space-y-4">
-                                            {medicamentos.map((med) => (
-                                                <div key={med.id_medicamento} className="bg-gray-50 border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-200">
-                                                    <div className="space-y-3">
-                                                        <div>
-                                                            <h5 className="font-bold text-gray-800 text-lg mb-2">{med.nombre}</h5>
-                                                            <p className="text-green-600 font-semibold mb-3" style={{ color: "var(--primary-color)" }}>
-                                                                {med.categoria}
-                                                            </p>
-                                                            {med.desc && (
-                                                                <p className="text-gray-700 mb-3 leading-relaxed">{med.desc}</p>
-                                                            )}
-                                                            {med.efectos_secundarios && (
-                                                                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-3">
-                                                                    <p className="text-gray-700">
-                                                                        <span className="font-semibold text-red-600">Efectos secundarios:</span> {med.efectos_secundarios}
-                                                                    </p>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {med.forma_via && (
-                                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                                    Vía: {med.forma_via}
-                                                                </span>
-                                                            )}
-                                                            {med.MedicamentoEnfermedad?.eficacia && (
-                                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                                    Eficacia: {med.MedicamentoEnfermedad.eficacia}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        {med.MedicamentoEnfermedad?.dosis_recomendada && (
-                                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                                                <p className="font-medium" style={{ color: "var(--primary-color)" }}>
-                                                                    <span className="font-semibold">Dosis recomendada:</span> {med.MedicamentoEnfermedad.dosis_recomendada}
-                                                                </p>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                            {medicamentos.map((medicamento) => (
+                                                <MedicamentoAsociado
+                                                    key={medicamento.id_medicamento}
+                                                    medicamento={medicamento}
+                                                />
                                             ))}
                                         </div>
                                     )}
@@ -207,7 +170,7 @@ const EnfermedadDetalle = () => {
                         </div>
                     )}
 
-                    {/* Botón volver */}
+                    {/* Btn volver */}
                     <div className="pt-4">
                         <button
                             onClick={handleVolver}

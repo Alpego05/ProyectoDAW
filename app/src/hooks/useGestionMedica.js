@@ -138,7 +138,7 @@ export const useCitasHoyDoctor = () => {
 
     const obtenerFechaHoy = () => {
         const hoy = new Date();
-        return hoy.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        return hoy.toISOString().split('T')[0]; //YYYY-MM-DD
     };
 
     const cargarCitasHoy = async () => {

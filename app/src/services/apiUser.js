@@ -10,7 +10,7 @@ export const getAllUsers = async () => {
     const response = await fetch(`${API_BASE_URL}/users`, {
         method: "GET",
         headers: {
-             'Authorization': `${getToken()}`
+            'Authorization': `${getToken()}`
         }
     });
     const data = await response.json();

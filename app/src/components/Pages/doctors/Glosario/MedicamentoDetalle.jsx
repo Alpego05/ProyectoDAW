@@ -6,6 +6,8 @@ import {
     Worm
 } from 'lucide-react'
 import useMedicamentos from '../../../../hooks/useMedicamentos'
+import EnfermedadAsociada from './EnfermedadAsociada'
+import LoadingSpinner from '../../../Common/LoadingSpinner'
 
 const MedicamentoDetalle = () => {
     const { id } = useParams()
@@ -44,12 +46,9 @@ const MedicamentoDetalle = () => {
 
     if (isLoading) {
         return (
+
             <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-                <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full mx-4 text-center space-y-6">
-                    <div className="animate-spin rounded-full h-14 w-14 border-4 border-gray-200 border-t-blue-600 mx-auto" 
-                         style={{ borderTopColor: "var(--primary-color)" }}></div>
-                    <p className="text-gray-700 text-lg font-medium">Cargando medicamento...</p>
-                </div>
+                <LoadingSpinner></LoadingSpinner>
             </div>
         )
     }
@@ -113,7 +112,7 @@ const MedicamentoDetalle = () => {
                                 </p>
                                 {medicamento.desc && <p className="text-gray-700 mb-4 leading-relaxed">{medicamento.desc}</p>}
                                 <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
-                                      style={{ backgroundColor: "rgba(59, 130, 246, 0.1)", color: "var(--primary-color)" }}>
+                                    style={{ backgroundColor: "rgba(59, 130, 246, 0.1)", color: "var(--primary-color)" }}>
                                     {medicamento.forma_via || 'No especificada'}
                                 </span>
                             </div>
@@ -153,46 +152,11 @@ const MedicamentoDetalle = () => {
                                         </div>
                                     ) : (
                                         <div className="mt-4 space-y-4">
-                                            {enfermedades.map((enf) => (
-                                                <div key={enf.id_enfermedad} className="bg-gray-50 border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-200">
-                                                    <div className="space-y-3">
-                                                        <div>
-                                                            <h5 className="font-bold text-gray-800 text-lg mb-2">{enf.nombre}</h5>
-                                                            <p className="text-blue-600 font-semibold mb-3" style={{ color: "var(--primary-color)" }}>
-                                                                {enf.categoria}
-                                                            </p>
-                                                            {enf.desc && (
-                                                                <p className="text-gray-700 mb-3 leading-relaxed">{enf.desc}</p>
-                                                            )}
-                                                            {enf.sintomas && (
-                                                                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
-                                                                    <p className="text-gray-700">
-                                                                        <span className="font-semibold text-yellow-600">Síntomas:</span> {enf.sintomas}
-                                                                    </p>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {enf.codigo_cie && (
-                                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-500">
-                                                                    CIE: {enf.codigo_cie}
-                                                                </span>
-                                                            )}
-                                                            {enf.MedicamentoEnfermedad?.eficacia && (
-                                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                                    Eficacia: {enf.MedicamentoEnfermedad.eficacia}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        {enf.MedicamentoEnfermedad?.dosis_recomendada && (
-                                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                                                <p className=" font-medium" style={{ color: "var(--primary-color)" }}>
-                                                                    <span className="font-semibold">Dosis recomendada:</span> {enf.MedicamentoEnfermedad.dosis_recomendada}
-                                                                </p>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                            {enfermedades.map((enfermedad) => (
+                                                <EnfermedadAsociada
+                                                    key={enfermedad.id_enfermedad}
+                                                    enfermedad={enfermedad}
+                                                />
                                             ))}
                                         </div>
                                     )}

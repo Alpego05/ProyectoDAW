@@ -126,7 +126,6 @@ const CitasHoy = () => {
                                         <span>Datos del Paciente</span>
                                     </h4>
                                     <div className="grid gap-4">
-                                        {/* Primera fila - Información básica */}
                                         <div className="grid md:grid-cols-3 gap-4">
                                             <div className="bg-white rounded-lg p-3 shadow-sm">
                                                 <span className="text-sm font-medium text-gray-600">Nombre:</span>
@@ -144,7 +143,6 @@ const CitasHoy = () => {
                                             </div>
                                         </div>
 
-                                        {/* Segunda fila - Contacto y alergias */}
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div className="bg-white rounded-lg p-3 shadow-sm">
                                                 <span className="text-sm font-medium text-gray-600">Teléfono:</span>
@@ -159,7 +157,6 @@ const CitasHoy = () => {
                                             </div>
                                         </div>
 
-                                        {/* Tercera fila - Historial médico (más grande) */}
                                         <div className="bg-white rounded-lg p-4 shadow-sm">
                                             <span className="text-sm font-medium text-gray-600 mb-2 block">Historial Médico:</span>
                                             <div className="bg-gray-50 rounded-lg p-3 min-h-[120px]">
@@ -168,8 +165,7 @@ const CitasHoy = () => {
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Action Buttons */}
+                                
                                 <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                                     <h4 className="text-lg font-bold text-gray-800 mb-4">Acciones Disponibles</h4>
                                     <div className="flex flex-wrap gap-3">

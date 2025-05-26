@@ -9,7 +9,7 @@ export const getAllDiagnosticos = async () => {
     const response = await fetch(`${API_BASE_URL}/diagnosticos`, {
         method: "GET",
         headers: {
-             'Authorization': `${getToken()}`
+            'Authorization': `${getToken()}`
         }
     });
     const data = await response.json();
