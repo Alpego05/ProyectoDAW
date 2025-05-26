@@ -120,9 +120,7 @@ const MedicamentoDetalle = () => {
 
                         <div className="mt-6 pt-6 border-t border-gray-200">
                             <div className="flex items-start">
-                                <div className="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                                    <Info className="h-6 w-6" />
-                                </div>
+                                
                                 <div className="flex-1">
                                     <h4 className="text-lg font-semibold text-gray-800">Información básica</h4>
                                     <div className="mt-4 grid md:grid-cols-2 gap-4">

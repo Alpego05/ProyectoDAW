@@ -4,10 +4,10 @@ import {
     getAllEnfermedades,
     getMedicamentoById,
     getEnfermedadesByMedicamento,
-    getEnfermedadById, // Asumiendo que existe esta función en la API
+    getMedicamentosByEnfermedad,
+    getEnfermedadById,
 } from "../services/apiEnfMed"
 
-// Hook personalizado para gestionar medicamentos y sus relaciones
 export const useMedicamentos = () => {
     const [medicamentos, setMedicamentos] = useState([])
     const [enfermedades, setEnfermedades] = useState([])
@@ -15,6 +15,7 @@ export const useMedicamentos = () => {
     const [error, setError] = useState(null)
     const [selectedMedicamento, setSelectedMedicamento] = useState(null)
     const [medicamentoEnfermedades, setMedicamentoEnfermedades] = useState([])
+    const [enfermedadMedicamentos, setEnfermedadMedicamentos] = useState([])
 
     // Cargar todos los medicamentos
     const cargarMedicamentos = async () => {
@@ -52,7 +53,6 @@ export const useMedicamentos = () => {
         }
     }
 
-    // Cargar detalles de un medicamento específico
     const cargarDetalleMedicamento = async (medicamentoId) => {
         setIsLoading(true)
         setError(null)
@@ -70,7 +70,6 @@ export const useMedicamentos = () => {
         }
     }
 
-    // Función para obtener medicamento por ID (para componente de detalle)
     const obtenerMedicamentoPorId = async (medicamentoId) => {
         setIsLoading(true)
         setError(null)
@@ -87,7 +86,6 @@ export const useMedicamentos = () => {
         }
     }
 
-    // Función para obtener enfermedad por ID (para componente de detalle)
     const obtenerEnfermedadPorId = async (enfermedadId) => {
         setIsLoading(true)
         setError(null)
@@ -104,11 +102,9 @@ export const useMedicamentos = () => {
         }
     }
 
-    // Cargar enfermedades tratadas por un medicamento
     const cargarEnfermedadesPorMedicamento = async (medicamentoId) => {
         setIsLoading(true)
         setError(null)
-
         try {
             const enfermedadesData = await getEnfermedadesByMedicamento(medicamentoId)
             setMedicamentoEnfermedades(enfermedadesData || [])
@@ -122,7 +118,22 @@ export const useMedicamentos = () => {
         }
     }
 
-    // Cargar todos los datos iniciales
+    const cargarMedicamentosPorEnfermedad = async (enfermedadId) => {
+        setIsLoading(true)
+        setError(null)
+        try {
+            const medicamentosData = await getMedicamentosByEnfermedad(enfermedadId)
+            setEnfermedadMedicamentos(medicamentosData || [])
+            return medicamentosData
+        } catch (err) {
+            console.error("Error al obtener medicamentos por enfermedad:", err)
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener medicamentos por enfermedad")
+            return []
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     const cargarDatosIniciales = async () => {
         setIsLoading(true)
         setError(null)
@@ -148,6 +159,7 @@ export const useMedicamentos = () => {
         cargarEnfermedades,
         cargarDetalleMedicamento,
         cargarEnfermedadesPorMedicamento,
+        cargarMedicamentosPorEnfermedad,
         obtenerMedicamentoPorId,
         obtenerEnfermedadPorId,
         setSelectedMedicamento,
