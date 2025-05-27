@@ -34,7 +34,7 @@ const Pacientes = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7">No hay pacientes disponibles</td>
+              <td colSpan="7">No hay pacientes encontrados</td>
             </tr>
           )}
         </tbody>
