@@ -5,6 +5,16 @@ const getToken = () => {
     return localStorage.getItem("authToken") || "";
 };
 
+export const getPatients = async () => {
+    const response = await fetch(`${API_BASE_URL}/patients`, {
+        method: "GET",
+        headers: {
+            "Authorization": `${getToken()}`
+            }
+            });
+            const data = await response.json();
+            return data.data;
+            };
 
 // Obtener paciente por ID
 export const getPatientById = async (id) => {
@@ -36,7 +46,6 @@ export const updatePatient = async (id, patientData) => {
         const response = await fetch(`${API_BASE_URL}/patients/edit/${id}`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `${getToken()}`
             },
             body: JSON.stringify(patientData)
@@ -56,5 +65,6 @@ export const updatePatient = async (id, patientData) => {
 
 export default {
     getPatientById,
-    updatePatient
+    updatePatient,
+    getPatients
 }

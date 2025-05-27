@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import useFormat from "./useFormat"
 
 import { getUserById } from "./../services/apiUser"
-import { getPatientById } from "./../services/apiPatient"
+import { getPatientById, getPatients } from "./../services/apiPatient"
 import { getDoctorById } from "./../services/apiDoctor"
 import { getCitasByPatient, getCitasByDoctor, getAllCitas } from "./../services/apiCitas"
 import { getDiagnosticosByPacienteId, getAllDiagnosticos } from "./../services/apiDiagnosticos"
@@ -53,6 +53,37 @@ export const useUsuarios = () => {
     }
 }
 
+export const useTodosPacientes = () => {
+    const [pacientes, setPacientes] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    const cargarPacientes = async () => {
+        try {
+            setLoading(true)
+            setError(null)
+            const data = await getPatients()
+            setPacientes(data)
+        } catch (err) {
+            setError('Error al cargar pacientes')
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        cargarPacientes()
+    }, [])
+
+    return {
+        pacientes,
+        loading,
+        error,
+        cargarPacientes
+    }
+}
+
 export const usePacientes = () => {
     const [paciente, setPaciente] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -64,6 +95,8 @@ export const usePacientes = () => {
             setIsLoading(false)
             return
         }
+
+
 
         setIsLoading(true)
         setError(null)

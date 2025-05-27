@@ -5,9 +5,9 @@ const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 
 // registrar un paciente
-router.post('/patient',  registerController.registerPatient);
+router.post('/patient',verifyToken,  registerController.registerPatient);
 
 // registrar un doctor
-router.post('/doctor',  registerController.registerDoctor);
+router.post('/doctor', verifyToken,  registerController.registerDoctor);
 
 module.exports = router;

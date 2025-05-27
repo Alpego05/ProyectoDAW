@@ -4,7 +4,7 @@ const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 
 // Rutas para pacientes
-PatientRouter.get('/', verifyToken, PatientController.getAllPatients);
+PatientRouter.get('/',  PatientController.getAllPatients);
 PatientRouter.get('/:id', verifyToken, PatientController.getPatientById);
 PatientRouter.patch('/edit/:id', verifyToken, PatientController.updatePatient);
 PatientRouter.delete('/delete/:id', verifyToken, PatientController.deletePatient);
