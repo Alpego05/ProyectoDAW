@@ -165,18 +165,42 @@ const MedicamentoDetalle = () => {
                         </div>
                     )}
 
-                    {/* Efectos secundarios */}
+                    {/* Efectos secundarios y Alérgenos */}
                     {medicamento.efectos_secundarios && (
                         <div className="bg-white rounded-lg shadow-md p-6">
-                            <div className="flex items-start">
-                                <div className="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+                            <div className="flex items-start space-x-6">
+                                {/* Icono */}
+                                <div className="p-3 rounded-full bg-yellow-100 text-yellow-600 flex-shrink-0">
                                     <AlertTriangle className="h-6 w-6" />
                                 </div>
-                                <div className="flex-1">
-                                    <h4 className="text-lg font-semibold text-gray-800">Efectos secundarios del medicamento</h4>
-                                    <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                        <p className="text-gray-700 font-medium leading-relaxed">{medicamento.efectos_secundarios}</p>
+
+                                {/* Contenido principal - layout horizontal */}
+                                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Efectos secundarios */}
+                                    <div>
+                                        <h4 className="text-lg font-semibold text-gray-800 mb-3">
+                                            Efectos secundarios
+                                        </h4>
+                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                            <p className="text-gray-700 font-medium leading-relaxed">
+                                                {medicamento.efectos_secundarios}
+                                            </p>
+                                        </div>
                                     </div>
+
+                                    {/* Alérgenos */}
+                                    {medicamento.alergernos && (
+                                        <div>
+                                            <h4 className="text-lg font-semibold text-gray-800 mb-3">
+                                                Precauciones
+                                            </h4>
+                                            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                                <p className="text-gray-700 font-medium leading-relaxed">
+                                                    {medicamento.alergernos}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

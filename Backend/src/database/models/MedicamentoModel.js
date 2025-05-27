@@ -20,25 +20,39 @@ Medicamento.init(
             },
         },
         categoria: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM(
+                'Analgésico',
+                'Antibiótico',
+                'Antiinflamatorio',
+                'Antihipertensivo',
+                'Antidiabético',
+                'Antidepresivo',
+                'Anticonvulsivante',
+                'Antihistamínico',
+                'Vacuna',
+                'Anticoagulante',
+                'Diurético',
+                'Corticosteroide',
+                'Antifúngico',
+                'Ansiolítico',
+                'Antipsicótico',
+                'Gastroprotector',
+                'Vitamina',
+                'Suplemento',
+                'Hormonal',
+                'Antialérgico',
+                'Cardiotónico',
+                'Antiemético',
+                'Laxante',
+                'Antidiarreico',
+                'Mucolítico',
+                'Expectorante',
+                'Antiséptico',
+                'Anestésico'
+            ),
             allowNull: false,
             validate: {
-                notEmpty: { msg: "La categoría no puede estar vacía" },
-                isIn: {
-                    args: [[
-                        "Analgésico",
-                        "Antibiótico",
-                        "Antiinflamatorio",
-                        "Antihipertensivo",
-                        "Antidiabético",
-                        "Antidepresivo",
-                        "Anticonvulsivante",
-                        "Antihistamínico",
-                        "Antiviral",
-                        "Vacuna"
-                    ]],
-                    msg: "Categoría no válida",
-                },
+                notEmpty: { msg: "La categoría no puede estar vacía" }
             },
         },
         efectos_secundarios: {
@@ -58,30 +72,22 @@ Medicamento.init(
         },
 
         forma_via: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM(
+                'Oral',
+                'Inyectable',
+                'Tópica',
+                'Inhalada',
+                'Oftálmica',
+                'Ótica',
+                'Nasal',
+                'Rectal',
+                'Vaginal',
+                'Sublingual',
+                'Vacuna'
+            ),
             allowNull: false,
             validate: {
-                notEmpty: { msg: "La forma/vía de administración no puede estar vacío" },
-                len: { args: [3, 100], msg: "La forma/vía debe tener entre 3 y 100 caracteres" },
-                isIn: {
-                    args: [
-                        [
-                            "Oral",
-                            "Intravenosa",
-                            "Intramuscular",
-                            "Subcutánea",
-                            "Tópica",
-                            "Inhalada",
-                            "Rectal",
-                            "Oftálmica",
-                            "Ótica",
-                            "Nasal",
-                            "Sublingual",
-                            "Transdérmica",
-                        ],
-                    ],
-                    msg: "La forma/vía debe ser una de las formas de administración válidas",
-                },
+                notEmpty: { msg: "La forma/vía de administración no puede estar vacío" }
             },
         },
 

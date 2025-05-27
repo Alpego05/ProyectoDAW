@@ -27,28 +27,36 @@ Enfermedad.init(
         },
 
         categoria: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM(
+                "Infecciosas",
+                "Genéticas",
+                "Crónicas",
+                "Degenerativas",
+                "Autoinmunes",
+                "Metabólicas",
+                "Neoplásicas",
+                "Mentales",
+                "Traumáticas",
+                "Cardiovasculares",
+                "Respiratorias",
+                "Digestivas",
+                "Neurológicas",
+                "Endocrinas",
+                "Hematológicas",
+                "Dermatológicas",
+                "Musculoesqueléticas",
+                "Renales",
+                "Oculares",
+                "Auditivas"
+            ),
             allowNull: false,
             validate: {
-                isIn: {
-                    args: [[
-                        "Infecciosas",
-                        "Genéticas",
-                        "Crónicas",
-                        "Degenerativas",
-                        "Autoinmunes",
-                        "Metabólicas",
-                        "Neoplásicas",
-                        "Mentales",
-                        "Traumáticas",
-                        "Cardiovasculares",
-                        "Respiratorias",
-                        "Digestivas"
-                    ]],
-                    msg: "La enfermedad no entra en ninguna categoría'",
-                },
-            },
+                notEmpty: {
+                    msg: "La categoría es obligatoria"
+                }
+            }
         },
+
 
         desc: {
             type: DataTypes.TEXT,
