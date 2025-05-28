@@ -174,7 +174,7 @@ const CitasHoy = () => {
                                             className="group cursor-pointer flex items-center space-x-2 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105" style={{ backgroundColor: "var(--warning-color)" }}
                                         >
                                             <History className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
-                                            <span>Ver Historial</span>
+                                            <span>Ver Datos del paciente</span>
                                         </button>
                                         <button
                                             onClick={() => asignarDiagnostico(selectedCita.id_cita, selectedCita.paciente_id)}

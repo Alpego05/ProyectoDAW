@@ -8,7 +8,7 @@ const getAllPatients = async () => {
             include: {
                 model: User,
                 as: "usuario",
-                attributes: ["nombre", "apellido1"]
+                attributes: ["nombre", "apellido1", "apellido2"]
             }
         });
 
@@ -25,7 +25,7 @@ const getPatientById = async (id) => {
             include: {
                 model: User,
                 as: "usuario",
-                attributes: ["nombre", "apellido1"]
+                attributes: ["nombre", "apellido1", "apellido2"]
             }
         });
 
