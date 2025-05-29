@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Calendar, LogOut, CalendarCheck, FileText, Pill, User } from 'lucide-react'
+import { Menu, X, Phone, Calendar, LogOut, CalendarCheck, FileText, Pill, User, Users } from 'lucide-react'
 import "./Header.css"
 import Logo from './../../assets/images/logo.png'
 import { logout } from '../../services/authservices'
@@ -33,7 +33,7 @@ const Header = () => {
           <>
             <li className="nav-item"><Link to={"Calendario"} className="nav-link"><CalendarCheck size={18} /> Calendario</Link></li>
             <li className="nav-item"><Link to={"Glosario"} className="nav-link"><FileText size={18} /> Glosario</Link></li>
-            <li className="nav-item"><Link to={"Pacientes"} className="nav-link"><Pill size={18} /> Pacientes</Link></li>
+            <li className="nav-item"><Link to={"Pacientes"} className="nav-link"><Users size={18} /> Pacientes</Link></li>
           </>
         )
       case "paciente":

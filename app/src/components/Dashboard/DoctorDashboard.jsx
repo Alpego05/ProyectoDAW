@@ -103,22 +103,18 @@ const DoctorDashboard = ({ doctorId }) => {
                 {/* Acciones rápidas */}
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Acciones Rápidas</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <button className="flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button className="cursor-pointer flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
                             <Calendar className="h-6 w-6 text-blue-600 mb-2" />
-                            <span className="text-sm font-medium text-gray-700">Agendar Cita</span>
+                            <span className="text-sm font-medium text-gray-700">Calendario</span>
                         </button>
-                        <button className="flex flex-col items-center justify-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                        <button className="cursor-pointer flex flex-col items-center justify-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
                             <FileText className="h-6 w-6 text-green-600 mb-2" />
-                            <span className="text-sm font-medium text-gray-700">Nueva Receta</span>
+                            <span className="text-sm font-medium text-gray-700">Glosario</span>
                         </button>
-                        <button className="flex flex-col items-center justify-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                            <ClipboardList className="h-6 w-6 text-purple-600 mb-2" />
-                            <span className="text-sm font-medium text-gray-700">Diagnóstico</span>
-                        </button>
-                        <button className="flex flex-col items-center justify-center p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors">
+                        <button className="cursor-pointer flex flex-col items-center justify-center p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors">
                             <Users className="h-6 w-6 text-yellow-600 mb-2" />
-                            <span className="text-sm font-medium text-gray-700">Ver Pacientes</span>
+                            <span className="text-sm font-medium text-gray-700 ">Ver Pacientes</span>
                         </button>
                     </div>
                 </div>
@@ -220,82 +216,6 @@ const DoctorDashboard = ({ doctorId }) => {
                             </div>
                         )}
                     </div>
-                </div>
-
-                {/* Lista de pacientes */}
-                <div className="bg-white rounded-lg shadow-md p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-800">Mis Pacientes</h3>
-                        <span
-                            className="text-xs font-medium bg-blue-100 px-2.5 py-0.5 rounded"
-                            style={{ color: "var(--primary-color)" }}>
-                            Total: {pacientes.length}
-                        </span>
-                    </div>
-
-                    {pacientes.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Nombre
-                                        </th>
-                                        <th scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Teléfono
-                                        </th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Acciones
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {pacientes.map((paciente, index) => {
-                                        // Encontrar la última cita de este paciente
-                                        const citasPaciente = citas.filter((c) => c.paciente_id === paciente.id)
-                                        const ultimaCita =
-                                            citasPaciente.length > 0
-                                                ? citasPaciente.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))[0]
-                                                : null
-
-                                        return (
-                                            <tr key={paciente.id || index}>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center">
-                                                        <div className="ml-4">
-                                                            <div className="text-sm font-medium text-gray-900">
-                                                                {paciente.usuario.nombre} {paciente.usuario.apellido1}
-                                                            </div>
-                                                            <div className="text-sm text-gray-500">{paciente.dni}</div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {paciente.telefono || "No disponible"}
-                                                </td>
-
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <button
-                                                        className="text-blue-600 hover:text-blue-900 mr-3"
-                                                        style={{ color: "var(--primary-color)" }}
-                                                    >
-                                                        Ver historial
-                                                    </button>
-                                                    <button className="text-green-600 hover:text-green-900">Nueva cita</button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <div className="text-center p-4 bg-gray-50 rounded-lg">
-                            <p className="text-gray-500">No hay pacientes asignados</p>
-                        </div>
-                    )}
-
                 </div>
             </div>
 

@@ -84,8 +84,7 @@ const CitasHoy = () => {
                             </div>
                             <button
                                 onClick={closePatientInfo}
-                                className="cursor-pointer hover:bg-white/30 rounded-lg p-2 transition-all duration-300 hover:scale-105"
-                            >
+                                className="cursor-pointer hover:bg-white/30 rounded-lg p-2 transition-all duration-300 hover:scale-105">
                                 <X className="h-5 w-5 text-white" />
                             </button>
                         </div>
@@ -165,28 +164,25 @@ const CitasHoy = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                                     <h4 className="text-lg font-bold text-gray-800 mb-4">Acciones Disponibles</h4>
                                     <div className="flex flex-wrap gap-3">
                                         <button
                                             onClick={() => verHistorial(selectedCita.paciente_id)}
-                                            className="group cursor-pointer flex items-center space-x-2 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105" style={{ backgroundColor: "var(--warning-color)" }}
-                                        >
+                                            className="group cursor-pointer flex items-center space-x-2 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105" style={{ backgroundColor: "var(--warning-color)" }}>
                                             <History className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
                                             <span>Ver Datos del paciente</span>
                                         </button>
                                         <button
                                             onClick={() => asignarDiagnostico(selectedCita.id_cita, selectedCita.paciente_id)}
-                                            className="group cursor-pointer flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105"
-                                        >
+                                            className="group cursor-pointer flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105">
                                             <FileText className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
                                             <span>Asignar Diagnóstico</span>
                                         </button>
                                         <button
                                             onClick={() => asignarCita(selectedCita.paciente_id)}
-                                            className="group cursor-pointer flex items-center space-x-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105"
-                                        >
+                                            className="group cursor-pointer flex items-center space-x-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105">
                                             <Plus className="h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
                                             <span>Asignar Nueva Cita</span>
                                         </button>
@@ -260,6 +256,8 @@ const CitasHoy = () => {
                                                         <span className="font-bold text-gray-800 text-sm">{cita.hora_inicio} - {cita.hora_fin}</span>
                                                     </div>
                                                 </div>
+
+                                                
                                             </div>
 
                                             <button
