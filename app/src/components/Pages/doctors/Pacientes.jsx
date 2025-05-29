@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useTodosPacientes } from '../../../hooks/useUsuarios'
-import { Search, Users, Phone, Calendar, MapPin, User, Loader2, AlertCircle } from 'lucide-react'
+import { Search, Users, Phone, Calendar, MapPin, User, Loader2, AlertCircle, Settings } from 'lucide-react'
+import FilaPaciente from './FilaPaciente'
 
 const Pacientes = () => {
   const { pacientes, loading, error } = useTodosPacientes()
@@ -16,6 +17,10 @@ const Pacientes = () => {
     })
   }, [pacientes, searchTerm])
 
+  // Handlers para los botones
+  const handleVerDetalles = (paciente) => {
+    console.log('Ver detalles del paciente:', paciente)
+  }
   return (
     <div className="p-4 bg-gray-50 min-h-screen mt-12">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -90,11 +95,16 @@ const Pacientes = () => {
                           <span>Fecha Nacimiento</span>
                         </div>
                       </th>
-
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <div className="flex items-center space-x-2">
                           <MapPin className="h-4 w-4" />
                           <span>Dirección</span>
+                        </div>
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="flex items-center space-x-2">
+                          <Settings className="h-4 w-4" />
+                          <span>Acciones</span>
                         </div>
                       </th>
                     </tr>
@@ -102,39 +112,12 @@ const Pacientes = () => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {pacientesFiltrados && pacientesFiltrados.length > 0 ? (
                       pacientesFiltrados.map((paciente, index) => (
-                        <tr
+                        <FilaPaciente
                           key={index}
-                          className="hover:bg-gray-50 transition-colors duration-150"
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-medium mr-4">
-                                {paciente.usuario.nombre.charAt(0).toUpperCase()}
-                              </div>
-                              <div>
-                                <div className="text-sm font-medium text-gray-900">
-                                  {paciente.usuario.nombre} {paciente.usuario.apellido1} {paciente.usuario.apellido2}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {paciente.telefono || 'No disponible'}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap ">
-                            <div className="text-sm text-gray-900">
-                              {paciente.fecha_nacimiento || 'No disponible'}
-                            </div>
-                          </td>
-
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-900 max-w-xs truncate">
-                              {paciente.direccion || 'No disponible'}
-                            </div>
-                          </td>
-                        </tr>
+                          paciente={paciente}
+                          index={index}
+                          onVerDetalles={handleVerDetalles}
+                        />
                       ))
                     ) : (
                       <tr>

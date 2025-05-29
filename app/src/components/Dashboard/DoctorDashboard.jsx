@@ -61,44 +61,7 @@ const DoctorDashboard = ({ doctorId }) => {
                     </div>
                 </div>
 
-                {/* Tarjetas de estadísticas */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                        <div className="flex items-center">
-                            <div className="p-3 rounded-full bg-blue-100 mr-4" style={{ color: "var(--primary-color)" }}>
-                                <Users className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Total Pacientes</p>
-                                <p className="text-2xl font-bold text-gray-800">{totalPacientes}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                        <div className="flex items-center">
-                            <div className="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                                <Calendar className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Total Citas</p>
-                                <p className="text-2xl font-bold text-gray-800">{totalCitas}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                        <div className="flex items-center">
-                            <div className="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
-                                <Clock className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Citas Pendientes</p>
-                                <p className="text-2xl font-bold text-gray-800">{citasPendientes}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
                 {/* Acciones rápidas */}
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
