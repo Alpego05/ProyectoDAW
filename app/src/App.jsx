@@ -19,6 +19,7 @@ import Glosario from './components/Pages/doctors/Glosario/Glosario'
 import Pacientes from './components/Pages/doctors/Pacientes'
 import MedicamentoDetalle from './components/Pages/doctors/Glosario/MedicamentoDetalle'
 import EnfermedadDetalle from './components/Pages/doctors/Glosario/EnfermedadDetalle'
+import DetallesPaciente from './components/Pages/doctors/DetallesPaciente'
 
 
 
@@ -56,6 +57,7 @@ function App() {
               <Route path='Glosario' element={<Glosario />} />
               <Route path="medicamentos/:id" element={<MedicamentoDetalle />} />
               <Route path="enfermedades/:id" element={<EnfermedadDetalle />} />
+              <Route path='Paciente/:id' element={<DetallesPaciente></DetallesPaciente>}></Route>
 
               <Route path='Pacientes' element={<Pacientes />} />
             </>

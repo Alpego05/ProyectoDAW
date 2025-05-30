@@ -1,6 +1,6 @@
-const User = require("./userModel");
-const Patient = require("./patientModel");
-const Doctor = require("./doctorModel");
+const User = require("./UserModel");
+const Patient = require("./PatientModel");
+const Doctor = require("./DoctorModel");
 const HorarioAtencion = require("./HorarioAtencionModel");
 const Cita = require("./CitaModel");
 const Diagnostico = require("./DiagnosticoModel");
@@ -104,9 +104,6 @@ Cita.belongsTo(Doctor, {
   foreignKey: "doctor_id",
   onDelete: "CASCADE",
 });
-
-// Cita - Diagnostico (1:1)
-
 
 // Doctor - Diagnostico
 Doctor.hasMany(Diagnostico, {

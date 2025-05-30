@@ -16,11 +16,9 @@ const getHorarioByDoctor = async (doctor_id) => {
         const horarios = await Horario.findAll({
             where: { id_doctor }
         });
-        
         if (!horarios || horarios.length === 0) {
             throw new Error('No se encontraron horarios para este doctor');
         }
-        
         return horarios;
     } catch (error) {
         throw new Error(`Error al obtener los horarios del doctor: ${error.message}`);
@@ -38,16 +36,13 @@ const createHorario = async (horarioData) => {
             error.statusCode = 400;
             throw error;
         }
-        
         // Verificar que el doctor exista
         const doctor = await db.Doctor.findByPk(id_doctor);
-        
         if (!doctor) {
             const error = new Error('Doctor no encontrado');
             error.statusCode = 404;
             throw error;
         }
-        
         // Crear el horario
         const newHorario = await Horario.create({
             id_doctor,
@@ -56,7 +51,6 @@ const createHorario = async (horarioData) => {
             hora_fin,
             estado
         });
-        
         return newHorario;
     } catch (error) {
         throw new Error(`Error al crear el horario: ${error.message}`);
@@ -71,7 +65,6 @@ const updateHorario = async (id, horarioData) => {
         if (!horario) {
             throw new Error('Horario no encontrado');
         }
-        
         // Actualizar los campos si están presentes
         const { id_doctor, dia, hora_inicio, hora_fin, estado } = horarioData;
         
@@ -82,7 +75,6 @@ const updateHorario = async (id, horarioData) => {
             if (!doctor) {
                 throw new Error('Doctor no encontrado');
             }
-            
             horario.id_doctor = id_doctor;
         }
         if (dia) horario.dia = dia;
@@ -123,7 +115,6 @@ const deleteHorarioByDoctor = async (id_doctor) => {
         if (!doctor) {
             throw new Error('Doctor no encontrado');
         }
-        
         // Buscar todos los horarios del doctor
         const horarios = await Horario.findAll({
             where: { id_doctor }
@@ -132,7 +123,6 @@ const deleteHorarioByDoctor = async (id_doctor) => {
         if (!horarios || horarios.length === 0) {
             throw new Error('No se encontraron horarios para este doctor');
         }
-        
         // Eliminar todos los horarios encontrados
         const result = await Horario.destroy({
             where: { id_doctor }

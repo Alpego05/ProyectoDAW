@@ -22,7 +22,6 @@ const getMedicamentosByEnfermedad = async (id_enfermedad) => {
     throw new Error(`Error al obtener medicamentos para la enfermedad: ${error.message}`)
   }
 }
-
 // Obtener enfermedades que pueden ser tratadas por un medicamento específico
 const getEnfermedadesByMedicamento = async (id_medicamento) => {
   try {
@@ -50,19 +49,16 @@ const getEnfermedadesByMedicamento = async (id_medicamento) => {
 const asignarMedicamentoAEnfermedad = async (id_medicamento, id_enfermedad, datos = {}) => {
   try {
     const { dosis_recomendada, eficacia } = datos
-
     // Verificar que el medicamento existe
     const medicamento = await Medicamento.findByPk(id_medicamento)
     if (!medicamento) {
       throw new Error("Medicamento no encontrado")
     }
-
     // Verificar que la enfermedad existe
     const enfermedad = await Enfermedad.findByPk(id_enfermedad)
     if (!enfermedad) {
       throw new Error("Enfermedad no encontrada")
     }
-
     // Crear o actualizar la relación
     const [relacion, created] = await MedicamentoEnfermedad.findOrCreate({
       where: {
@@ -74,7 +70,6 @@ const asignarMedicamentoAEnfermedad = async (id_medicamento, id_enfermedad, dato
         eficacia,
       },
     })
-
     // Si la relación ya existía, actualizar los datos
     if (!created && (dosis_recomendada || eficacia)) {
       if (dosis_recomendada) relacion.dosis_recomendada = dosis_recomendada

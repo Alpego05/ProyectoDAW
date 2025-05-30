@@ -90,8 +90,6 @@ const deleteMedicamento = async (id_medicamento) => {
     }
 };
 
-
-
 module.exports = {
     getAllMedicamentos,
     getMedicamentoById,

@@ -168,7 +168,6 @@ const loginUser = async (dni, clave) => {
         if (!user) {
             throw new Error("Usuario no encontrado");
         }
-        
         // Verificar la contraseña con bcrypt
         const isPasswordValid = await bcrypt.compare(clave, user.clave);
         

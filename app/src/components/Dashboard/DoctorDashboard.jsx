@@ -3,6 +3,7 @@ import { useDoctorData } from "../../hooks/useUsuarios"
 import { Calendar, Clock, User, Users, FileText, ClipboardList } from "lucide-react"
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
+import { Link } from "react-router-dom"
 
 const DoctorDashboard = ({ doctorId }) => {
     const { usuario, doctor, citas, pacientes, loading, error, formatDate, getProximasCitas, getCitasHoy } =
@@ -61,26 +62,27 @@ const DoctorDashboard = ({ doctorId }) => {
                     </div>
                 </div>
 
-                
+
 
                 {/* Acciones rápidas */}
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Acciones Rápidas</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <button className="cursor-pointer flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                        <Link to="/Home/Calendario" className="cursor-pointer flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
                             <Calendar className="h-6 w-6 text-blue-600 mb-2" />
                             <span className="text-sm font-medium text-gray-700">Calendario</span>
-                        </button>
-                        <button className="cursor-pointer flex flex-col items-center justify-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                        </Link>
+                        <Link to="/Home/Glosario" className="cursor-pointer flex flex-col items-center justify-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
                             <FileText className="h-6 w-6 text-green-600 mb-2" />
                             <span className="text-sm font-medium text-gray-700">Glosario</span>
-                        </button>
-                        <button className="cursor-pointer flex flex-col items-center justify-center p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors">
+                        </Link>
+                        <Link to="/Home/Pacientes" className="cursor-pointer flex flex-col items-center justify-center p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors">
                             <Users className="h-6 w-6 text-yellow-600 mb-2" />
-                            <span className="text-sm font-medium text-gray-700 ">Ver Pacientes</span>
-                        </button>
+                            <span className="text-sm font-medium text-gray-700">Ver Pacientes</span>
+                        </Link>
                     </div>
                 </div>
+
 
                 {/* Información del médico y citas */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">

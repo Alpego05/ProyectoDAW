@@ -1,7 +1,15 @@
 import React from 'react'
 import { Eye, Edit } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-const FilaPaciente = ({ paciente, index, onVerDetalles, onEditarPaciente }) => {
+const FilaPaciente = ({ paciente, index, onEditarPaciente }) => {
+    const navigate = useNavigate()
+
+    const handleVerDetalles = () => {
+        // Navegar a la página de detalles del paciente usando su ID
+        navigate(`/Home/Paciente/${paciente.usuario_id}`)
+    }
+
     return (
         <tr
             key={index}
@@ -37,10 +45,8 @@ const FilaPaciente = ({ paciente, index, onVerDetalles, onEditarPaciente }) => {
             <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center space-x-2">
                     <button
-                        onClick={() => onVerDetalles(paciente)}
-                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
-                    >
-                        <Eye className="h-3 w-3 mr-1" />
+                        onClick={handleVerDetalles}
+                        className="cursor-pointer inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors duration-150">
                         Ver Detalles
                     </button>
                 </div>

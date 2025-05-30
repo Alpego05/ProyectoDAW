@@ -25,7 +25,6 @@ Enfermedad.init(
                 len: { args: [0, 2000], msg: "Los síntomas no pueden exceder los 2000 caracteres" },
             },
         },
-
         categoria: {
             type: DataTypes.ENUM(
                 "Infecciosas",
@@ -56,8 +55,6 @@ Enfermedad.init(
                 }
             }
         },
-
-
         desc: {
             type: DataTypes.TEXT,
             allowNull: true,
@@ -65,7 +62,6 @@ Enfermedad.init(
                 len: { args: [0, 500], msg: "La descripción no puede exceder los 500 caracteres" },
             },
         },
-
         codigo_cie: {
             type: DataTypes.STRING,
             allowNull: false,

@@ -149,7 +149,6 @@ const getRecetasByPacienteId = async (id_paciente) => {
     }
 };
 
-
 // Obtener recetas por ID de diagnóstico
 const getRecetasByDiagnosticoId = async (diagnostico_id) => {
     try {

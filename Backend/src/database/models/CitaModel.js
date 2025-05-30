@@ -35,7 +35,6 @@ Cita.init(
       },
     },
 
-
     paciente_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

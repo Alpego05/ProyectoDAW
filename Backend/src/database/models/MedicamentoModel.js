@@ -61,7 +61,6 @@ Medicamento.init(
             validate: {
                 len: { args: [0, 2000], msg: "Los efectos secundarios no pueden exceder los 2000 caracteres" },
             },
-
         },
         alergernos: {
             type: DataTypes.TEXT,
@@ -70,7 +69,6 @@ Medicamento.init(
                 len: { args: [0, 2000], msg: "Los alergenos no pueden exceder los 2000 caracteres" },
             },
         },
-
         forma_via: {
             type: DataTypes.ENUM(
                 'Oral',

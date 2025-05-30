@@ -26,7 +26,6 @@ const getEnfermedadById = async (id_enfermedad) => {
 const createEnfermedad = async (enfermedadData) => {
     try {
         const { nombre, sintomas, codigo_cie } = enfermedadData;
-
         // Validar que los campos obligatorios estén presentes
         if (!nombre || !codigo_cie) {
             const error = new Error('Faltan campos requeridos');
@@ -40,7 +39,6 @@ const createEnfermedad = async (enfermedadData) => {
             sintomas,
             codigo_cie
         });
-
         return newEnfermedad;
     } catch (error) {
         throw new Error(`Error al crear la enfermedad: ${error.message}`);
@@ -55,16 +53,13 @@ const updateEnfermedad = async (id_enfermedad, enfermedadData) => {
         if (!enfermedad) {
             throw new Error('Enfermedad no encontrada');
         }
-
         // Actualizar los campos si están presentes
         const { nombre, sintomas, codigo_cie } = enfermedadData;
-
         if (nombre) enfermedad.nombre = nombre;
         if (sintomas) enfermedad.sintomas = sintomas;
         if (codigo_cie) enfermedad.codigo_cie = codigo_cie;
 
         await enfermedad.save();
-
         return enfermedad;
     } catch (error) {
         throw new Error(`Error al actualizar la enfermedad: ${error.message}`);
@@ -75,11 +70,9 @@ const updateEnfermedad = async (id_enfermedad, enfermedadData) => {
 const deleteEnfermedad = async (id_enfermedad) => {
     try {
         const enfermedad = await Enfermedad.findByPk(id_enfermedad);
-
         if (!enfermedad) {
             throw new Error('Enfermedad no encontrada');
         }
-
         await enfermedad.destroy();
         return true;
     } catch (error) {

@@ -213,7 +213,7 @@ const CitasHoy = () => {
                             </div>
                             <h3 className="text-xl font-bold text-gray-600 mb-3">No hay citas programadas</h3>
                             <p className="text-gray-500 max-w-md mx-auto">
-                                No tienes citas programadas para hoy. Disfruta de tu día libre o revisa citas pendientes.
+                                No tienes citas programadas para hoy. Disfruta de tu día libre.
                             </p>
                         </div>
                     ) : (

@@ -46,13 +46,13 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
           <div className="text-xs">
             <span
               className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${dayCitas.some((c) => c.estado === "No asistida")
-                  ? "bg-red-500 text-white"
-                  : dayCitas.some((c) => c.estado === "Pendiente")
-                    ? "bg-amber-500 text-white"
-                    : "bg-green-500 text-white"
+                ? "bg-red-500 text-white"
+                : dayCitas.some((c) => c.estado === "Pendiente")
+                  ? "bg-amber-500 text-white"
+                  : "bg-green-500 text-white"
                 }`}
             >
-              {dayCitas.length} 
+              {dayCitas.length}
             </span>
           </div>
         )}

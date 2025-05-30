@@ -13,7 +13,7 @@ const getAllDoctors = async (req, res) => {
 };
 
 const getDoctorById = async (req, res) => {
-      try {
+    try {
         const { id } = req.params;
         const recetas = await  doctorService.getDoctorById(id);
         
@@ -27,7 +27,6 @@ const getDoctorById = async (req, res) => {
         });
     }
 };
-
 
 const getDoctorsBySpecialty = async (req, res) => {
     try {

@@ -8,8 +8,7 @@ const sequelize = new Sequelize(
         
     host: 'localhost',
     dialect: 'mysql',
-
-
+    
     define: {
         timestamps: true,
         underscored: false,

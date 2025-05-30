@@ -82,7 +82,7 @@ const registerPatient = async (userData, patientData, transaction) => {
 // Registrar doctor
 const registerDoctor = async (userData, doctorData, transaction) => {
   const t = transaction || (await sequelize.transaction());
-
+  
   try {
     const { nombre, apellido1, apellido2, email, dni } = userData;
     const { especialidad, sala_asignada, numero_licencia } = doctorData;
