@@ -6,7 +6,6 @@ import HospitalInfo from "./HospitalInfo"
 
 const AdminDashboard = () => {
     const { usuarios, doctores, pacientes, citas, diagnosticos, recetas, isLoading, error, cargarDatos } = useAdmin()
-
     const [activeTab, setActiveTab] = useState("usuarios")
 
     if (isLoading) {

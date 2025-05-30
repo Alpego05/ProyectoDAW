@@ -34,6 +34,12 @@ const useFormat = () => {
         });
     };
 
+   const formatHour = (hora) => {
+        if (!hora) return '';
+        return hora.substring(0, 5);
+    };
+
+
     // mostrar primeras letras en mayúscula
     const capitalizeText = (text) => {
         if (!text) return '';
@@ -51,7 +57,8 @@ const useFormat = () => {
         formatDay,
         formatDateTime,
         capitalizeText,
-        truncateText
+        truncateText, 
+        formatHour
     };
 };
 

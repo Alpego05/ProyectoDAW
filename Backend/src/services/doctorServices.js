@@ -1,5 +1,5 @@
-const Doctor = require('../database/models/doctorModel');
-const User = require('../database/models/userModel');
+const Doctor = require('../database/models/DoctorModel');
+const User = require('../database/models/UserModel');
 
 const getAllDoctors = async () => {
     return await Doctor.findAll({

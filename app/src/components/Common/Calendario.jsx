@@ -1,14 +1,16 @@
 import { useState } from "react"
 import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
-import { Clock, User, CalendarIcon, UserRound } from "lucide-react"
+import { Clock, User, CalendarIcon, UserRound, NotebookPen } from "lucide-react"
+import { useFormatCita } from "../../hooks/useGestionMedica"
 import "./../../index.css"
 
 const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   const [date, setDate] = useState(new Date())
+  const { getEstadoClassName, formatTime, formatDate } = useFormatCita()
 
-  // Función para convertir fecha a string local (sin UTC)
-  const formatDate = (date) => {
+  // Función para convertir fecha a string local (sin UTC) para el calendario
+  const formatDateForCalendar = (date) => {
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
@@ -25,17 +27,22 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
     citasPorFecha[cita.fecha].push(cita)
   })
 
-  // Función para formatear la hora
-  const formatTime = (timeString) => {
-    const [hours, minutes] = timeString.split(":")
-    return `${hours}:${minutes}`
+  // Función para obtener el color del badge basado en los estados de las citas
+  const getBadgeColor = (dayCitas) => {
+    if (dayCitas.some((c) => c.estado === "No asistida")) {
+      return "bg-red-500 text-white"
+    } else if (dayCitas.some((c) => c.estado === "Pendiente")) {
+      return "bg-amber-500 text-white"
+    } else {
+      return "bg-green-500 text-white"
+    }
   }
 
   // Renderizar el contenido del día
   const tileContent = ({ date, view }) => {
     if (view !== "month") return null
 
-    const dateStr = formatDate(date)
+    const dateStr = formatDateForCalendar(date)
     const dayCitas = citasPorFecha[dateStr] || []
 
     if (dayCitas.length === 0) return null
@@ -45,12 +52,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
         {dayCitas.length > 0 && (
           <div className="text-xs">
             <span
-              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${dayCitas.some((c) => c.estado === "No asistida")
-                ? "bg-red-500 text-white"
-                : dayCitas.some((c) => c.estado === "Pendiente")
-                  ? "bg-amber-500 text-white"
-                  : "bg-green-500 text-white"
-                }`}
+              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${getBadgeColor(dayCitas)}`}
             >
               {dayCitas.length}
             </span>
@@ -64,7 +66,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   const tileClassName = ({ date, view }) => {
     if (view !== "month") return ""
 
-    const dateStr = formatDate(date)
+    const dateStr = formatDateForCalendar(date)
     const dayCitas = citasPorFecha[dateStr] || []
 
     if (dayCitas.length === 0) return ""
@@ -73,7 +75,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
   }
 
   // Mostrar detalles de las citas del día seleccionado
-  const selectedDateStr = formatDate(date)
+  const selectedDateStr = formatDateForCalendar(date)
   const citasSeleccionadas = citasPorFecha[selectedDateStr] || []
 
   return (
@@ -95,7 +97,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
           <div className="bg-white rounded-lg shadow-sm p-4">
             <div className="pb-2 border-b mb-4">
               <div className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-blue-500" />
+                 <NotebookPen className="h-7 w-7 "   style={{ color: "var(--primary-color)" }}/>
                 <h3 className="text-lg font-semibold">
                   Citas para el{" "}
                   {date.toLocaleDateString("es-ES", {
@@ -115,25 +117,20 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
                 {citasSeleccionadas.map((cita) => (
                   <div
                     key={cita.id_cita}
-                    className="bg-white border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow"
+                    className="bg-white border rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-300 hover:border-gray-300"
                     onClick={() => onCitaClick && onCitaClick(cita)}
                   >
-                    <div className="flex justify-between items-start">
-                      <div className="font-medium">{cita.nombre}</div>
-                      <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cita.estado === "Completada" ? "bg-green-500 text-white" : "bg-amber-500 text-white"
-                          }`}
-                      >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="font-medium text-gray-900">{cita.nombre}</div>
+                      <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${getEstadoClassName(cita.estado)}`}>
                         {cita.estado}
                       </span>
                     </div>
-                    <div className="mt-2 space-y-1 text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <Clock className="h-3 w-3 mr-2" />
-                        <span>
-                          {formatTime(cita.hora_inicio)} - {formatTime(cita.hora_fin)}
-                        </span>
-                      </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Clock className="h-3 w-3 mr-2" />
+                      <span>
+                        {formatTime(cita.hora_inicio)} - {formatTime(cita.hora_fin)}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -143,7 +140,7 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
         </div>
       </div>
 
-      <style >{`
+      <style>{`
         .react-calendar {
           width: 100%;
           font-family: inherit;

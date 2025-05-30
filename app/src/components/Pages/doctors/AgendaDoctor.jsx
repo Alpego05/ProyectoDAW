@@ -55,7 +55,7 @@ const AgendaDoctor = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
         <div className="p-4 border-b">
           <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-blue-500" />
+              <Calendar className="h-7 w-7 "   style={{ color: "var(--primary-color)" }}/>
             <h2 className="text-xl font-semibold">Agenda</h2>
           </div>
           <p className="text-gray-500 text-sm mt-1">Visualiza y gestiona tus citas con pacientes</p>

@@ -112,7 +112,7 @@ export const useFormatCita = () => {
     const getEstadoClassName = (estado) => {
         switch (estado) {
             case "Pendiente":
-                return "bg-yellow-100 text-yellow-800";
+                return "bg-yellow-100 text-yellow-600";
             case "Completada":
                 return "bg-green-100 text-green-800";
             case "No asistida":
