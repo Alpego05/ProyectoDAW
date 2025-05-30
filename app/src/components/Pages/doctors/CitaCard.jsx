@@ -20,10 +20,6 @@ const CitaCard = ({
         setIsExpanded(!isExpanded);
     };
 
-    const formatearHora = (hora) => {
-        if (!hora) return '';
-        return hora.substring(0, 5);
-    };
 
     const isCompleted = cita.estado === 'Completada' || cita.estado === 'No asistida';
 

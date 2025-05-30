@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCitasByPatient, getCitasByDoctor } from '../services/apiCitas';
+import { getCitasByPatient, getCitasByDoctor, updateCita } from '../services/apiCitas';
 import { getPatientById } from '../services/apiPatient';
 import { getDoctorById } from '../services/apiDoctor';
 import { getDiagnosticosByPacienteId } from '../services/apiDiagnosticos';
@@ -151,16 +151,13 @@ export const useCitasHoyDoctor = () => {
                 throw new Error("No se encontró el ID del doctor");
             }
 
-            // Obtener todas las citas del doctor
             const todasLasCitas = await getCitasByDoctor(doctorId);
             const fechaHoy = obtenerFechaHoy();
             
-            // Filtrar solo las citas de hoy
             const citasDelDia = todasLasCitas.filter(cita => 
                 cita.fecha === fechaHoy
             );
 
-            // Obtener datos del paciente para cada cita
             const citasConPacientes = await Promise.all(
                 citasDelDia.map(async (cita) => {
                     try {
@@ -206,22 +203,28 @@ export const useCitasHoyDoctor = () => {
         setShowPatientInfo(false);
     };
 
-    const verHistorial = (pacienteId) => {
-        console.log("Ver historial del paciente:", pacienteId);
-        // Aquí puedes agregar la lógica para ver el historial
-        // Por ejemplo, navegar a otra página o abrir un modal
+    const marcarComoCompletada = async (citaId) => {
+        try {
+            await updateCita(citaId, { estado: 'Completada' });
+
+            await recargarCitas();
+            console.log('Cita marcada como completada exitosamente');
+        } catch (error) {
+            console.error('Error al marcar cita como completada:', error);
+            setError('Error al actualizar el estado de la cita');
+        }
     };
 
-    const asignarDiagnostico = (citaId, pacienteId) => {
-        console.log("Asignar diagnóstico - Cita:", citaId, "Paciente:", pacienteId);
-        // Aquí puedes agregar la lógica para asignar diagnóstico
-        // Por ejemplo, abrir un formulario o modal
-    };
+    const marcarComoNoAsistida = async (citaId) => {
+        try {
+            await updateCita(citaId, { estado: 'No asistida' });
 
-    const asignarCita = (pacienteId) => {
-        console.log("Asignar nueva cita al paciente:", pacienteId);
-        // Aquí puedes agregar la lógica para asignar nueva cita
-        // Por ejemplo, abrir un formulario de cita
+            await recargarCitas();
+            console.log('Cita marcada como no asistida exitosamente');
+        } catch (error) {
+            console.error('Error al marcar cita como no asistida:', error);
+            setError('Error al actualizar el estado de la cita');
+        }
     };
 
     return {
@@ -234,9 +237,8 @@ export const useCitasHoyDoctor = () => {
         recargarCitas,
         handleCitaClick,
         closePatientInfo,
-        verHistorial,
-        asignarDiagnostico,
-        asignarCita
+        marcarComoCompletada,
+        marcarComoNoAsistida
     };
 };
 
