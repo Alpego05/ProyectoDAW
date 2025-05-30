@@ -4,12 +4,14 @@ import { Calendar, Clock, User, Users, FileText, ClipboardList } from "lucide-re
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
 import { Link } from "react-router-dom"
+import useFormat from '../../hooks/useFormat';
 
 const DoctorDashboard = ({ doctorId }) => {
     const { usuario, doctor, citas, pacientes, loading, error, formatDate, getProximasCitas, getCitasHoy } =
         useDoctorData(doctorId)
 
     const [activeTab, setActiveTab] = useState("hoy")
+    const { formatHour } = useFormat();
 
     if (loading) {
         return <LoadingSpinner message="Cargando datos del médico..." />
@@ -144,7 +146,7 @@ const DoctorDashboard = ({ doctorId }) => {
                                             <div className="text-right">
                                                 <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
                                                 <p className="text-xs text-gray-600">
-                                                    {cita.hora_inicio} - {cita.hora_fin}
+                                                    {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
                                                 </p>
                                             </div>
                                         </div>
@@ -169,7 +171,7 @@ const DoctorDashboard = ({ doctorId }) => {
                                         <div className="text-right">
                                             <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
                                             <p className="text-xs text-gray-600">
-                                                {cita.hora_inicio} - {cita.hora_fin}
+                                                 {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
                                             </p>
                                         </div>
                                     </div>

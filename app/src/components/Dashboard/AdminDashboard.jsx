@@ -3,6 +3,7 @@ import { useAdmin } from "../../hooks/useUsuarios"
 import { Calendar, ClipboardList, FileText, Settings, User, Users } from "lucide-react"
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
+import useFormat from '../../hooks/useFormat';
 
 const AdminDashboard = () => {
     const { usuarios, doctores, pacientes, citas, diagnosticos, recetas, isLoading, error, cargarDatos } = useAdmin()
@@ -474,7 +475,7 @@ const AdminDashboard = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.fecha}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {cita.hora_inicio} - {cita.hora_fin}
+                                                     {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <span

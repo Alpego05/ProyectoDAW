@@ -105,9 +105,9 @@ const Header = () => {
               <Link to={"../Home"} className="nav-link active">Inicio</Link>
             </li>
             {renderNavItems()}
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link to={"Perfil"} className="nav-link"><User size={18} /> Perfil</Link>
-            </li>
+            </li> */}
             <li className="nav-item logout" onClick={logout}>
               <button className="nav-link-2 cursor-pointer"><LogOut size={18} /> Logout</button>
             </li>

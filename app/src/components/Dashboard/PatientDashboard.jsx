@@ -2,6 +2,7 @@ import { getData } from "../../hooks/useUsuarios"
 import { Check, User } from "lucide-react"
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
+import useFormat from '../../hooks/useFormat';
 
 const PatientDashboard = ({ usuarioId }) => {
     const { usuario, paciente, recetas, diagnosticos, formatDate, loading, error, getProximasCitas } = getData(
@@ -31,6 +32,7 @@ const PatientDashboard = ({ usuarioId }) => {
     }
 
     const proximasCitas = getProximasCitas()
+      const { formatHour } = useFormat();
 
     return (
         <div className="bg-gray-50 min-h-screen">
@@ -108,7 +110,7 @@ const PatientDashboard = ({ usuarioId }) => {
                                         <div className="text-right">
                                             <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
                                             <p className="text-xs text-gray-600">
-                                                {cita.hora_inicio} - {cita.hora_fin}
+                                                {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
                                             </p>
                                         </div>
                                     </div>

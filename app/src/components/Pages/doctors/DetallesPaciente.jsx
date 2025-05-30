@@ -7,7 +7,7 @@ import LoadingSpinner from "../../Common/LoadingSpinner"
 const DetallesPaciente = () => {
     const { id } = useParams()
     const navigate = useNavigate()
-    const handleVolver = () => navigate('/Home/Pacientes')
+    const handleVolver = () => navigate(-1)
 
     const { usuario, paciente, recetas, diagnosticos, citas, formatDate, loading, error, getProximasCitas } = getData(
         id,
