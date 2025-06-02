@@ -1,5 +1,3 @@
-"use client"
-
 import { MapPin, Phone, Mail, Clock, Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
 import "./Footer.css"
 import Map from "./../../assets/images/Map.png"
@@ -65,7 +63,7 @@ const Footer = () => {
                                 <li>
                                     <a href="#">Urgencias</a>
                                 </li>
-                                
+
                             </ul>
                         </div>
                         <div className="footer-links-column">
@@ -85,7 +83,7 @@ const Footer = () => {
                                     <span>Lun-Vie: 8:00 - 20:00</span>
                                 </li>
                             </ul>
-                            
+
                         </div>
                     </div>
                 </div>

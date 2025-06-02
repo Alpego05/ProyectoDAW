@@ -71,7 +71,6 @@
   color: var(--text-light);
 }
 
-/* Contact Info */
 .contact-info {
   display: flex;
   gap: 2rem;
@@ -137,7 +136,6 @@
   padding: 0.5rem;
 }
 
-/* Main Navigation */
 .main-nav {
   background-color: var(--primary-color);
   margin-left: 0px;
@@ -156,7 +154,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  justify-content: center; /* Centrar los elementos */
+  justify-content: center; 
 }
 
 .nav-item {
@@ -233,7 +231,6 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Mobile Nav Header - Solo visible en móvil */
 .mobile-nav-header {
   display: none;
   padding: 1rem;
@@ -265,7 +262,6 @@
   cursor: pointer;
 }
 
-/* Overlay para móvil */
 .mobile-overlay {
   display: none;
   position: fixed;
@@ -305,7 +301,6 @@
     display: block;
   }
 
-  /* Convertir el menú móvil en un aside */
   .main-nav {
     position: fixed;
     top: 0;
@@ -355,12 +350,12 @@
   }
 
   .nav-link::after {
-    display: none; /* Ocultar línea en móvil */
+    display: none; 
   }
 
   .nav-link:hover,
   .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.1); /* Restaurar fondo en móvil */
+    background-color: rgba(255, 255, 255, 0.1);
   }
 }
 

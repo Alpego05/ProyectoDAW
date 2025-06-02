@@ -1,6 +1,6 @@
 const jwt = require("jwt-simple");
 const moment = require("moment");
-const Usuario = require("./../database/models/userModel");
+const Usuario = require("./../database/models/UserModel");
 
 const verifyToken = async (req, res, next) => {
   try {

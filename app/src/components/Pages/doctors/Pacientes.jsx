@@ -35,7 +35,7 @@ const Pacientes = () => {
         <div className="p-4 border-b">
           <div className="flex flex-col gap-4">
 
-            {/* Barra de búsqueda */}
+            {/* Barra de busqueda */}
             <div className="relative flex-grow">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -145,7 +145,6 @@ const Pacientes = () => {
                 </table>
               </div>
 
-              {/* Footer con información adicional */}
               {pacientesFiltrados && pacientesFiltrados.length > 0 && (
                 <div className="mt-6 pt-4 border-t border-gray-200">
                   <div className="flex items-center justify-between text-sm text-gray-600">

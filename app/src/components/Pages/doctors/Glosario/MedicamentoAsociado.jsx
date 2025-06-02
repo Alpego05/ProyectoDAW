@@ -1,5 +1,3 @@
-import React from 'react'
-
 const MedicamentoAsociado = ({ medicamento }) => {
     return (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-200">

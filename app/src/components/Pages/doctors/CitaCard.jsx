@@ -13,8 +13,8 @@ const CitaCard = ({
 }) => {
     const { getEstadoClassName } = useFormatCita();
     const [isExpanded, setIsExpanded] = useState(false);
-     const navigate = useNavigate();
-     const { formatHour } = useFormat();
+    const navigate = useNavigate();
+    const { formatHour } = useFormat();
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -44,7 +44,7 @@ const CitaCard = ({
                             <div className="flex items-center gap-2 text-gray-600">
                                 <Clock className="h-4 w-4" />
                                 <span>
-                                   {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
+                                    {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
                                 </span>
                             </div>
                         </div>
@@ -104,7 +104,6 @@ const CitaCard = ({
             {isExpanded && (
                 <div className="px-4 pb-4 sm:px-6 sm:pb-6 border-t border-gray-200 transition-all duration-300">
                     <div className="pt-4 space-y-6">
-                        {/* Info Básica del Paciente */}
                         {cita.paciente ? (
                             <>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -128,7 +127,6 @@ const CitaCard = ({
                                     </div>
                                 </div>
 
-                                {/* Acciones - Solo mostrar si la cita NO está completada */}
                                 {cita.estado !== 'Completada' && (
                                     <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
                                         <h4 className="text-lg font-semibold text-gray-800 mb-4">
@@ -144,7 +142,6 @@ const CitaCard = ({
                                             </button>
 
 
-                                            {/* Nuevo Diagnóstico */}
                                             <button
                                                 onClick={() => asignarDiagnostico(cita.id_cita, cita.paciente_id)}
                                                 className="cursor-pointer group flex items-center justify-center space-x-2 bg-emerald-100 text-emerald-800 hover:bg-emerald-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
@@ -152,7 +149,6 @@ const CitaCard = ({
                                                 <span>Nuevo Diagnóstico</span>
                                             </button>
 
-                                            {/* Nueva Cita */}
                                             <button
                                                 onClick={() => asignarCita(cita.paciente_id)}
                                                 className="cursor-pointer group flex items-center justify-center space-x-2 bg-sky-100 text-sky-800 hover:bg-sky-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">

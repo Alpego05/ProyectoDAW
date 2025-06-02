@@ -121,11 +121,9 @@ const DoctorDashboard = ({ doctorId }) => {
                                 <button onClick={() => setActiveTab("hoy")} className={`px-3 py-1 text-xs font-medium rounded-full ${activeTab === "hoy" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600"}`} style={activeTab === "hoy" ? { backgroundColor: "var(--primary-color)" } : {}}>
                                     Hoy
                                 </button>
-                                <button
-                                    onClick={() => setActiveTab("proximas")}
+                                <button onClick={() => setActiveTab("proximas")}
                                     className={`px-3 py-1 text-xs font-medium rounded-full ${activeTab === "proximas" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600"}`}
-                                    style={activeTab === "proximas" ? { backgroundColor: "var(--primary-color)" } : {}}
-                                >
+                                    style={activeTab === "proximas" ? { backgroundColor: "var(--primary-color)" } : {}}>
                                     Próximas
                                 </button>
                             </div>
@@ -137,8 +135,7 @@ const DoctorDashboard = ({ doctorId }) => {
                                     {citasHoy.map((cita, index) => (
                                         <div
                                             key={cita.id_cita || index}
-                                            className="flex justify-between border-l-4 border-green-400 bg-green-50 p-3 rounded"
-                                        >
+                                            className="flex justify-between border-l-4 border-green-400 bg-green-50 p-3 rounded">
                                             <div>
                                                 <p className="text-sm font-medium text-gray-900">{cita.nombre || "Consulta médica"}</p>
                                                 <p className="text-xs text-gray-600">Paciente: { }</p>
@@ -171,7 +168,7 @@ const DoctorDashboard = ({ doctorId }) => {
                                         <div className="text-right">
                                             <p className="text-sm font-medium text-gray-900">{formatDate(cita.fecha)}</p>
                                             <p className="text-xs text-gray-600">
-                                                 {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
+                                                {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
                                             </p>
                                         </div>
                                     </div>

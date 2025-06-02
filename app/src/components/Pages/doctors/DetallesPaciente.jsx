@@ -3,11 +3,13 @@ import { getData } from "../../../hooks/useUsuarios"
 import { Check, User, Calendar, Phone, MapPin, Heart, Pill, FileText, ArrowLeft, Mail, Clock, Activity, Stethoscope, AlertCircle } from "lucide-react"
 import { useNavigate } from 'react-router-dom'
 import LoadingSpinner from "../../Common/LoadingSpinner"
+import useFormat from '../../../hooks/useFormat';
 
 const DetallesPaciente = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     const handleVolver = () => navigate(-1)
+    const { formatHour } = useFormat();
 
     const { usuario, paciente, recetas, diagnosticos, citas, formatDate, loading, error, getProximasCitas } = getData(
         id,
@@ -48,7 +50,6 @@ const DetallesPaciente = () => {
 
     const proximasCitas = getProximasCitas()
 
-    // calcular la edad
     const calcularEdad = (fechaNacimiento) => {
         if (!fechaNacimiento) return 'No especificada'
         const hoy = new Date()
@@ -168,7 +169,7 @@ const DetallesPaciente = () => {
                                                 <p className="font-semibold text-gray-800">{formatDate(cita.fecha)}</p>
                                                 <p className="text-gray-600 flex items-center">
                                                     <Clock className="w-3 h-3 mr-1" />
-                                                    {cita.hora_inicio}
+                                                    {formatHour(cita.hora_inicio)}
                                                 </p>
                                             </div>
                                         </div>
@@ -317,7 +318,7 @@ const DetallesPaciente = () => {
                                                 <td className="px-4 py-3 text-gray-700 text-sm">
                                                     <div className="flex items-center">
                                                         <Clock className="w-3 h-3 mr-1 text-gray-400" />
-                                                        {cita.hora_inicio} - {cita.hora_fin}
+                                                        {formatHour(cita.hora_inicio)} - {formatHour(cita.hora_fin)}
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-3 text-gray-700 text-sm">
@@ -345,14 +346,14 @@ const DetallesPaciente = () => {
                     )}
                 </div>
                 <div className="pt-4">
-                <button
-                    onClick={handleVolver}
-                    className="cursor-pointer bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-md shadow-md hover:shadow-lg transition-all duration-200 flex items-center space-x-3 border border-gray-200 font-medium"
-                >
-                    <ArrowLeft className="h-5 w-5" />
-                    <span>Volver</span>
-                </button>
-            </div>
+                    <button
+                        onClick={handleVolver}
+                        className="cursor-pointer bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-md shadow-md hover:shadow-lg transition-all duration-200 flex items-center space-x-3 border border-gray-200 font-medium"
+                    >
+                        <ArrowLeft className="h-5 w-5" />
+                        <span>Volver</span>
+                    </button>
+                </div>
             </div>
         </div>
     )

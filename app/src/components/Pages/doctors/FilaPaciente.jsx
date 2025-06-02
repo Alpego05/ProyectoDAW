@@ -6,7 +6,6 @@ const FilaPaciente = ({ paciente, index, onEditarPaciente }) => {
     const navigate = useNavigate()
 
     const handleVerDetalles = () => {
-        // Navegar a la página de detalles del paciente usando su ID
         navigate(`/Home/Paciente/${paciente.usuario_id}`)
     }
 
