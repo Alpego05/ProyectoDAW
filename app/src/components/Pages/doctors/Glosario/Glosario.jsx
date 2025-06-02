@@ -1,20 +1,23 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { Search, Pill, WormIcon as Virus, AlertCircle, Filter } from "lucide-react"
 import LoadingSpinner from "../../../Common/LoadingSpinner"
-import useMedicamentos from "../../../../hooks/useMedicamentos"
+import { MedEnfsContext } from "../../../../context/MedEnfsContext"
 import useFilters from "../../../../hooks/useFilters"
 import TabMedicamentos from "./TabMedicamentos"
 import TabEnfermedades from "./TabEnfermedades"
 
 const Glosario = () => {
   const navigate = useNavigate()
-  const { medicamentos, enfermedades, isLoading, error, cargarDatosIniciales } = useMedicamentos()
+  const { medicamentos, enfermedades } = useContext(MedEnfsContext)
+  
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("medicamentos")
   const [filtroFormaMedicamento, setFiltroFormaMedicamento] = useState("todas")
   const [filtroCategoriaMedicamento, setFiltroCategoriaMedicamento] = useState("todas")
   const [filtroCategoriaEnfermedad, setFiltroCategoriaEnfermedad] = useState("todas")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const {
     paginaActualMedicamentos,
@@ -37,9 +40,6 @@ const Glosario = () => {
     filtroCategoriaEnfermedad
   )
 
-  useEffect(() => {
-    cargarDatosIniciales()
-  }, [])
 
   const handleMedicamentoClick = (medicamento) => {
     navigate(`/Home/medicamentos/${medicamento.id_medicamento}`)

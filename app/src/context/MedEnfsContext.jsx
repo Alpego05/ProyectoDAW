@@ -1,52 +1,70 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const MedEnfsContext = createContext();
 
 export const MedEnfsProvider = ({ children }) => {
   
   const [medicamentos, setMedicamentos] = useState([]);
-  const [enfermedades, setEnfermedades] = useState({});
+  const [enfermedades, setEnfermedades] = useState([]);
 
-  const fecthEnfermedades = async () => {
-    const response = await fetch(`${API_BASE_URL}/enf`, {
-      method: "GET",
-      headers: {
-        'Authorization': `${getToken()}`
+  const getToken = () => {
+    return localStorage.getItem("authToken") || "";
+};
+
+  const fetchEnfermedades = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/enf`, {
+        method: "GET",
+        headers: {
+          'Authorization': `${getToken()}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    });
-    const data = await response.json();
-    console.log(data.data);
-    setEnfermedades(data.data);
+      
+      const data = await response.json();
+      console.log(data.data);
+      setEnfermedades(data.data);
+    } catch (error) {
+      console.error('Error fetching enfermedades:', error);
+    }
   };
 
   const fetchMedicamentos = async () => {
-    const response = await fetch(`${API_BASE_URL}/med`, {
-      method: "GET",
-      headers: {
-        'Authorization': `${getToken()}`
+    try {
+      const response = await fetch(`http://localhost:3000/med`, {
+        method: "GET",
+        headers: {
+          'Authorization': `${getToken()}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    });
-    const data = await response.json();
-    console.log(data.data);
-    setMedicamentos(data.data);
-    
+      
+      const data = await response.json();
+      console.log(data.data);
+      setMedicamentos(data.data);
+    } catch (error) {
+      console.error('Error fetching medicamentos:', error);
+    }
   };
 
   useEffect(() => {
-        fecthEnfermedades();
-        fetchMedicamentos();
-    },[])
-
+    fetchEnfermedades();
+    fetchMedicamentos();
+  }, []);
 
   return (
-    <>
-    <MedEnfsContext.Provider value={{medicamentos, enfermedades }}>
+    <MedEnfsContext.Provider value={{medicamentos, enfermedades,}}>
       {children}
     </MedEnfsContext.Provider>
-    
-    </>
-    
   );
 };
+
+
 
 export default MedEnfsContext;

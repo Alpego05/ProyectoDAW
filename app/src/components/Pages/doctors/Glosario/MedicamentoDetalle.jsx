@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import {
-    ArrowLeft, Pill, AlertTriangle, Info, Activity,
-    Stethoscope,
-    Worm
-} from 'lucide-react'
+import { ArrowLeft, Pill, AlertTriangle, Activity, Worm} from 'lucide-react'
 import useMedicamentos from '../../../../hooks/useMedicamentos'
 import EnfermedadAsociada from './EnfermedadAsociada'
 import LoadingSpinner from '../../../Common/LoadingSpinner'
