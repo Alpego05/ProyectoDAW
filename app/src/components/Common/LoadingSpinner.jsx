@@ -1,5 +1,3 @@
-import React from 'react';
-
 const LoadingSpinner = ({ message = "Cargando..." }) => {
   return (
     <div className="flex justify-center items-center h-64">

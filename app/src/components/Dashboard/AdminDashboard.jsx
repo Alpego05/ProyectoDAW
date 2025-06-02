@@ -3,7 +3,7 @@ import { useAdmin } from "../../hooks/useUsuarios"
 import { Calendar, ClipboardList, FileText, Settings, User, Users } from "lucide-react"
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
-import useFormat from '../../hooks/useFormat';
+// import useFormat from '../../hooks/useFormat';
 
 const AdminDashboard = () => {
     const { usuarios, doctores, pacientes, citas, diagnosticos, recetas, isLoading, error, cargarDatos } = useAdmin()

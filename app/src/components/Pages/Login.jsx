@@ -3,6 +3,7 @@ import { useState } from "react";
 import { CircleAlert, Eye, EyeOff } from 'lucide-react';
 import { login } from "../../services/authservices"; 
 import Logo from './../../assets/images/logo.png';
+import Footer from "../Footer/Footer";
 
 function Login() {
     const navigate = useNavigate();
@@ -125,6 +126,7 @@ function Login() {
                     </form>
                 </div>
             </div>
+            <Footer></Footer>
         </div>
     );
 }

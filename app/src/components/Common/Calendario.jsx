@@ -2,7 +2,7 @@ import { useState } from "react"
 import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 import { Clock, User, CalendarIcon, UserRound, NotebookPen } from "lucide-react"
-import { useFormatCita } from "../../hooks/useGestionMedica"
+import { useFormatCita } from "../../hooks/medical/useFormatCita"
 import "./../../index.css"
 
 const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {

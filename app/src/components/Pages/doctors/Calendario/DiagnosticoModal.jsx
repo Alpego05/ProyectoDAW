@@ -1,5 +1,4 @@
-// DiagnosticoModal.jsx - Componente principal refactorizado
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { X, Stethoscope, FileText, AlertCircle } from 'lucide-react';
 import { MedEnfsContext } from '../../../../context/MedEnfsContext';
 import { useDiagnosticoForm } from '../../../../hooks/medical/useDiagnosticoForm';
