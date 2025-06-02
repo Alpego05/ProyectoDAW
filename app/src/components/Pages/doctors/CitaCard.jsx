@@ -3,14 +3,14 @@ import { Clock, CheckCircle, XCircle, ChevronDown, ChevronUp, User, Phone, Histo
 import { useFormatCita } from '../../../hooks/useGestionMedica';
 import { useNavigate } from "react-router-dom";
 import useFormat from '../../../hooks/useFormat';
-import DiagnosticoModal from './DiagnosticoModal'; // Importar el modal
+import DiagnosticoModal from './DiagnosticoModal';
+import { generateCitaPDF } from '../../Common/pdfcreator';
 
 const CitaCard = ({
     cita,
     asignarCita,
     marcarComoCompletada,
     marcarComoNoAsistida,
-    onDiagnosticoCreated // Nueva prop para manejar la actualización
 }) => {
     const { getEstadoClassName } = useFormatCita();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -26,10 +26,18 @@ const CitaCard = ({
         setShowDiagnosticoModal(true);
     };
 
-    const handleDiagnosticoSuccess = () => {
-        // Callback para cuando se crea exitosamente el diagnóstico
-        onDiagnosticoCreated?.();
-        setShowDiagnosticoModal(false);
+    const handleGeneratePDF = async () => {
+        try {
+            // if (!cita.diagnosticos || cita.diagnosticos.length === 0) {
+            //     alert('Esta cita no tiene diagnósticos registrados');
+            //     return;
+            // }
+            
+            await generateCitaPDF(cita, formatHour);
+        } catch (error) {
+            console.error('Error al generar PDF:', error);
+            alert('Ocurrió un error al generar el PDF: ' + error.message);
+        }
     };
 
     const isCompleted = cita.estado === 'Completada' || cita.estado === 'No asistida';
@@ -139,37 +147,51 @@ const CitaCard = ({
                                         </div>
                                     </div>
 
-                                    {cita.estado !== 'Completada' && (
-                                        <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-                                            <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                                                Acciones Disponibles
-                                            </h4>
-                                            <div className="flex flex-col sm:flex-row gap-3">
-                                                {/* Ver Historial */}
-                                                <button
-                                                    onClick={() => navigate(`/Home/Paciente/${cita.paciente_id}`)}
-                                                    className="cursor-pointer group flex items-center justify-center space-x-2 bg-purple-200 text-purple-700 hover:bg-purple-300 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
-                                                    <History className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                                                    <span>Ver Historial</span>
-                                                </button>
+                                    {/* Sección de acciones */}
+                                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                                        <h4 className="text-lg font-semibold text-gray-800 mb-4">
+                                            Acciones Disponibles
+                                        </h4>
+                                        <div className="flex flex-col sm:flex-row gap-3">
+                                            {/* Ver Historial */}
+                                            <button
+                                                onClick={() => navigate(`/Home/Paciente/${cita.paciente_id}`)}
+                                                className="cursor-pointer group flex items-center justify-center space-x-2 bg-purple-200 text-purple-700 hover:bg-purple-300 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
+                                                <History className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+                                                <span>Ver Historial</span>
+                                            </button>
 
-                                                {/* Botón actualizado para usar el modal */}
-                                                <button
-                                                    onClick={handleAsignarDiagnostico}
-                                                    className="cursor-pointer group flex items-center justify-center space-x-2 bg-emerald-100 text-emerald-800 hover:bg-emerald-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
-                                                    <ClipboardPlus className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                                                    <span>Nuevo Diagnóstico</span>
-                                                </button>
+                                            {/* Nuevo Diagnóstico */}
+                                            <button
+                                                onClick={handleAsignarDiagnostico}
+                                                className="cursor-pointer group flex items-center justify-center space-x-2 bg-emerald-100 text-emerald-800 hover:bg-emerald-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
+                                                <ClipboardPlus className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+                                                <span>Nuevo Diagnóstico</span>
+                                            </button>
 
-                                                <button
-                                                    onClick={() => asignarCita(cita.paciente_id)}
-                                                    className="cursor-pointer group flex items-center justify-center space-x-2 bg-sky-100 text-sky-800 hover:bg-sky-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
-                                                    <Plus className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-                                                    <span>Nueva Cita</span>
-                                                </button>
-                                            </div>
+                                            {/* Nueva Cita */}
+                                            <button
+                                                onClick={() => asignarCita(cita.paciente_id)}
+                                                className="cursor-pointer group flex items-center justify-center space-x-2 bg-sky-100 text-sky-800 hover:bg-sky-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
+                                                <Plus className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+                                                <span>Nueva Cita</span>
+                                            </button>
                                         </div>
-                                    )}
+                                    </div>
+
+                                    {/* Sección de exportación */}
+                                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                                        <h4 className="text-lg font-semibold text-gray-800 mb-4">
+                                            Exportar Información
+                                        </h4>
+                                        <button
+                                            onClick={handleGeneratePDF}
+                                            className="cursor-pointer group flex items-center justify-center space-x-2 bg-blue-100 text-blue-800 hover:bg-blue-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            <FileText className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+                                            <span>Generar PDF</span>
+                                        </button>
+                                    </div>
                                 </>
                             ) : (
                                 <div className="bg-red-50 border border-red-200 rounded-xl p-6">
@@ -197,7 +219,7 @@ const CitaCard = ({
                 onClose={() => setShowDiagnosticoModal(false)}
                 citaId={cita.id_cita}
                 pacienteId={cita.paciente_id}
-                onSuccess={handleDiagnosticoSuccess}
+                
             />
         </>
     );
