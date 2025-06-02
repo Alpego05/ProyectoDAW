@@ -110,8 +110,6 @@ export const useMedicamentos = () => {
     }
 
     return {
-        medicamentos,
-        enfermedades,
         medicamentoEnfermedades,
         selectedMedicamento,
         isLoading,

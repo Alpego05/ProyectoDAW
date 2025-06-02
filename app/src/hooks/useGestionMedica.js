@@ -227,6 +227,16 @@ export const useCitasHoyDoctor = () => {
         }
     };
 
+    const handleDiagnosticoCreated = async () => {
+    try {
+        console.log('Diagnóstico creado exitosamente');
+        // Recargar las citas para reflejar cualquier cambio
+        await recargarCitas();
+    } catch (error) {
+        console.error('Error al recargar citas después de crear diagnóstico:', error);
+    }
+};
+
     return {
         citasHoy,
         isLoading,
@@ -236,6 +246,7 @@ export const useCitasHoyDoctor = () => {
         cargarCitasHoy,
         recargarCitas,
         handleCitaClick,
+        handleDiagnosticoCreated,
         closePatientInfo,
         marcarComoCompletada,
         marcarComoNoAsistida

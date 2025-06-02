@@ -1,5 +1,9 @@
 const Diagnostico = require('../database/models/DiagnosticoModel');
 const Enfermedad = require('../database/models/EnfermedadModel');
+const Paciente = require('../database/models/PatientModel');
+const Cita = require('../database/models/CitaModel');
+const Doctor = require('../database/models/DoctorModel');
+
 
 // Obtener todos los diagnósticos
 const getAllDiagnosticos = async () => {
@@ -47,12 +51,12 @@ const createDiagnostico = async (diagnosticoData) => {
         }
 
         //comprobación de que existe el paciente, la cita el doctor y la enfermedad
-        const paciente = await paciente.findByPk(paciente_id);
-        const cita = await cita.findByPk(cita_id);
-        const doctor = await doctor.findByPk(doctor_id);
-        const enfermedad = await enfermedad.findByPk(enfermedad_id);
+        const pacienteData = await Paciente.findByPk(paciente_id);
+        const citaData = await Cita.findByPk(cita_id);
+        const doctorData = await Doctor.findByPk(doctor_id);
+        const enfermedadData = await Enfermedad.findByPk(enfermedad_id);
 
-        if (!paciente || !cita || !doctor || !enfermedad) {
+        if (!pacienteData || !citaData || !doctorData || !enfermedadData) {
             const error = new Error('No se encontraron los datos del paciente, la cita, el doctor o la enfermedad');
             error.statusCode = 404;
             throw error;
