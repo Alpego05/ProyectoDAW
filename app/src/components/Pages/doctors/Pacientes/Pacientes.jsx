@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { useTodosPacientes } from '../../../hooks/useUsuarios'
+import { useTodosPacientes } from '../../../../hooks/useUsuarios'
 import { Search, Users, Phone, Calendar, MapPin, User, Loader2, AlertCircle, Settings } from 'lucide-react'
 import FilaPaciente from './FilaPaciente'
 

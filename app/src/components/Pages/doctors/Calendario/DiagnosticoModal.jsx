@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { X, Plus, Trash2, Stethoscope, Pill, Clock, FileText, AlertCircle, ChevronDown, Search } from 'lucide-react';
-import { createDiagnostico } from '../../../services/apiDiagnosticos';
-import { createReceta } from '../../../services/apiRecetas';
-import { MedEnfsContext } from '../../../context/MedEnfsContext';
+import { createDiagnostico } from '../../../../services/apiDiagnosticos';
+import { createReceta } from '../../../../services/apiRecetas';
+import { MedEnfsContext } from '../../../../context/MedEnfsContext';
 
 // Componente SearchableSelect
 const SearchableSelect = ({
@@ -46,7 +46,7 @@ const SearchableSelect = ({
     return (
         <div className={`relative ${className}`}>
             <div
-                className={`w-full px-4 py-3 border-2 border-emerald-200 rounded-xl focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 cursor-pointer flex items-center justify-between ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white hover:border-emerald-300'
+                className={`w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-4 focus:ring-emerald-500/20 focus:border-blue-500 transition-all duration-200 cursor-pointer flex items-center justify-between ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white hover:border-emerald-300'
                     }`}
                 onClick={() => !disabled && setIsOpen(!isOpen)}
             >

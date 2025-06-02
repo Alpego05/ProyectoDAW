@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Clock, CheckCircle, XCircle, ChevronDown, ChevronUp, User, Phone, History, FileText, Plus, TriangleAlert, ClipboardPlus } from 'lucide-react';
-import { useFormatCita } from '../../../hooks/useGestionMedica';
+import { useFormatCita } from '../../../../hooks/useGestionMedica';
 import { useNavigate } from "react-router-dom";
-import useFormat from '../../../hooks/useFormat';
+import useFormat from '../../../../hooks/useFormat';
 import DiagnosticoModal from './DiagnosticoModal';
-import { generateCitaPDF } from '../../Common/pdfcreator';
+import { generateCitaPDF } from '../../../Common/pdfcreator';
 
 const CitaCard = ({
     cita,

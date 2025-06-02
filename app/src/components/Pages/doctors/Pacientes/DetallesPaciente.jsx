@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
-import { getData } from "../../../hooks/useUsuarios"
+import { getData } from "../../../../hooks/useUsuarios"
 import { Check, User, Calendar, Phone, MapPin, Heart, Pill, FileText, ArrowLeft, Mail, Clock, Activity, Stethoscope, AlertCircle } from "lucide-react"
 import { useNavigate } from 'react-router-dom'
-import LoadingSpinner from "../../Common/LoadingSpinner"
-import useFormat from '../../../hooks/useFormat';
+import LoadingSpinner from "../../../Common/LoadingSpinner"
+import useFormat from '../../../../hooks/useFormat';
 
 const DetallesPaciente = () => {
     const { id } = useParams()

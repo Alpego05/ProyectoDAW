@@ -1,7 +1,7 @@
 import React from 'react';
-import { useCitasHoyDoctor } from '../../../hooks/useGestionMedica';
+import { useCitasHoyDoctor } from '../../../../hooks/useGestionMedica';
 import { Calendar, Stethoscope } from 'lucide-react';
-import LoadingSpinner from '../../Common/LoadingSpinner';
+import LoadingSpinner from '../../../Common/LoadingSpinner';
 import CitaCard from './CitaCard';
 
 const CitasHoy = () => {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
-import Calendario from "../../Common/Calendario"
+import Calendario from "../../../Common/Calendario"
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
-import LoadingSpinner from "../../Common/LoadingSpinner"
+import LoadingSpinner from "../../../Common/LoadingSpinner"
 import CitasHoy from "./CitasHoy"
 
 const AgendaDoctor = () => {
