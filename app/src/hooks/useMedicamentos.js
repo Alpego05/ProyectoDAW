@@ -1,7 +1,5 @@
 import { useState } from "react"
 import {
-    getAllMedicamentos,
-    getAllEnfermedades,
     getMedicamentoById,
     getEnfermedadesByMedicamento,
     getMedicamentosByEnfermedad,
@@ -9,49 +7,12 @@ import {
 } from "../services/apiEnfMed"
 
 export const useMedicamentos = () => {
-    const [medicamentos, setMedicamentos] = useState([])
-    const [enfermedades, setEnfermedades] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
     const [selectedMedicamento, setSelectedMedicamento] = useState(null)
     const [medicamentoEnfermedades, setMedicamentoEnfermedades] = useState([])
     const [enfermedadMedicamentos, setEnfermedadMedicamentos] = useState([])
 
-    // Cargar todos los medicamentos
-    const cargarMedicamentos = async () => {
-        setIsLoading(true)
-        setError(null)
-
-        try {
-            const data = await getAllMedicamentos()
-            setMedicamentos(data || [])
-            return data
-        } catch (err) {
-            console.error("Error al obtener medicamentos:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener medicamentos")
-            return []
-        } finally {
-            setIsLoading(false)
-        }
-    }
-
-    // Cargar todas las enfermedades
-    const cargarEnfermedades = async () => {
-        setIsLoading(true)
-        setError(null)
-
-        try {
-            const data = await getAllEnfermedades()
-            setEnfermedades(data || [])
-            return data
-        } catch (err) {
-            console.error("Error al obtener enfermedades:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener enfermedades")
-            return []
-        } finally {
-            setIsLoading(false)
-        }
-    }
 
     const cargarDetalleMedicamento = async (medicamentoId) => {
         setIsLoading(true)
@@ -155,8 +116,6 @@ export const useMedicamentos = () => {
         selectedMedicamento,
         isLoading,
         error,
-        cargarMedicamentos,
-        cargarEnfermedades,
         cargarDetalleMedicamento,
         cargarEnfermedadesPorMedicamento,
         cargarMedicamentosPorEnfermedad,
