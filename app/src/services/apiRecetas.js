@@ -91,8 +91,32 @@ export const getRecetasByDiagnosticoId = async (id) => {
     }
 }
 
+//crear un diagnostico
+export const createReceta = async (recetaData) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/recetas/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${getToken()}`
+            },
+            body: JSON.stringify(recetaData)
+        });
+        if (!response.ok) {
+            throw new Error("Error al crear la receta");
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al crear la receta:", error);
+        throw error;
+    }
+};
+
+
 export default {
     getAllRecetas,
     getRecetasByCitaId,
-    getRecetasByDiagnosticoId
+    getRecetasByDiagnosticoId,
+    createReceta
 }
