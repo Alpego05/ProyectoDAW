@@ -36,16 +36,7 @@ Receta.init(
             onDelete: 'SET NULL',
             onUpdate: 'CASCADE'
         },
-        id_enfermedad: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'enfermedades',
-                key: 'id_enfermedad'
-            },
-            onDelete: 'NO ACTION',
-            onUpdate: 'CASCADE'
-        },
+       
         dosis: {
             type: DataTypes.STRING,
             allowNull: false

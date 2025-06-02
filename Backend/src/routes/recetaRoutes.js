@@ -8,7 +8,7 @@ RecetaRouter.get("/:id",verifyToken, RecetaController.getRecetaById);
 RecetaRouter.get("/bydiagnostico/:id", RecetaController.getRecetasByDiagnosticoId);
 RecetaRouter.get("/bypatient/:id", verifyToken, RecetaController.getRecetasByPacienteId);
 RecetaRouter.delete("/delete/:id", verifyToken, RecetaController.deleteReceta);
-RecetaRouter.post("/create", verifyToken, RecetaController.createReceta);
+RecetaRouter.post("/create",  RecetaController.createReceta);
 RecetaRouter.patch("/edit/:id", verifyToken, RecetaController.deleteReceta);  
 
 module.exports = RecetaRouter;

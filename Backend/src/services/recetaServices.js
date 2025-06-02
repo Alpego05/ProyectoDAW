@@ -11,11 +11,6 @@ const getAllRecetas = async () => {
                     model: Medicamento,
                     as: "medicamento",
                     attributes: ["nombre"]
-                },
-                {
-                    model: Enfermedad,
-                    as: "enfermedad",
-                    attributes: ["nombre"]
                 }
             ]
         });
@@ -33,11 +28,6 @@ const getRecetaById = async (id_receta) => {
                 {
                     model: Medicamento,
                     as: "medicamento",
-                    attributes: ["nombre"]
-                },
-                {
-                    model: Enfermedad,
-                    as: "enfermedad",
                     attributes: ["nombre"]
                 }
             ]
@@ -57,10 +47,10 @@ const getRecetaById = async (id_receta) => {
 // Crear una nueva receta
 const createReceta = async (recetaData) => {
     try {
-        const { diagnostico_id, id_paciente, medicamento_id, id_enfermedad, dosis, duracion } = recetaData;
+        const { diagnostico_id, id_paciente, medicamento_id, dosis, duracion } = recetaData;
 
         // Validar que los campos obligatorios estén presentes
-        if (!diagnostico_id || !id_paciente || !medicamento_id || !id_enfermedad || !dosis || !duracion) {
+        if (!diagnostico_id || !id_paciente || !medicamento_id  || !dosis || !duracion) {
             const error = new Error('Faltan campos requeridos');
             error.statusCode = 400;
             throw error;
@@ -71,7 +61,6 @@ const createReceta = async (recetaData) => {
             diagnostico_id,
             id_paciente,
             medicamento_id,
-            id_enfermedad,
             dosis,
             duracion
         });
@@ -135,11 +124,6 @@ const getRecetasByPacienteId = async (id_paciente) => {
                     model: Medicamento,
                     as: "medicamento",
                     attributes: ["nombre"]
-                },
-                {
-                    model: Enfermedad,
-                    as: "enfermedad",
-                    attributes: ["nombre"]
                 }
             ]
         });
@@ -158,11 +142,6 @@ const getRecetasByDiagnosticoId = async (diagnostico_id) => {
                 {
                     model: Medicamento,
                     as: "medicamento",
-                    attributes: ["nombre"]
-                },
-                {
-                    model: Enfermedad,
-                    as: "enfermedad",
                     attributes: ["nombre"]
                 }
             ]

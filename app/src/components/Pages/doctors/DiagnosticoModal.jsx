@@ -13,7 +13,6 @@ const SearchableSelect = ({
     displayField = 'nombre',
     valueField = 'id',
     disabled = false,
-    required = false,
     className = ""
 }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -175,7 +174,6 @@ const DiagnosticoModal = ({
     const agregarReceta = () => {
         setRecetas(prev => [...prev, {
             medicamento_id: '',
-            enfermedad_id: '',
             dosis: '',
             duracion: ''
         }]);
@@ -226,6 +224,7 @@ const DiagnosticoModal = ({
         setError('');
 
         try {
+            // Obtener el doctor_id del localStorage
             const doctorId = localStorage.getItem('userId');
 
             if (!doctorId) {
@@ -244,20 +243,25 @@ const DiagnosticoModal = ({
             };
 
             const diagnosticoCreado = await createDiagnostico(diagnosticoPayload);
+            console.log('Diagnóstico creado:', diagnosticoCreado);
 
             // Crear las recetas asociadas si existen
             if (recetas.length > 0) {
-                const promesasRecetas = recetas.map(receta =>
-                    createReceta({
+                const promesasRecetas = recetas.map(receta => {
+                    const recetaPayload = {
                         diagnostico_id: diagnosticoCreado.id_diagnostico,
+                        id_paciente: pacienteId, 
                         medicamento_id: parseInt(receta.medicamento_id),
-                        enfermedad_id: receta.enfermedad_id ? parseInt(receta.enfermedad_id) : null,
                         dosis: receta.dosis.trim(),
                         duracion: receta.duracion.trim()
-                    })
-                );
+                    };
+                    
+                    console.log('Creando receta con payload:', recetaPayload);
+                    return createReceta(recetaPayload);
+                });
 
-                await Promise.all(promesasRecetas);
+                const recetasCreadas = await Promise.all(promesasRecetas);
+                console.log('Recetas creadas:', recetasCreadas);
             }
 
             // Notificar éxito y cerrar modal
@@ -450,22 +454,6 @@ const DiagnosticoModal = ({
                                                             disabled={isLoading}
                                                         />
                                                     </div>
-
-                                                    <div>
-                                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                            Enfermedad
-                                                        </label>
-                                                        <SearchableSelect
-                                                            options={enfermedades}
-                                                            value={receta.enfermedad_id}
-                                                            onChange={(value) => handleRecetaChange(index, 'enfermedad_id', value)}
-                                                            placeholder="Selecciona una enfermedad (opcional)"
-                                                            displayField="nombre"
-                                                            valueField="id_enfermedad"
-                                                            disabled={isLoading}
-                                                        />
-                                                    </div>
-
                                                     <div>
                                                         <label className="block text-sm font-semibold text-gray-700 mb-2">
                                                             Dosis *
@@ -480,7 +468,7 @@ const DiagnosticoModal = ({
                                                         />
                                                     </div>
 
-                                                    <div>
+                                                    <div className="md:col-span-2">
                                                         <label className="block text-sm font-semibold text-gray-700 mb-2">
                                                             Duración *
                                                         </label>

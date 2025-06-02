@@ -92,23 +92,49 @@ export const getRecetasByDiagnosticoId = async (id) => {
 }
 
 //crear un diagnostico
+// Crear una receta - Enhanced with debugging
 export const createReceta = async (recetaData) => {
     try {
+        const token = getToken();
+
+        console.log("📦 Enviando recetaData:", recetaData);
+
         const response = await fetch(`${API_BASE_URL}/recetas/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${getToken()}`
+                'Authorization': `${token}`
             },
             body: JSON.stringify(recetaData)
         });
+
+        const responseText = await response.text();
+
         if (!response.ok) {
-            throw new Error("Error al crear la receta");
+            let errorMessage = "Error al crear la receta";
+
+            try {
+                const errorData = JSON.parse(responseText);
+                errorMessage = errorData.message || errorData.error || errorMessage;
+                console.error("❌ Server error details:", errorData);
+            } catch (parseError) {
+                console.error("❌ No se pudo parsear la respuesta de error:", responseText);
+            }
+
+            throw new Error(errorMessage);
         }
-        const data = await response.json();
+
+        const data = JSON.parse(responseText);
+        console.log("✅ Receta creada correctamente:", data.data);
         return data.data;
+
     } catch (error) {
-        console.error("Error al crear la receta:", error);
+        console.error("🚨 Error al crear la receta:", error);
+
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            throw new Error("No se pudo conectar al servidor.");
+        }
+
         throw error;
     }
 };

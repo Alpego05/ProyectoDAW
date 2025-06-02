@@ -42,16 +42,6 @@ Receta.belongsTo(Medicamento, {
   onDelete: "SET NULL",
 });
 
-Receta.belongsTo(Enfermedad, {
-  foreignKey: 'id_enfermedad',
-  as: 'enfermedad'
-});
-
-Enfermedad.hasMany(Receta, {
-  foreignKey: 'id_enfermedad',
-  as: 'recetas'
-});
-
 
 
 Medicamento.hasMany(Receta, {

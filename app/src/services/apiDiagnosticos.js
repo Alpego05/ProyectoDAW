@@ -19,7 +19,6 @@ export const getAllDiagnosticos = async () => {
 
 //conseguir diagnosticos por paciente
 export const getDiagnosticosByPacienteId = async (id) => {
-
     try {
         const response = await fetch(`${API_BASE_URL}/diagnosticos/byPatient/${id}`, {
             method: 'GET',
@@ -40,28 +39,46 @@ export const getDiagnosticosByPacienteId = async (id) => {
     }
 };
 
-//crear un diagnostico
+//crear un diagnostico - Enhanced with debugging
 export const createDiagnostico = async (diagnosticoData) => {
     try {
+        const token = getToken();
         const response = await fetch(`${API_BASE_URL}/diagnosticos/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${getToken()}`
+                'Authorization': `${token}`
             },
             body: JSON.stringify(diagnosticoData)
         });
+        const responseText = await response.text();
         if (!response.ok) {
-            throw new Error("Error al crear diagnostico");
+            let errorMessage = "Error al crear diagnostico";
+            
+            try {
+                const errorData = JSON.parse(responseText);
+                errorMessage = errorData.message || errorData.error || errorMessage;
+                console.error("❌ Server error details:", errorData);
+            } catch (parseError) {
+                console.error("❌ Could not parse error response:", responseText);
+            }
+            
+            throw new Error(errorMessage);
         }
-        const data = await response.json();
+        
+        const data = JSON.parse(responseText);
         return data.data;
+        
     } catch (error) {
-        console.error("Error al crear diagnostico:", error);
+        console.error(" Error:", error);
+        
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            throw new Error("No se pudo conectar al servidor.");
+        }
+        
         throw error;
     }
 };
-
 
 export default {
     getDiagnosticosByPacienteId,
