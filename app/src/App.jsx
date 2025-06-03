@@ -3,19 +3,18 @@ import './App.css'
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import Layout from "./components/Pages/layout/Layout"
 import Login from "./components/Pages/Login"
+import SetPass from './components/Pages/SetPass'
 
 // componentes de pacientes
 import Dashboard from "./components/Dashboard/Dashboard";
 import AgendaPaciente from './components/Pages/patients/Calendario/AgendaPaciente'
-// import HistorialPaciente from './components/Pages/patients/HistorialPaciente'
-// import RecetasPaciente from './components/Pages/patients/RecetasPaciente'
-// import Perfil from './components/Pages/Perfil'
 import SolicitarCita from './components/Pages/patients/Solicitar/SolicitarCita'
+import HistorialPaciente from './components/Pages/patients/Historial/HistorialPaciente'
 
 //componentes de admins
-import DashboardCitas from './components/Pages/admins/DashboardCitas'
-import DashboardUsuarios from './components/Pages/admins/DashboardUsuarios'
-import DashboardDiagnosticos from './components/Pages/admins/DashboardDiagnosticos'
+import RegistrarPaciente from './components/Pages/admins/RegistrarPaciente'
+import RegistrarDoctor from './components/Pages/admins/RegistrarDoctor'
+import Usuarios from './components/Pages/admins/ListaUsuarios/Usuarios'
 
 //componentes de doctores
 import AgendaDoctor from './components/Pages/doctors/Calendario/AgendaDoctor'
@@ -24,9 +23,6 @@ import Pacientes from './components/Pages/doctors/Pacientes/Pacientes'
 import MedicamentoDetalle from './components/Pages/doctors/Glosario/MedicamentoDetalle'
 import EnfermedadDetalle from './components/Pages/doctors/Glosario/EnfermedadDetalle'
 import DetallesPaciente from './components/Pages/doctors/Pacientes/DetallesPaciente'
-import SetPass from './components/Pages/SetPass'
-
-
 
 function App() {
   const rol = localStorage.getItem("rol")
@@ -50,6 +46,7 @@ function App() {
               <Route path='Agenda' element={<AgendaPaciente />} />
               {/* <Route path='Recetas' element={< RecetasPaciente/>} /> */}
               <Route path='SolicitarCita' element={<SolicitarCita />} />
+              <Route path='Historial' element={<HistorialPaciente />} />
             </>
 
           )}
@@ -59,16 +56,12 @@ function App() {
             <>
               <Route index element={<Dashboard />} />
               <Route path='Calendario' element={<AgendaDoctor />} />
-
               <Route path='Glosario' element={<Glosario />} />
               <Route path="medicamentos/:id" element={<MedicamentoDetalle />} />
               <Route path="enfermedades/:id" element={<EnfermedadDetalle />} />
               <Route path='Paciente/:id' element={<DetallesPaciente></DetallesPaciente>}></Route>
-
               <Route path='Pacientes' element={<Pacientes />} />
             </>
-
-
 
           )}
 
@@ -76,9 +69,9 @@ function App() {
           {rol === "admin" && (
             <>
               <Route index element={<Dashboard />} />
-              <Route path='DashboardCitas' element={< DashboardCitas />} />
-              <Route path='DashboardUsuarios' element={<DashboardUsuarios />} />
-              <Route path='DashboardDiagnosticos' element={<DashboardDiagnosticos />} />
+              <Route path='NuevoPaciente' element={<RegistrarPaciente />} />
+              <Route path='NuevoDoctor' element={<RegistrarDoctor />} />
+              <Route path='ListaUsuarios' element= {<Usuarios/>}/>
             </>
 
 

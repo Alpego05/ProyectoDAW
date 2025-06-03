@@ -23,9 +23,9 @@ const Header = () => {
       case "admin":
         return (
           <>
-            <li className="nav-item"><Link to={"DashboardCitas"} className="nav-link">Citas</Link></li>
-            <li className="nav-item"><Link to={"DashboardUsuarios"} className="nav-link">Usuarios</Link></li>
-            <li className="nav-item"><Link to={"DashboardDiagnosticos"} className="nav-link">Diagnosticos</Link></li>
+            <li className="nav-item"><Link to={"NuevoPaciente"} className="nav-link">Registrar Paciente</Link></li>
+            <li className="nav-item"><Link to={"NuevoDoctor"} className="nav-link">Registrar Doctor</Link></li>
+            <li className="nav-item"><Link to={"ListaUsuarios"} className="nav-link">Usuarios</Link></li>
           </>
         )
       case "doctor":
@@ -40,7 +40,7 @@ const Header = () => {
         return (
           <>
             <li className="nav-item"><Link to={"Agenda"} className="nav-link"><CalendarCheck size={18} /> Citas</Link></li>
-            <li className="nav-item"><Link to={"SolicitarCita"} className="nav-link"><FileText size={18} /> Historial</Link></li>
+            <li className="nav-item"><Link to={"Historial"} className="nav-link"><FileText size={18} /> Historial</Link></li>
             <li className="nav-item"><Link to={"SolicitarCita"} className="nav-link"><Stethoscope size={18} /> Solicitar Cita</Link></li>
             
           </>
