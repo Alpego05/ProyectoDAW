@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useAdmin } from "../../hooks/useUsuarios"
+import { useAdmin } from "../../hooks/users/useAdmin"
 import { Calendar, ClipboardList, FileText, Settings, User, Users } from "lucide-react"
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"

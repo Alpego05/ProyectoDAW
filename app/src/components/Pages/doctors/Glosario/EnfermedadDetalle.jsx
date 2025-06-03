@@ -5,7 +5,7 @@ import {
     Pill,
     Worm
 } from 'lucide-react'
-import useMedicamentos from '../../../../hooks/useMedicamentos'
+import useMedicamentos from '../../../../hooks/medical/useMedicamentos'
 import MedicamentoAsociado from './MedicamentoAsociado'
 import LoadingSpinner from '../../../Common/LoadingSpinner'
 

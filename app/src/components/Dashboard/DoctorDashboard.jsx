@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useDoctorData } from "../../hooks/useUsuarios"
+import { useState } from "react" 
+import { useDoctorData } from "../../hooks/users/useDoctores"
 import { Calendar, Clock, User, Users, FileText, ClipboardList } from "lucide-react"
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"

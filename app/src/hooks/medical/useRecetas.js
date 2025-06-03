@@ -1,117 +1,149 @@
-import { useState, useEffect } from 'react';
-import { getRecetasByPacienteId, getRecetasByDiagnosticoId } from '../../services/apiRecetas';
+import { useState, useEffect } from "react"
+import { getRecetasByPacienteId, getAllRecetas, getRecetasByDiagnosticoId } from "../../services/apiRecetas"
 
 export const useRecetas = (pacienteIdProp = null, diagnosticoIdProp = null) => {
-    const [recetas, setRecetas] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [selectedReceta, setSelectedReceta] = useState(null);
+    const [recetas, setRecetas] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [selectedReceta, setSelectedReceta] = useState(null)
 
     const cargarRecetasPorPaciente = async (pacienteId = null) => {
-        setIsLoading(true);
-        setError(null);
+        setIsLoading(true)
+        setError(null)
 
         try {
-            const id = pacienteId || pacienteIdProp || localStorage.getItem("userId");
+            const id = pacienteId || pacienteIdProp || localStorage.getItem("userId")
             
             if (!id) {
-                throw new Error("No se encontró el ID del paciente. Por favor, inicia sesión nuevamente.");
+                throw new Error("No se encontró el ID del paciente. Por favor, inicia sesión nuevamente.")
             }
 
-            const data = await getRecetasByPacienteId(id);
-            setRecetas(Array.isArray(data) ? data : []);
+            const data = await getRecetasByPacienteId(id)
+            setRecetas(Array.isArray(data) ? data : [])
         } catch (err) {
-            console.error("Error al obtener recetas:", err);
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener las recetas");
-            setRecetas([]);
+            console.error("Error al obtener recetas:", err)
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener las recetas")
+            setRecetas([])
         } finally {
-            setIsLoading(false);
+            setIsLoading(false)
         }
-    };
+    }
 
     const cargarRecetasPorDiagnostico = async (diagnosticoId = null) => {
-        const id = diagnosticoId || diagnosticoIdProp;
+        const id = diagnosticoId || diagnosticoIdProp
         
         if (!id) {
-            setError('No se proporcionó ID de diagnóstico');
-            setIsLoading(false);
-            return;
+            setError('No se proporcionó ID de diagnóstico')
+            setIsLoading(false)
+            return
         }
 
-        setIsLoading(true);
-        setError(null);
+        setIsLoading(true)
+        setError(null)
 
         try {
-            const data = await getRecetasByDiagnosticoId(id);
-            setRecetas(Array.isArray(data) ? data : []);
+            const data = await getRecetasByDiagnosticoId(id)
+            setRecetas(Array.isArray(data) ? data : [])
         } catch (err) {
-            console.error("Error al obtener recetas por diagnóstico:", err);
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener las recetas");
-            setRecetas([]);
+            console.error("Error al obtener recetas por diagnóstico:", err)
+            setError(err instanceof Error ? err.message : "Error desconocido al obtener las recetas")
+            setRecetas([])
         } finally {
-            setIsLoading(false);
+            setIsLoading(false)
         }
-    };
+    }
 
     useEffect(() => {
         if (diagnosticoIdProp) {
-            cargarRecetasPorDiagnostico();
+            cargarRecetasPorDiagnostico()
         } else {
-            cargarRecetasPorPaciente();
+            cargarRecetasPorPaciente()
         }
-    }, [pacienteIdProp, diagnosticoIdProp]);
+    }, [pacienteIdProp, diagnosticoIdProp])
 
     const handleRecetaClick = (receta) => {
-        if (!receta) return;
-        setSelectedReceta(receta);
-    };
+        if (!receta) return
+        setSelectedReceta(receta)
+    }
 
     const closeDetails = () => {
-        setSelectedReceta(null);
-    };
+        setSelectedReceta(null)
+    }
 
     const recargarRecetas = () => {
         if (diagnosticoIdProp) {
-            cargarRecetasPorDiagnostico();
+            cargarRecetasPorDiagnostico()
         } else {
-            cargarRecetasPorPaciente();
+            cargarRecetasPorPaciente()
         }
-    };
+    }
 
     const filtrarRecetasPorEstado = (estado) => {
-        if (!estado) return recetas;
+        if (!estado || !Array.isArray(recetas)) return recetas
         return recetas.filter(receta => 
-            receta.estado?.toLowerCase() === estado.toLowerCase()
-        );
-    };
+            receta?.estado?.toLowerCase() === estado.toLowerCase()
+        )
+    }
 
-    //sin usar, si se quita tenemos un problema
     const filtrarRecetasActivas = () => {
-        const hoy = new Date();
+        if (!Array.isArray(recetas)) return []
+        
+        const hoy = new Date()
         return recetas.filter(receta => {
-            if (!receta.fecha_fin) return true; 
-            const fechaFin = new Date(receta.fecha_fin);
-            return fechaFin >= hoy;
-        });
-    };
+            if (!receta?.fecha_fin && !receta?.fecha_vencimiento) return true
+            
+            try {
+                const fechaFin = new Date(receta.fecha_fin || receta.fecha_vencimiento)
+                return fechaFin >= hoy
+            } catch (e) {
+                console.error("Error al procesar fecha de receta:", e)
+                return true // En caso de error, se asume activa
+            }
+        })
+    }
 
     const filtrarRecetasVencidas = () => {
-        const hoy = new Date();
+        if (!Array.isArray(recetas)) return []
+        
+        const hoy = new Date()
         return recetas.filter(receta => {
-            if (!receta.fecha_fin) return false;
-            const fechaFin = new Date(receta.fecha_fin);
-            return fechaFin < hoy;
-        });
-    };
+            if (!receta?.fecha_fin && !receta?.fecha_vencimiento) return false
+            
+            try {
+                const fechaFin = new Date(receta.fecha_fin || receta.fecha_vencimiento)
+                return fechaFin < hoy
+            } catch (e) {
+                console.error("Error al procesar fecha de receta:", e)
+                return false
+            }
+        })
+    }
 
     const buscarRecetasPorMedicamento = (nombreMedicamento) => {
-        if (!nombreMedicamento) return recetas;
-        const busqueda = nombreMedicamento.toLowerCase();
+        if (!nombreMedicamento || !Array.isArray(recetas)) return recetas
+        
+        const busqueda = nombreMedicamento.toLowerCase()
         return recetas.filter(receta => 
-            receta.medicamento?.toLowerCase().includes(busqueda) ||
-            receta.nombre_medicamento?.toLowerCase().includes(busqueda)
-        );
-    };
+            receta?.medicamento?.toLowerCase().includes(busqueda) ||
+            receta?.nombre_medicamento?.toLowerCase().includes(busqueda)
+        )
+    }
+
+    const getRecetasRecientes = (limite = 5) => {
+        if (!Array.isArray(recetas) || recetas.length === 0) return []
+
+        return [...recetas]
+            .sort((a, b) => {
+                try {
+                    return new Date(b?.fecha_receta || b?.created_at || b?.fecha || 0) - 
+                           new Date(a?.fecha_receta || a?.created_at || a?.fecha || 0)
+                } catch (e) {
+                    console.error("Error al ordenar recetas:", e)
+                    return 0
+                }
+            })
+            .slice(0, limite)
+    }
 
     return {
         recetas,
@@ -126,6 +158,47 @@ export const useRecetas = (pacienteIdProp = null, diagnosticoIdProp = null) => {
         filtrarRecetasPorEstado,
         filtrarRecetasActivas,
         filtrarRecetasVencidas,
-        buscarRecetasPorMedicamento
-    };
-};
+        buscarRecetasPorMedicamento,
+        getRecetasRecientes,
+    }
+}
+
+export const useTodasRecetas = () => {
+    const [recetas, setRecetas] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    const cargarRecetas = async () => {
+        setLoading(true)
+        setError(null)
+
+        try {
+            const recetasData = await getAllRecetas()
+            setRecetas(Array.isArray(recetasData) ? recetasData : [])
+        } catch (err) {
+            console.error("Error al cargar todas las recetas:", err)
+            setError(err instanceof Error ? err.message : "Error al cargar recetas")
+            setRecetas([])
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const resetRecetas = () => {
+        setRecetas([])
+        setError(null)
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        cargarRecetas()
+    }, [])
+
+    return {
+        recetas,
+        loading,
+        error,
+        cargarRecetas,
+        resetRecetas,
+    }
+}

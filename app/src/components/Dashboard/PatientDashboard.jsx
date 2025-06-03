@@ -1,4 +1,4 @@
-import { getData } from "../../hooks/useUsuarios"
+import { getData } from "../../hooks/users/useUsuarios"
 import { Check, User } from "lucide-react"
 import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"

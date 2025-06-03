@@ -4,7 +4,7 @@ import {
     getEnfermedadesByMedicamento,
     getMedicamentosByEnfermedad,
     getEnfermedadById,
-} from "../services/apiEnfMed"
+} from "../../services/apiEnfMed"
 
 export const useMedicamentos = () => {
     const [isLoading, setIsLoading] = useState(true)

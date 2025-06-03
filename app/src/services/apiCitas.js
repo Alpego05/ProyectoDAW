@@ -22,7 +22,6 @@ export const getAllCitas = async () => {
 };
 
 export const getCitasByPatient = async (patientId) => {
-
     try {
         const response = await fetch(`${API_BASE_URL}/citas/bypatient/${patientId}`, {
             method: 'GET',
@@ -36,12 +35,13 @@ export const getCitasByPatient = async (patientId) => {
         }
 
         const data = await response.json();
-        return data.data;
+        return data.data || []; 
     } catch (error) {
         console.error("Error al cargar citas del paciente:", error);
-        throw error;
+        return []; 
     }
 };
+
 
 export const getCitasByDoctor = async (doctorId) => {
 
