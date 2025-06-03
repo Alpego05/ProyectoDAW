@@ -22,8 +22,7 @@ const registerPatient = async (userData, patientData, transaction) => {
     const { genero, fecha_nacimiento, direccion, telefono, tipo_sangre, alergias } = patientData;
 
     // Generar una contraseña temporal aleatoria
-    // const tempPassword = Math.random().toString(36).slice(-10);
-    const tempPassword = "123456";
+    const tempPassword = Math.random().toString(36).slice(-10);
     const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
     const newUser = await User.create(
@@ -60,7 +59,8 @@ const registerPatient = async (userData, patientData, transaction) => {
     }
 
     try {
-      await sendWelcomeEmail(newUser);
+      // Pasar la contraseña temporal al correo
+      await sendWelcomeEmail(newUser, tempPassword);
     } catch (emailError) {
       console.error("Error al enviar correo:", emailError.message);
       throw new Error(`Error al enviar correo de bienvenida: ${emailError.message}`);
@@ -88,10 +88,8 @@ const registerDoctor = async (userData, doctorData, transaction) => {
     const { especialidad, sala_asignada, numero_licencia } = doctorData;
 
     // Generar una contraseña temporal aleatoria
-    // const tempPassword = Math.random().toString(36).slice(-10);
-    const tempPassword = "123456";
-   const hashedPassword = await bcrypt.hash(tempPassword, 10);
-    // console.log("Hashed Password:", hashedPassword);
+    const tempPassword = Math.random().toString(36).slice(-10);
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
     const newUser = await User.create(
       {
@@ -123,8 +121,8 @@ const registerDoctor = async (userData, doctorData, transaction) => {
     }
 
     try {
-      // enviar el correo
-      await sendWelcomeEmail(newUser);
+      // Pasar la contraseña temporal al correo
+      await sendWelcomeEmail(newUser, tempPassword);
     } catch (emailError) {
       console.error("Error al enviar correo:", emailError.message);
       throw new Error(`Error al enviar correo de bienvenida: ${emailError.message}`);
