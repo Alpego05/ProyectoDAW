@@ -22,6 +22,7 @@ import Pacientes from './components/Pages/doctors/Pacientes/Pacientes'
 import MedicamentoDetalle from './components/Pages/doctors/Glosario/MedicamentoDetalle'
 import EnfermedadDetalle from './components/Pages/doctors/Glosario/EnfermedadDetalle'
 import DetallesPaciente from './components/Pages/doctors/Pacientes/DetallesPaciente'
+import SetPass from './components/Pages/SetPass'
 
 
 
@@ -32,6 +33,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login />} />
+        <Route path='SetPass' element={<SetPass />} />
 
         {/* Protegemos la ruta revisando el rol */}
         <Route
@@ -82,6 +84,7 @@ function App() {
 
           {/* rutas comunes */}
           {/* <Route path='Perfil' element={<Perfil />} /> */}
+        
 
 
         </Route>
