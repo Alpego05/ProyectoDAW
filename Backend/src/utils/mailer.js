@@ -89,7 +89,7 @@ const sendWelcomeEmail = async (user, tempPassword) => {
         ¿Cómo iniciar sesión?
       </h4>
       <ul style="padding-left: 20px; margin: 0; color: #4b5563; font-size: 15px;">
-        <li style="margin-bottom: 10px;">1. Usa tu <strong>DNI</strong> como nombre de usuario.</li>
+        <li style="margin-bottom: 10px;">1. Necesitas tu <strong>DNI</strong> para inciar sesión</li>
         <li style="margin-bottom: 10px;">2. Ingresa tu <strong>contraseña temporal</strong>.</li>
         <li>3. Establece tu nueva contraseña personal.</li>
       </ul>

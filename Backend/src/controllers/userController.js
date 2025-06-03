@@ -43,19 +43,91 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        const updatedUser = await userService.updateUser(
-            req.params.id,
-            req.body
-        );
-        if (updatedUser) {
-            res.status(201).json(updatedUser);
-        } else {
-            res.status(404).json({ message: "Cliente no encontrado" });
-        }
+        const { id } = req.params;
+        const userData = req.body;
+
+        const updatedUser = await updateUser(id, userData);
+        res.status(200).json({
+            success: true,
+            message: updatedUser.message || 'Usuario actualizado correctamente',
+            data: updatedUser
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error in updateUserController:', error);
+
+        let statusCode = 500;
+        if (error.message.includes('no encontrado')) {
+            statusCode = 404;
+        } else if (error.message.includes('contraseña temporal no es correcta') ||
+            error.message.includes('nueva contraseña debe ser diferente')) {
+            statusCode = 400;
+        }
+
+        res.status(statusCode).json({
+            success: false,
+            message: error.message,
+            error: error.message
+        });
     }
 }
+
+const changePassword = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { tempPassword, newPassword } = req.body;
+
+        if (!tempPassword || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Contraseña temporal y nueva contraseña son requeridas'
+            });
+        }
+
+        if (tempPassword === newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'La nueva contraseña debe ser diferente a la temporal'
+            });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'La nueva contraseña debe tener al menos 6 caracteres'
+            });
+        }
+
+        const updatedUser = await userService.updateUser(id, {
+            tempPassword,
+            newPassword
+        });
+
+        res.status(200).json({
+            success: true,
+            message: updatedUser.message || 'Contraseña actualizada correctamente',
+            data: {
+                dni: updatedUser.dni,
+                nombre: updatedUser.nombre,
+                updatedAt: updatedUser.updatedAt
+            }
+        });
+    } catch (error) {
+        console.error('Error in changePassword controller:', error);
+
+        let statusCode = 500;
+        if (error.message.includes('no encontrado')) {
+            statusCode = 404;
+        } else if (error.message.includes('contraseña temporal no es correcta') ||
+            error.message.includes('nueva contraseña debe ser diferente')) {
+            statusCode = 400;
+        }
+
+        res.status(statusCode).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 
 
 // Eliminar un usuario
@@ -73,14 +145,14 @@ const deleteUser = async (req, res) => {
 }
 
 //creamos el token al iniciar el usuario
-const createToken=(user) => { 
-  const payload={
-    usuarioId:user.id,
-    createdAt:moment().unix(),
-    expiredAt:moment().add(60,"minutes").unix()
-  }
-  return jwt.encode(payload, process.env.JWT_SECRET)
- }
+const createToken = (user) => {
+    const payload = {
+        usuarioId: user.id,
+        createdAt: moment().unix(),
+        expiredAt: moment().add(60, "minutes").unix()
+    }
+    return jwt.encode(payload, process.env.JWT_SECRET)
+}
 
 
 const login = async (req, res) => {
@@ -97,9 +169,9 @@ const login = async (req, res) => {
 
         return res.status(200).json({
             message: 'Login exitoso',
-            token: createToken(authData), 
-            user: authData.id,  
-            rol: authData.tipo_usuario         
+            token: createToken(authData),
+            user: authData.id,
+            rol: authData.tipo_usuario
         });
     } catch (error) {
         const errorMessage = error.message;
@@ -127,7 +199,7 @@ const login = async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message:  errorMessage
+            message: errorMessage
         });
     }
 };
@@ -139,5 +211,6 @@ module.exports = {
     getUserById,
     login,
     updateUser,
-    deleteUser
+    deleteUser, 
+    changePassword
 };

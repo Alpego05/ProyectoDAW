@@ -8,5 +8,6 @@ userRouter.get("/:id", verifyToken, userController.getUserById);
 userRouter.delete("/delete/:id", verifyToken, userController.deleteUser);
 userRouter.post("/login",  userController.login);  
 userRouter.patch("/edit/:id", verifyToken, userController.updateUser);  
+userRouter.patch("/change-password/:id", userController.changePassword);
 
 module.exports = userRouter;

@@ -39,7 +39,7 @@ export const getUserById = async (id) => {
     }
 };
 
-// función para editar un usuario
+// función para editar un usuario (requiere token)
 export const updateUser = async (id, userData) => {
     try {
         const response = await fetch(`${API_BASE_URL}/users/edit/${id}`, {
@@ -51,20 +51,52 @@ export const updateUser = async (id, userData) => {
             body: JSON.stringify(userData)
         });
 
-        if (!response.ok) {
-            throw new Error("Error al actualizar usuario");
-        }
-
         const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || data.error || "Error al actualizar usuario");
+        }
         return data.data;
+        
     } catch (error) {
         console.error("Error al actualizar usuario:", error);
+        
+        if (error.name === 'TypeError' || error.name === 'SyntaxError') {
+            throw new Error('Error de conexión. Verifique su conexión a internet.');
+        }
         throw error;
     }
 };
 
+// Nueva función para cambiar contraseña sin token
+export const changePassword = async (id, passwordData) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/change-password/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+                // No incluimos Authorization header
+            },
+            body: JSON.stringify(passwordData)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || data.error || "Error al cambiar contraseña");
+        }
+        return data.data;
+        
+    } catch (error) {
+        console.error("Error al cambiar contraseña:", error);
+        
+        if (error.name === 'TypeError' || error.name === 'SyntaxError') {
+            throw new Error('Error de conexión. Verifique su conexión a internet.');
+        }
+        throw error;
+    }
+};
 export default {
     getAllUsers,
     getUserById,
-    updateUser
+    updateUser,
+    changePassword
 }

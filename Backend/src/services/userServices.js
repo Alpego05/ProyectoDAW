@@ -105,26 +105,58 @@ const createUser = async (userData) => {
 // Actualizar un usuario
 const updateUser = async (id, userData) => {
     try {
-        const { nombre, apellido1, apellido2, clave, email } = userData;
+        const { nombre, apellido1, apellido2, clave, email, tempPassword, newPassword } = userData;
 
-        const user = await User.findByPk(id);
+        const user = await User.findOne({
+            where: { dni: id } // Buscar por DNI
+        });
 
         if (!user) {
             throw new Error('Usuario no encontrado');
         }
 
-        // Actualizar campos si existen en la solicitud
+        // Cnueva contraseña con validación de contraseña temporal
+        if (tempPassword && newPassword) {
+            const isTempPasswordValid = await bcrypt.compare(tempPassword, user.clave);
+            
+            if (!isTempPasswordValid) {
+                throw new Error('La contraseña temporal no es correcta');
+            }
+            // verificar que la nueva contraseña sea diferente a la temporal
+            if (tempPassword === newPassword) {
+                throw new Error('La nueva contraseña debe ser diferente a la temporal');
+            }
+
+            const saltRounds = 10;
+            const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+            
+            // Actualizar solo la contraseña
+            user.clave = hashedNewPassword;
+            await user.save();
+
+            return {
+                message: 'Contraseña establecida correctamente',
+                dni: user.dni,
+                nombre: user.nombre,
+                updatedAt: user.updatedAt
+            };
+        }
+
+        //Actualización de otros campos
         if (nombre) user.nombre = nombre;
         if (apellido1) user.apellido1 = apellido1;
         if (apellido2) user.apellido2 = apellido2;
-        if (clave) user.clave = clave;
+        if (clave) {
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(clave, saltRounds);
+            user.clave = hashedPassword;
+        }
         if (email) user.email = email;
         
         await user.save();
-
-        // Excluir la contraseña de la respuesta
         const userWithoutPassword = {
-            name: user.nombre,
+            dni: user.dni,
+            nombre: user.nombre,
             apellido1: user.apellido1,
             apellido2: user.apellido2,
             email: user.email,
