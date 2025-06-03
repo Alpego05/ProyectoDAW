@@ -1,6 +1,6 @@
 import { Clock, User, FileText, CheckCircle, Stethoscope, Pill, AlertCircle, Calendar, Activity, Folder, Tablets, TestTube, } from "lucide-react";
-import { useFormatCita } from "./../../../hooks/medical/useFormatCita";
-import LoadingSpinner from "./../../Common/LoadingSpinner";
+import { useFormatCita } from "../../../../hooks/medical/useFormatCita";
+import LoadingSpinner from "../../../Common/LoadingSpinner";
 
 const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError }) => {
     const { formatDate, formatTime, getEstadoClassName } = useFormatCita();
@@ -203,13 +203,7 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
                                             className="bg-sky-50 rounded-lg p-5 border border-sky-100 hover:shadow-md transition-shadow duration-200"
                                         >
                                             <div className="space-y-4">
-                                                <div className="flex items-start gap-3">
-                                                    <Stethoscope className="h-5 w-5 text-sky-600 mt-0.5 flex-shrink-0" />
-                                                    <div className="flex-1">
-                                                        <span className="text-slate-500 text-sm block mb-1">Enfermedad:</span>
-                                                        <span className="font-medium text-slate-800">{receta.enfermedad.nombre}</span>
-                                                    </div>
-                                                </div>
+                                                
 
                                                 <div className="flex items-start gap-3">
                                                     <Tablets className="h-5 w-5 text-sky-600 mt-0.5 flex-shrink-0" />

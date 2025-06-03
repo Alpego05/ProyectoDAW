@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Clock, CheckCircle, XCircle, ChevronDown, ChevronUp, User, Phone, History, FileText, Plus, TriangleAlert, ClipboardPlus } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, ChevronDown, ChevronUp, User, History, FileText, Plus, TriangleAlert, ClipboardPlus } from 'lucide-react';
 import { useFormatCita } from '../../../../hooks/medical/useFormatCita';
 import { useNavigate } from "react-router-dom";
 import useFormat from '../../../../hooks/useFormat';
 import DiagnosticoModal from './DiagnosticoModal';
 import { generateCitaPDF } from '../../../Common/pdfcreator';
+import { useCitaPDF } from '../../../../hooks/medical/useCitaPDF';
 
 const CitaCard = ({
     cita,
@@ -17,6 +18,7 @@ const CitaCard = ({
     const [showDiagnosticoModal, setShowDiagnosticoModal] = useState(false);
     const navigate = useNavigate();
     const { formatHour } = useFormat();
+    const { obtenerDatosPDF, loading: pdfLoading } = useCitaPDF();
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -28,12 +30,11 @@ const CitaCard = ({
 
     const handleGeneratePDF = async () => {
         try {
-            // if (!cita.diagnosticos || cita.diagnosticos.length === 0) {
-            //     alert('Esta cita no tiene diagnósticos registrados');
-            //     return;
-            // }
+            // Obtener todos los datos necesarios para el PDF
+            const datosPDF = await obtenerDatosPDF(cita);
             
-            await generateCitaPDF(cita, formatHour);
+            // Generar el PDF con los datos completos
+            await generateCitaPDF(datosPDF, formatHour);
         } catch (error) {
             console.error('Error al generar PDF:', error);
             alert('Ocurrió un error al generar el PDF: ' + error.message);
@@ -107,13 +108,9 @@ const CitaCard = ({
                                         e.stopPropagation();
                                         toggleExpand();
                                     }}
-                                    className="p-2 text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                                >
-                                    {isExpanded ? (
-                                        <ChevronUp className="h-5 w-5" />
-                                    ) : (
-                                        <ChevronDown className="h-5 w-5" />
-                                    )}
+                                    className="p-2 text-gray-600 hover:text-gray-900 transition-colors duration-200">
+                                        <ChevronUp  className={`cursor-pointer h-5 w-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                                    
                                 </button>
                             </div>
                         </div>
@@ -126,7 +123,7 @@ const CitaCard = ({
                         <div className="pt-4 space-y-6">
                             {cita.paciente ? (
                                 <>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4">
                                         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                                             <div className="flex items-center space-x-3 mb-2">
                                                 <User className="h-4 w-4 text-gray-600" />
@@ -134,15 +131,6 @@ const CitaCard = ({
                                             </div>
                                             <p className="text-lg font-semibold text-gray-900">
                                                 {cita.paciente?.usuario.nombre} {cita.paciente?.usuario.apellido1}
-                                            </p>
-                                        </div>
-                                        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                                            <div className="flex items-center space-x-3 mb-2">
-                                                <Phone className="h-4 w-4 text-gray-600" />
-                                                <p className="text-sm font-medium text-gray-700">Teléfono</p>
-                                            </div>
-                                            <p className="text-lg font-semibold text-gray-900">
-                                                {cita.paciente.telefono}
                                             </p>
                                         </div>
                                     </div>
@@ -186,10 +174,11 @@ const CitaCard = ({
                                         </h4>
                                         <button
                                             onClick={handleGeneratePDF}
+                                            disabled={pdfLoading}
                                             className="cursor-pointer group flex items-center justify-center space-x-2 bg-blue-100 text-blue-800 hover:bg-blue-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             <FileText className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                                            <span>Generar PDF</span>
+                                            <span>{pdfLoading ? 'Generando PDF...' : 'Generar PDF'}</span>
                                         </button>
                                     </div>
                                 </>

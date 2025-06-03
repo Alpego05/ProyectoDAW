@@ -5,6 +5,18 @@ import { useNavigate } from 'react-router-dom'
 import LoadingSpinner from "../../../Common/LoadingSpinner"
 import useFormat from '../../../../hooks/useFormat';
 
+const handleGeneratePDF = async () => {
+        try {
+            const datosPDF = await obtenerDatosPDF(cita);
+            
+            // Generar el PDF con los datos completos
+            await generateCitaPDF(datosPDF, formatHour);
+        } catch (error) {
+            console.error('Error al generar PDF:', error);
+            alert('Ocurrió un error al generar el PDF: ' + error.message);
+        }
+    };
+    
 const DetallesPaciente = () => {
     const { id } = useParams()
     const navigate = useNavigate()

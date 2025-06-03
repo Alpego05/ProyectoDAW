@@ -80,8 +80,32 @@ export const createDiagnostico = async (diagnosticoData) => {
     }
 };
 
+
+// Obtener diagnósticos por ID de cita
+export const getDiagnosticosByCitaId = async (citaId) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/diagnosticos/byCita/${citaId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener diagnósticos por cita");
+        }
+
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error al cargar diagnosticos por cita:", error);
+        throw error;
+    }
+};
+
 export default {
     getDiagnosticosByPacienteId,
     getAllDiagnosticos,
-    createDiagnostico
+    createDiagnostico,
+    getDiagnosticosByCitaId
 }

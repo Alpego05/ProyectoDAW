@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { changePassword } from '../services/apiUser'; // Cambiar import
+import { changePassword } from '../services/apiUser'; 
 
 export const useSetPass = () => {
     const [dni, setDni] = useState('');
@@ -79,7 +79,6 @@ export const useSetPass = () => {
                 newPassword: newPassword.trim()
             };
 
-            // Usar la nueva función changePassword que no requiere token
             await changePassword(dni.trim(), passwordData);
             
             setIsSuccess(true);

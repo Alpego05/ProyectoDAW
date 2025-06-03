@@ -7,7 +7,6 @@ const getToken = () => {
     return localStorage.getItem("authToken") || "";
 };
 
-
 export const getAllRecetas = async () => {
     const response = await fetch(`${API_BASE_URL}/recetas`, {
         method: "GET",
@@ -19,11 +18,14 @@ export const getAllRecetas = async () => {
     return data.data;
 };
 
-
-
 export const getRecetasByPacienteId = async (pacienteId) => {
-
     try {
+        if (!pacienteId) {
+            throw new Error('ID de paciente requerido');
+        }
+
+        console.log(`Obteniendo recetas para paciente ID: ${pacienteId}`);
+        
         const response = await fetch(`${API_BASE_URL}/recetas/bypatient/${pacienteId}`, {
             method: 'GET',
             headers: {
@@ -32,66 +34,104 @@ export const getRecetasByPacienteId = async (pacienteId) => {
         });
 
         if (!response.ok) {
-            throw new Error("Error al obtener recetas del paciente");
+            if (response.status === 404) {
+                console.log(`No se encontraron recetas para el paciente ${pacienteId}`);
+                return [];
+            }
+            const errorText = await response.text();
+            throw new Error(`Error ${response.status}: ${errorText || 'Error al obtener recetas del paciente'}`);
         }
 
         const data = await response.json();
-        console.log(data)
-        return data.data;
+        console.log(`Recetas del paciente ${pacienteId}:`, data);
+        return data.data || [];
     } catch (error) {
-        console.error("Error al cargar recetas del paciente:", error);
-        throw error;
+        console.error(`Error al cargar recetas del paciente ${pacienteId}:`, error.message);
+        
+        // Si es un error de "no encontrado", retornar array vacío en lugar de error
+        if (error.message.includes('404') || error.message.includes('No se encontraron')) {
+            return [];
+        }
+        throw new Error(`Error al obtener recetas del paciente: ${error.message}`);
     }
 };
 
-
-
-
 export const getRecetasByCitaId = async (citaId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/recetas/bycita/${citaId
-            }`, {
+        if (!citaId) {
+            throw new Error('ID de cita requerido');
+        }
+
+        console.log(`Obteniendo recetas para cita ID: ${citaId}`);
+        
+        const response = await fetch(`${API_BASE_URL}/recetas/bycita/${citaId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `${getToken()}`
             }
         });
+
         if (!response.ok) {
-            throw new Error("Error al obtener recetas del paciente");
+            if (response.status === 404) {
+                console.log(`No se encontraron recetas para la cita ${citaId}`);
+                return [];
+            }
+            const errorText = await response.text();
+            throw new Error(`Error ${response.status}: ${errorText || 'Error al obtener recetas de la cita'}`);
         }
+
         const data = await response.json();
-        console.log(data)
-        return data.data;
+        console.log(`Recetas de la cita ${citaId}:`, data);
+        return data.data || [];
     } catch (error) {
-        console.error("Error al obtener recetas del paciente:", error);
-        throw error;
+        console.error(`Error al obtener recetas de la cita ${citaId}:`, error.message);
+        
+        // Si es un error de "no encontrado", retornar array vacío en lugar de error
+        if (error.message.includes('404') || error.message.includes('No se encontraron')) {
+            return [];
+        }
+        throw new Error(`Error al obtener recetas de la cita: ${error.message}`);
     }
 };
 
-
-
-export const getRecetasByDiagnosticoId = async (id) => {
+export const getRecetasByDiagnosticoId = async (diagnosticoId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/recetas/bydiagnostico/${id}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `${getToken()}`
-                }
-            }
-        );
-        if (!response.ok) {
-            throw new Error("Error al obtener recetas del paciente");
+        if (!diagnosticoId) {
+            throw new Error('ID de diagnóstico requerido');
         }
-        const data = await response.json();
-        return data.data;
-    } catch (error) {
-        console.error("Error al obtener recetas del paciente:", error);
-        throw error;
-    }
-}
 
-//crear un diagnostico
+        console.log(`Obteniendo recetas para diagnóstico ID: ${diagnosticoId}`);
+        
+        const response = await fetch(`${API_BASE_URL}/recetas/bydiagnostico/${diagnosticoId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${getToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                console.log(`No se encontraron recetas para el diagnóstico ${diagnosticoId}`);
+                return [];
+            }
+            const errorText = await response.text();
+            throw new Error(`Error ${response.status}: ${errorText || 'Error al obtener recetas del diagnóstico'}`);
+        }
+
+        const data = await response.json();
+        console.log(`Recetas del diagnóstico ${diagnosticoId}:`, data);
+        return data.data || [];
+    } catch (error) {
+        console.error(`Error al obtener recetas del diagnóstico ${diagnosticoId}:`, error.message);
+        
+        // Si es un error de "no encontrado", retornar array vacío en lugar de error
+        if (error.message.includes('404') || error.message.includes('No se encontraron')) {
+            return [];
+        }
+        throw new Error(`Error al obtener recetas del diagnóstico: ${error.message}`);
+    }
+};
+
 // Crear una receta - Enhanced with debugging
 export const createReceta = async (recetaData) => {
     try {
@@ -111,7 +151,7 @@ export const createReceta = async (recetaData) => {
             try {
                 const errorData = JSON.parse(responseText);
                 errorMessage = errorData.message || errorData.error || errorMessage;
-                console.error( errorData);
+                console.error(errorData);
             } catch (parseError) {
                 console.error(responseText);
             }
@@ -129,10 +169,10 @@ export const createReceta = async (recetaData) => {
     }
 };
 
-
 export default {
     getAllRecetas,
+    getRecetasByPacienteId,
     getRecetasByCitaId,
     getRecetasByDiagnosticoId,
     createReceta
-}
+};

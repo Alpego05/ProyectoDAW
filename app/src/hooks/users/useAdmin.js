@@ -76,7 +76,6 @@ export const useAdmin = () => {
             console.error("Error al obtener datos de administrador:", err)
             setError(err instanceof Error ? err.message : "Error desconocido al obtener datos")
             
-            // Establecer valores por defecto en caso de error completo
             setUsuarios([])
             setDoctores([])
             setPacientes([])

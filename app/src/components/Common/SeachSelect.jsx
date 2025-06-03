@@ -56,8 +56,7 @@ const SearchableSelect = ({
                                 e.stopPropagation();
                                 handleClear();
                             }}
-                            className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
-                        >
+                            className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
                             <X className="h-4 w-4" />
                         </button>
                     )}

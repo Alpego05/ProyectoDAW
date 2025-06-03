@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react"
 import { getPatientById, getPatients } from "../../services/apiPatient"
-import { getUserById } from "../../services/apiUser"
-
-import { getDoctorById } from "../../services/apiDoctor"
-import { getCitasByPatient, getCitasByDoctor, getAllCitas } from "../../services/apiCitas"
-import { getDiagnosticosByPacienteId, getAllDiagnosticos } from "../../services/apiDiagnosticos"
-import { getRecetasByPacienteId, getAllRecetas } from "../../services/apiRecetas"
-import { getAllUsers } from "../../services/apiUser"
 
 export const usePacientes = () => {
     const [paciente, setPaciente] = useState(null)

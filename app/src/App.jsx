@@ -6,11 +6,13 @@ import Login from "./components/Pages/Login"
 
 // componentes de pacientes
 import Dashboard from "./components/Dashboard/Dashboard";
-import AgendaPaciente from './components/Pages/patients/AgendaPaciente'
+import AgendaPaciente from './components/Pages/patients/Calendario/AgendaPaciente'
 // import HistorialPaciente from './components/Pages/patients/HistorialPaciente'
 // import RecetasPaciente from './components/Pages/patients/RecetasPaciente'
 // import Perfil from './components/Pages/Perfil'
-import SolicitarCita from './components/Pages/patients/SolicitarCita'
+import SolicitarCita from './components/Pages/patients/Solicitar/SolicitarCita'
+
+//componentes de admins
 import DashboardCitas from './components/Pages/admins/DashboardCitas'
 import DashboardUsuarios from './components/Pages/admins/DashboardUsuarios'
 import DashboardDiagnosticos from './components/Pages/admins/DashboardDiagnosticos'
