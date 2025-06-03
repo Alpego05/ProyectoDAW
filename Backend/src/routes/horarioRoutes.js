@@ -4,7 +4,7 @@ const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 
 horarioRoutes.get("/", verifyToken, horarioController.getAllHorarios);
-horarioRoutes.get("/:id", verifyToken, horarioController.getHorarioByDoctor);
+horarioRoutes.get("/:id",  horarioController.getHorarioByDoctor);
 horarioRoutes.post("/create" , verifyToken, horarioController.createHorario);
 horarioRoutes.patch("/edit/:id", verifyToken, horarioController.updateHorario);
 horarioRoutes.delete("/delete/:id", verifyToken, horarioController.deleteHorario);

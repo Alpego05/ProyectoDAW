@@ -11,10 +11,11 @@ const getAllHorarios = async () => {
 };
 
 // Obtener horarios de un doctor por ID
-const getHorarioByDoctor = async (doctor_id) => {
+const getHorarioByDoctor = async (doctor_id
+) => {
     try {
         const horarios = await Horario.findAll({
-            where: { id_doctor }
+            where: { doctor_id }
         });
         if (!horarios || horarios.length === 0) {
             throw new Error('No se encontraron horarios para este doctor');
