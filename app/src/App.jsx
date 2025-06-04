@@ -14,7 +14,6 @@ import HistorialPaciente from './components/Pages/patients/Historial/HistorialPa
 //componentes de admins
 import RegistrarPaciente from './components/Pages/admins/RegistrarPaciente'
 import RegistrarDoctor from './components/Pages/admins/RegistrarDoctor'
-import Usuarios from './components/Pages/admins/ListaUsuarios/Usuarios'
 
 //componentes de doctores
 import AgendaDoctor from './components/Pages/doctors/Calendario/AgendaDoctor'
@@ -71,7 +70,7 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path='NuevoPaciente' element={<RegistrarPaciente />} />
               <Route path='NuevoDoctor' element={<RegistrarDoctor />} />
-              <Route path='ListaUsuarios' element= {<Usuarios/>}/>
+
             </>
 
 

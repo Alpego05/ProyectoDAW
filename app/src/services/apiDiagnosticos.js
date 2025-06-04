@@ -58,9 +58,9 @@ export const createDiagnostico = async (diagnosticoData) => {
             try {
                 const errorData = JSON.parse(responseText);
                 errorMessage = errorData.message || errorData.error || errorMessage;
-                console.error("❌ Server error details:", errorData);
+                console.error("Server error:", errorData);
             } catch (parseError) {
-                console.error("❌ Could not parse error response:", responseText);
+                console.error(" error:", responseText);
             }
             
             throw new Error(errorMessage);
