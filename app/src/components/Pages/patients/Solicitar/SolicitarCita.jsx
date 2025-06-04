@@ -28,13 +28,11 @@ const SolicitarCita = () => {
 
     // Cargar doctores al montar el componente
     useEffect(() => {
-        console.log('Cargando doctores al montar componente...');
         loadAllDoctors();
     }, [loadAllDoctors]);
 
     useEffect(() => {
         if (selectedDoctorId) {
-            console.log('Cargando datos para doctor:', selectedDoctorId);
             loadDoctorData(selectedDoctorId);
         } else {
             clearData();
@@ -44,7 +42,6 @@ const SolicitarCita = () => {
     // Actualizar horarios cuando cambia la fecha
     useEffect(() => {
         if (selectedDate && selectedDoctorId) {
-            console.log('Actualizando horarios para fecha:', selectedDate);
             updateAvailableSlots(selectedDate);
         }
     }, [selectedDate, selectedDoctorId, updateAvailableSlots]);
@@ -84,16 +81,13 @@ const SolicitarCita = () => {
 
     // Resetear formulario cuando cambia el doctor
     const handleDoctorChange = (doctorId) => {
-        console.log('Cambiando doctor a:', doctorId);
         setSelectedDoctorId(doctorId);
         setSelectedDate('');
         setSelectedTime('');
         setMotivo('');
     };
 
-    // Manejar cambio de fecha
     const handleDateChange = (date) => {
-        console.log('Cambiando fecha a:', date);
         setSelectedDate(date);
         setSelectedTime('');
     };

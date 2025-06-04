@@ -73,7 +73,7 @@ const HistorialPaciente = () => {
     // FIXED: Función para confirmar cambio de horario
     const confirmarCambioHorario = async (nuevaFecha, nuevaHoraInicio, nuevaHoraFin) => {
         try {
-            console.log("✅ Horario cambiado exitosamente:", {
+            console.log("", {
                 cita: modalEditarCita.id_cita,
                 fecha: nuevaFecha,
                 hora_inicio: nuevaHoraInicio,

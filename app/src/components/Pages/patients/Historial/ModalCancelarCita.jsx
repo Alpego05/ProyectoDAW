@@ -18,7 +18,7 @@ const ModalCancelarCita = ({ cita, onClose, onConfirm, formatDate, formatHour, l
                     <button
                         onClick={onClose}
                         disabled={loading}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <X className="h-5 w-5 text-gray-500" />
                     </button>
@@ -72,14 +72,14 @@ const ModalCancelarCita = ({ cita, onClose, onConfirm, formatDate, formatHour, l
                         <button
                             onClick={onClose}
                             disabled={loading}
-                            className="px-6 py-2.5 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="cursor-pointer px-6 py-2.5 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             No, mantener cita
                         </button>
                         <button
                             onClick={onConfirm}
                             disabled={loading}
-                            className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="cursor-pointer px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                             {loading ? 'Cancelando...' : 'Sí, cancelar cita'}

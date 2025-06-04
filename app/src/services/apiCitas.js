@@ -114,7 +114,7 @@ export const createCita = async (citaData) => {
         }
 
         const data = await response.json()
-        console.log("✅ Cita creada exitosamente:", data)
+        console.log("Cita creada:", data)
         return data.data
     } catch (error) {
         console.error("Error en createCita:", error)
@@ -136,8 +136,6 @@ export const updateCita = async (id, citaData) => {
             estado: citaData.estado || "Pendiente",
         }
 
-        console.log("📤 Payload enviado:", payload)
-
         const response = await fetch(`${API_BASE_URL}/citas/edit/${id}`, {
             method: "PATCH",
             headers: {
@@ -154,7 +152,7 @@ export const updateCita = async (id, citaData) => {
         }
 
         const data = await response.json()
-        console.log("Cita actualizada exitosamente:", data)
+        console.log("Cita actualizada:", data)
         return data.data
     } catch (error) {
         console.error("Error al actualizar cita:", error)

@@ -74,11 +74,6 @@ Cita.init(
       allowNull: false,
       validate: {
         notEmpty: { msg: "La hora de fin no puede estar vacía" },
-        isAfterStartTime(value) {
-          if (this.hora_inicio && value <= this.hora_inicio) {
-            throw new Error("La hora de fin debe ser posterior a la hora de inicio");
-          }
-        },
       },
     },
     estado: {

@@ -59,7 +59,6 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
 
             const citasDelDia = citasOcupadas.filter((citaItem) => {
                 const fechaCita = new Date(citaItem.fecha).toDateString()
-                // FIXED: Excluir la cita actual que se está editando
                 const esLaMismaCita = citaItem.id_cita === cita?.id_cita
                 return fechaCita === fechaSeleccionada && !esLaMismaCita
             })
@@ -98,17 +97,13 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
         return diasOrdenados.filter((dia) => dias.includes(dia))
     }, [])
 
-    // FIXED: Obtener doctorId correctamente
     const getDoctorId = useCallback(() => {
-        // Intentar diferentes propiedades donde puede estar el doctor ID
         return cita?.doctor_id || cita?.doctorId || cita?.medico_id
     }, [cita])
 
     const loadDoctorData = useCallback(async () => {
         const doctorId = getDoctorId()
 
-        console.log("🔍 Cita completa:", cita)
-        console.log("🔍 Doctor ID encontrado:", doctorId)
 
         if (!doctorId) {
             console.warn("No se encontró doctorId en la cita")
@@ -120,15 +115,10 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
         setError(null)
 
         try {
-            console.log("🔄 Cargando datos para doctor:", doctorId)
-
             const [horariosResponse, citasResponse] = await Promise.all([
                 getHorarioByDoctorId(doctorId),
                 getCitasByDoctor(doctorId),
             ])
-
-            console.log("📦 Respuesta horarios:", horariosResponse)
-            console.log("📦 Respuesta citas:", citasResponse)
 
             // Procesar horarios
             let horarioData
@@ -150,9 +140,6 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                 citasData = citasResponse ? [citasResponse] : []
             }
 
-            console.log("✅ Horarios procesados:", horarioData)
-            console.log("✅ Citas procesadas:", citasData)
-
             setHorarioDisponible(horarioData)
             setCitasExistentes(citasData)
             setAvailableDays(getAvailableDays(horarioData))
@@ -161,7 +148,7 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                 setError("No se encontraron horarios disponibles para este doctor")
             }
         } catch (err) {
-            console.error("❌ Error al cargar datos:", err)
+            console.error("Error al cargar datos:", err)
             setError(`Error al cargar los horarios disponibles: ${err.message}`)
         } finally {
             setLoading(false)
@@ -227,37 +214,34 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
         setError(null)
 
         try {
-            console.log("🔄 Actualizando cita:", {
+            console.log("Actualizando cita:", {
                 id: cita.id_cita,
                 fecha: selectedDate,
                 hora_inicio: selectedTime,
                 hora_fin: calculatedEndTime,
             })
 
-            // FIXED: Crear objeto con los nombres de campo correctos para la base de datos
+
             const citaActualizada = {
-                patient_id: cita.patient_id || cita.paciente_id, // FIXED: Usar patient_id
-                doctor_id: cita.doctor_id || cita.medico_id, // FIXED: Usar doctor_id
+                patient_id: cita.patient_id || cita.paciente_id, 
+                doctor_id: cita.doctor_id || cita.medico_id, 
                 fecha: selectedDate,
                 hora_inicio: selectedTime,
                 hora_fin: calculatedEndTime,
                 estado: cita.estado || "Pendiente",
             }
 
-            console.log("📤 Datos a enviar:", citaActualizada)
 
             await updateCita(cita.id_cita, citaActualizada)
+            console.log("Cita actualizada")
 
-            console.log("✅ Cita actualizada exitosamente")
-
-            // Llamar al callback del componente padre
             if (onSubmit) {
                 onSubmit(selectedDate, selectedTime, calculatedEndTime)
             }
 
             onClose()
         } catch (err) {
-            console.error("❌ Error al actualizar cita:", err)
+            console.error("Error al actualizar cita:", err)
             setError(`Error al actualizar la cita: ${err.message}`)
         } finally {
             setUpdating(false)

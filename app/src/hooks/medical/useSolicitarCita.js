@@ -342,7 +342,7 @@ const useSolicitarCita = () => {
                     const slotsLibres = calculateAvailableSlots(horarioDisponible, [...citasExistentes, nuevaCita], fecha)
                     setHorariosLibres(slotsLibres)
                 }
-                console.log("Cita creada exitosamente:", nuevaCita)
+                // console.log("Cita creada exitosamente:", nuevaCita)
                 return nuevaCita
             } catch (err) {
                 console.error("Error al solicitar cita:", err)
