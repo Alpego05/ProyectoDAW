@@ -1,9 +1,9 @@
 import React from 'react';
-import { X, AlertTriangle, Calendar, Clock, User } from 'lucide-react';
+import { X, AlertTriangle, Calendar, Clock, User, Loader2 } from 'lucide-react';
 
-const ModalCancelarCita = ({ cita, onClose, onConfirm, formatDate, formatHour }) => {
+const ModalCancelarCita = ({ cita, onClose, onConfirm, formatDate, formatHour, loading = false }) => {
     return (
-        <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -17,7 +17,8 @@ const ModalCancelarCita = ({ cita, onClose, onConfirm, formatDate, formatHour })
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                        disabled={loading}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <X className="h-5 w-5 text-gray-500" />
                     </button>
@@ -70,15 +71,18 @@ const ModalCancelarCita = ({ cita, onClose, onConfirm, formatDate, formatHour })
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={onClose}
-                            className="px-6 py-2.5 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 font-medium"
+                            disabled={loading}
+                            className="px-6 py-2.5 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             No, mantener cita
                         </button>
                         <button
                             onClick={onConfirm}
-                            className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                            disabled={loading}
+                            className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
-                            Sí, cancelar cita
+                            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                            {loading ? 'Cancelando...' : 'Sí, cancelar cita'}
                         </button>
                     </div>
                 </div>

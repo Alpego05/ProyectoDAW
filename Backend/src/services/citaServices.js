@@ -82,13 +82,13 @@ const createCita = async (citaData) => {
 // Actualizar una cita
 const updateCita = async (id, citaData) => {
     try {
-        const { paciente_id, doctor_id, fecha, hora_inicio, hora_fin, estado } = citaData;
+        const { patient_id, doctor_id, fecha, hora_inicio, hora_fin, estado } = citaData;
         const cita = await Cita.findByPk(id);
         if (!cita) {
             throw new Error('Cita no encontrada');
         }
-        // Actualizar los campos si están presentes
-        if (paciente_id) cita.paciente_id = paciente_id;
+
+        if (patient_id) cita.paciente_id = patient_id;
         if (doctor_id) cita.doctor_id = doctor_id;
         if (fecha) cita.fecha = fecha;
         if (hora_inicio) cita.hora = hora_inicio;

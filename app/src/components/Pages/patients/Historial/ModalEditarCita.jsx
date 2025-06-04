@@ -1,244 +1,279 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { X, Calendar, Clock, AlertCircle } from 'lucide-react';
-import { getDoctorById } from '../../../../services/apiDoctor';
-import { getHorarioByDoctorId } from '../../../../services/apiHorarios';
-import { getCitasByDoctor } from '../../../../services/apiCitas';
-
+import { useState, useEffect, useCallback } from "react"
+import { X, Calendar, Clock, AlertCircle } from "lucide-react"
+import { getHorarioByDoctorId } from "../../../../services/apiHorarios"
+import { getCitasByDoctor, updateCita } from "../../../../services/apiCitas"
 const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [selectedDate, setSelectedDate] = useState('');
-    const [selectedTime, setSelectedTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [horarioDisponible, setHorarioDisponible] = useState([]);
-    const [citasExistentes, setCitasExistentes] = useState([]);
-    const [horariosLibres, setHorariosLibres] = useState([]);
-    const [availableDays, setAvailableDays] = useState([]);
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [selectedDate, setSelectedDate] = useState("")
+    const [selectedTime, setSelectedTime] = useState("")
+    const [endTime, setEndTime] = useState("")
+    const [horarioDisponible, setHorarioDisponible] = useState([])
+    const [citasExistentes, setCitasExistentes] = useState([])
+    const [horariosLibres, setHorariosLibres] = useState([])
+    const [availableDays, setAvailableDays] = useState([])
+    const [updating, setUpdating] = useState(false)
 
     useEffect(() => {
         if (cita) {
-            setSelectedDate(cita.fecha?.split('T')[0] || '');
-            setSelectedTime(cita.hora_inicio || '');
-            setEndTime(cita.hora_fin || '');
+            setSelectedDate(cita.fecha?.split("T")[0] || "")
+            setSelectedTime(cita.hora_inicio || "")
+            setEndTime(cita.hora_fin || "")
         }
-    }, [cita]);
+    }, [cita])
 
     const getDayNameInSpanish = useCallback((fecha) => {
-        const date = new Date(fecha);
-        const days = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
-        return days[date.getDay()];
-    }, []);
+        const date = new Date(fecha)
+        const days = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"]
+        return days[date.getDay()]
+    }, [])
 
     const generateTimeSlots = useCallback((startTime, endTime) => {
-        const slots = [];
-        const start = new Date(`2024-01-01 ${startTime}`);
-        const end = new Date(`2024-01-01 ${endTime}`);
+        const slots = []
+        const start = new Date(`2024-01-01 ${startTime}`)
+        const end = new Date(`2024-01-01 ${endTime}`)
 
-        let current = new Date(start);
+        const current = new Date(start)
 
         while (current < end) {
-            const timeString = current.toTimeString().slice(0, 5);
-            slots.push(timeString);
-            current.setMinutes(current.getMinutes() + 30);
+            const timeString = current.toTimeString().slice(0, 5)
+            slots.push(timeString)
+            current.setMinutes(current.getMinutes() + 30)
         }
 
-        return slots;
-    }, []);
+        return slots
+    }, [])
 
-    const calculateAvailableSlots = useCallback((horarios, citasOcupadas, fecha) => {
-        if (!horarios || horarios.length === 0) return [];
+    const calculateAvailableSlots = useCallback(
+        (horarios, citasOcupadas, fecha) => {
+            if (!horarios || horarios.length === 0) return []
 
-        const fechaSeleccionada = new Date(fecha).toDateString();
-        const diaSemana = getDayNameInSpanish(fecha);
+            const fechaSeleccionada = new Date(fecha).toDateString()
+            const diaSemana = getDayNameInSpanish(fecha)
 
-        const horariosDelDia = horarios.filter(horario =>
-            horario.dia_semana === diaSemana
-        );
+            const horariosDelDia = horarios.filter((horario) => horario.dia_semana === diaSemana)
 
-        if (horariosDelDia.length === 0) {
-            return [];
-        }
+            if (horariosDelDia.length === 0) {
+                return []
+            }
 
-        const citasDelDia = citasOcupadas.filter(citaItem => {
-            const fechaCita = new Date(citaItem.fecha).toDateString();
-            const esLaMismaCita = citaItem.id === cita?.id;
-            return fechaCita === fechaSeleccionada && !esLaMismaCita;
-        });
+            const citasDelDia = citasOcupadas.filter((citaItem) => {
+                const fechaCita = new Date(citaItem.fecha).toDateString()
+                // FIXED: Excluir la cita actual que se está editando
+                const esLaMismaCita = citaItem.id_cita === cita?.id_cita
+                return fechaCita === fechaSeleccionada && !esLaMismaCita
+            })
 
-        let todosLosSlots = [];
+            let todosLosSlots = []
 
-        horariosDelDia.forEach(horario => {
-            const slots = generateTimeSlots(horario.hora_inicio, horario.hora_fin);
-            todosLosSlots = [...todosLosSlots, ...slots];
-        });
+            horariosDelDia.forEach((horario) => {
+                const slots = generateTimeSlots(horario.hora_inicio, horario.hora_fin)
+                todosLosSlots = [...todosLosSlots, ...slots]
+            })
 
-        // Filtrar slots ocupados
-        const slotsLibres = todosLosSlots.filter(slot => {
-            return !citasDelDia.some(citaItem => {
-                let horaCita;
-                if (citaItem.hora_inicio) {
-                    horaCita = citaItem.hora_inicio.slice(0, 5);
-                } else if (citaItem.fecha) {
-                    horaCita = new Date(citaItem.fecha).toTimeString().slice(0, 5);
-                }
-                return horaCita === slot;
-            });
-        });
+            const slotsLibres = todosLosSlots.filter((slot) => {
+                return !citasDelDia.some((citaItem) => {
+                    let horaCita
+                    if (citaItem.hora_inicio) {
+                        horaCita = citaItem.hora_inicio.slice(0, 5)
+                    } else if (citaItem.fecha) {
+                        horaCita = new Date(citaItem.fecha).toTimeString().slice(0, 5)
+                    }
+                    return horaCita === slot
+                })
+            })
 
-        // Remover duplicados y ordenar
-        const slotsUnicos = [...new Set(slotsLibres)].sort();
-        return slotsUnicos;
-    }, [generateTimeSlots, getDayNameInSpanish, cita?.id]);
+            const slotsUnicos = [...new Set(slotsLibres)].sort()
+            return slotsUnicos
+        },
+        [generateTimeSlots, getDayNameInSpanish, cita?.id_cita],
+    )
 
-    // Obtener días disponibles
     const getAvailableDays = useCallback((horarios) => {
-        if (!horarios || horarios.length === 0) return [];
+        if (!horarios || horarios.length === 0) return []
 
-        const dias = [...new Set(horarios.map(h => h.dia_semana))];
-        const diasOrdenados = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+        const dias = [...new Set(horarios.map((h) => h.dia_semana))]
+        const diasOrdenados = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
 
-        return diasOrdenados.filter(dia => dias.includes(dia));
-    }, []);
+        return diasOrdenados.filter((dia) => dias.includes(dia))
+    }, [])
 
-    // Cargar datos del doctor
+    // FIXED: Obtener doctorId correctamente
+    const getDoctorId = useCallback(() => {
+        // Intentar diferentes propiedades donde puede estar el doctor ID
+        return cita?.doctor_id || cita?.doctorId || cita?.medico_id
+    }, [cita])
+
     const loadDoctorData = useCallback(async () => {
-        // Intentar obtener el doctorId de diferentes formas
-        const doctorId = cita?.doctorId || cita?.doctor_id || cita?.medico_id;
+        const doctorId = getDoctorId()
 
-        // console.log( cita);
-        // console.log( doctorId);
+        console.log("🔍 Cita completa:", cita)
+        console.log("🔍 Doctor ID encontrado:", doctorId)
 
-        // if (!doctorId) {
-        //     console.warn('No se encontró doctorId en la cita');
-        //     setError('No se pudo identificar el doctor de la cita');
-        //     return;
-        // }
+        if (!doctorId) {
+            console.warn("No se encontró doctorId en la cita")
+            setError("No se pudo identificar el doctor de la cita")
+            return
+        }
 
-        setLoading(true);
-        setError(null);
+        setLoading(true)
+        setError(null)
 
         try {
-            // console.log(doctorId);
+            console.log("🔄 Cargando datos para doctor:", doctorId)
 
-            // Cargar horarios y citas en paralelo
             const [horariosResponse, citasResponse] = await Promise.all([
                 getHorarioByDoctorId(doctorId),
-                getCitasByDoctor(doctorId)
-            ]);
+                getCitasByDoctor(doctorId),
+            ])
 
-            // console.log( horariosResponse);
-            // console.log(citasResponse);
+            console.log("📦 Respuesta horarios:", horariosResponse)
+            console.log("📦 Respuesta citas:", citasResponse)
 
             // Procesar horarios
-            let horarioData;
+            let horarioData
             if (horariosResponse?.data) {
-                horarioData = Array.isArray(horariosResponse.data) ? horariosResponse.data : [horariosResponse.data];
+                horarioData = Array.isArray(horariosResponse.data) ? horariosResponse.data : [horariosResponse.data]
             } else if (Array.isArray(horariosResponse)) {
-                horarioData = horariosResponse;
+                horarioData = horariosResponse
             } else {
-                horarioData = horariosResponse ? [horariosResponse] : [];
+                horarioData = horariosResponse ? [horariosResponse] : []
             }
 
             // Procesar citas
-            let citasData;
+            let citasData
             if (citasResponse?.data) {
-                citasData = Array.isArray(citasResponse.data) ? citasResponse.data : [citasResponse.data];
+                citasData = Array.isArray(citasResponse.data) ? citasResponse.data : [citasResponse.data]
             } else if (Array.isArray(citasResponse)) {
-                citasData = citasResponse;
+                citasData = citasResponse
             } else {
-                citasData = citasResponse ? [citasResponse] : [];
+                citasData = citasResponse ? [citasResponse] : []
             }
 
-            // console.log('orarios :', horarioData);
-            // console.log('Citas', citasData);
+            console.log("✅ Horarios procesados:", horarioData)
+            console.log("✅ Citas procesadas:", citasData)
 
-            setHorarioDisponible(horarioData);
-            setCitasExistentes(citasData);
-            setAvailableDays(getAvailableDays(horarioData));
+            setHorarioDisponible(horarioData)
+            setCitasExistentes(citasData)
+            setAvailableDays(getAvailableDays(horarioData))
 
             if (horarioData.length === 0) {
-                setError('No se encontraron horarios disponibles para este doctor');
+                setError("No se encontraron horarios disponibles para este doctor")
             }
-
         } catch (err) {
-            console.error(' Error :', err);
-            console.error('error:', {
-                message: err.message,
-                response: err.response,
-                status: err.response?.status,
-                data: err.response?.data
-            });
-            setError(`Error al cargar los horarios disponibles: ${err.message}`);
+            console.error("❌ Error al cargar datos:", err)
+            setError(`Error al cargar los horarios disponibles: ${err.message}`)
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
-    }, [cita, getAvailableDays]);
+    }, [cita, getAvailableDays, getDoctorId])
 
-    // Cargar datos al montar componente
     useEffect(() => {
-        loadDoctorData();
-    }, [loadDoctorData]);
+        loadDoctorData()
+    }, [loadDoctorData])
 
-    // Actualizar horarios libres cuando cambia la fecha
     useEffect(() => {
         if (selectedDate && horarioDisponible.length > 0) {
-            const slotsLibres = calculateAvailableSlots(horarioDisponible, citasExistentes, selectedDate);
-            setHorariosLibres(slotsLibres);
+            const slotsLibres = calculateAvailableSlots(horarioDisponible, citasExistentes, selectedDate)
+            setHorariosLibres(slotsLibres)
         }
-    }, [selectedDate, horarioDisponible, citasExistentes, calculateAvailableSlots]);
+    }, [selectedDate, horarioDisponible, citasExistentes, calculateAvailableSlots])
 
-    // Validar si una fecha es válida
-    const isValidDate = useCallback((fecha) => {
-        if (!fecha || !horarioDisponible || horarioDisponible.length === 0) return false;
+    const isValidDate = useCallback(
+        (fecha) => {
+            if (!fecha || !horarioDisponible || horarioDisponible.length === 0) return false
 
-        const diaSemana = getDayNameInSpanish(fecha);
-        return horarioDisponible.some(horario => horario.dia_semana === diaSemana);
-    }, [horarioDisponible, getDayNameInSpanish]);
+            const diaSemana = getDayNameInSpanish(fecha)
+            return horarioDisponible.some((horario) => horario.dia_semana === diaSemana)
+        },
+        [horarioDisponible, getDayNameInSpanish],
+    )
 
     const calculateEndTime = useCallback((startTime) => {
-        if (!startTime) return '';
+        if (!startTime) return ""
 
-        const start = new Date(`2024-01-01 ${startTime}`);
-        start.setMinutes(start.getMinutes() + 30);
-        return start.toTimeString().slice(0, 5);
-    }, []);
+        const start = new Date(`2024-01-01 ${startTime}`)
+        start.setMinutes(start.getMinutes() + 30)
+        return start.toTimeString().slice(0, 5)
+    }, [])
 
     const handleTimeChange = (time) => {
-        setSelectedTime(time);
-        setEndTime(calculateEndTime(time));
-    };
+        setSelectedTime(time)
+        setEndTime(calculateEndTime(time))
+    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    // FIXED: Función para actualizar la cita
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
         if (!selectedDate || !selectedTime) {
-            setError('Por favor complete todos los campos requeridos');
-            return;
+            setError("Por favor complete todos los campos requeridos")
+            return
         }
+
         if (!isValidDate(selectedDate)) {
-            setError('La fecha seleccionada no está disponible para este doctor');
-            return;
+            setError("La fecha seleccionada no está disponible para este doctor")
+            return
         }
 
         if (!horariosLibres.includes(selectedTime)) {
-            setError('El horario seleccionado no está disponible');
-            return;
+            setError("El horario seleccionado no está disponible")
+            return
         }
-        const calculatedEndTime = calculateEndTime(selectedTime);
-        onSubmit(selectedDate, selectedTime, calculatedEndTime);
-    };
 
-    // Obtener fecha mínima (hoy)
+        const calculatedEndTime = calculateEndTime(selectedTime)
+
+        setUpdating(true)
+        setError(null)
+
+        try {
+            console.log("🔄 Actualizando cita:", {
+                id: cita.id_cita,
+                fecha: selectedDate,
+                hora_inicio: selectedTime,
+                hora_fin: calculatedEndTime,
+            })
+
+            // FIXED: Crear objeto con los nombres de campo correctos para la base de datos
+            const citaActualizada = {
+                patient_id: cita.patient_id || cita.paciente_id, // FIXED: Usar patient_id
+                doctor_id: cita.doctor_id || cita.medico_id, // FIXED: Usar doctor_id
+                fecha: selectedDate,
+                hora_inicio: selectedTime,
+                hora_fin: calculatedEndTime,
+                estado: cita.estado || "Pendiente",
+            }
+
+            console.log("📤 Datos a enviar:", citaActualizada)
+
+            await updateCita(cita.id_cita, citaActualizada)
+
+            console.log("✅ Cita actualizada exitosamente")
+
+            // Llamar al callback del componente padre
+            if (onSubmit) {
+                onSubmit(selectedDate, selectedTime, calculatedEndTime)
+            }
+
+            onClose()
+        } catch (err) {
+            console.error("❌ Error al actualizar cita:", err)
+            setError(`Error al actualizar la cita: ${err.message}`)
+        } finally {
+            setUpdating(false)
+        }
+    }
+
     const getMinDate = () => {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
-    };
-
+        const today = new Date()
+        return today.toISOString().split("T")[0]
+    }
 
     const getMaxDate = () => {
-        const future = new Date();
-        future.setDate(future.getDate() + 30);
-        return future.toISOString().split('T')[0];
-    };
+        const future = new Date()
+        future.setDate(future.getDate() + 30)
+        return future.toISOString().split("T")[0]
+    }
 
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -249,13 +284,12 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                         <div className="p-2 bg-[#e6f3f8] rounded-lg">
                             <Calendar className="h-5 w-5 text-[#0077b6]" />
                         </div>
-                        <h3 className="text-lg font-semibold text-[#1e293b]">
-                            Cambiar Horario de Cita
-                        </h3>
+                        <h3 className="text-lg font-semibold text-[#1e293b]">Cambiar Horario de Cita</h3>
                     </div>
                     <button
                         onClick={onClose}
                         className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                        disabled={updating}
                     >
                         <X className="h-5 w-5 text-[#64748b]" />
                     </button>
@@ -264,7 +298,7 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="flex flex-col lg:flex-row gap-8">
-                        {/* Columna izquierda - Información y fechas */}
+                        {/* Columna izquierda */}
                         <div className="flex-1 space-y-5">
                             {/* Información actual */}
                             <div className="bg-[#f8fafc] rounded-lg p-4">
@@ -276,54 +310,45 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
 
                             {/* Error */}
                             {error && (
-                                <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
-                                    <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                                    <div>
-                                        <h4 className="font-semibold text-red-800">Error</h4>
-                                        <p className="text-red-700 mt-1">{error}</p>
-                                    </div>
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-2">
+                                    <AlertCircle className="h-4 w-4 text-red-500" />
+                                    <p className="text-sm text-red-600">{error}</p>
                                 </div>
                             )}
 
                             {/* Nueva fecha */}
                             <div>
-                                <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                                    Nueva Fecha
-                                </label>
+                                <label className="block text-sm font-medium text-[#1e293b] mb-2">Nueva Fecha</label>
                                 <div className="relative">
                                     <input
                                         type="date"
                                         value={selectedDate}
                                         onChange={(e) => {
-                                            setSelectedDate(e.target.value);
-                                            setSelectedTime('');
-                                            setEndTime('');
-                                            setError(null);
+                                            setSelectedDate(e.target.value)
+                                            setSelectedTime("")
+                                            setEndTime("")
+                                            setError(null)
                                         }}
                                         min={getMinDate()}
                                         max={getMaxDate()}
                                         className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0077b6] focus:border-transparent transition-all duration-200"
                                         required
+                                        disabled={updating}
                                     />
                                     <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#64748b]" />
                                 </div>
                                 {selectedDate && !isValidDate(selectedDate) && (
-                                    <p className="text-xs text-red-500 mt-1">
-                                        El doctor no tiene horarios disponibles este día
-                                    </p>
+                                    <p className="text-xs text-red-500 mt-1">El doctor no tiene horarios disponibles este día</p>
                                 )}
                             </div>
 
                             {/* Información de horarios disponibles */}
                             {availableDays.length > 0 && (
                                 <div className="bg-[#e6f3f8] rounded-lg p-4">
-                                    <h4 className="text-sm font-medium text-[#0077b6] mb-2">
-                                        Días disponibles del doctor:
-                                    </h4>
-                                    <ul className="">
-
-                                        {availableDays.map(dia => (
-                                            <li key={dia} className="text-sm text-[#005b8a] ">
+                                    <h4 className="text-sm font-medium text-[#0077b6] mb-2">Días disponibles del doctor:</h4>
+                                    <ul className="grid grid-cols-2 gap-1">
+                                        {availableDays.map((dia) => (
+                                            <li key={dia} className="text-sm text-[#005b8a]">
                                                 {dia.charAt(0).toUpperCase() + dia.slice(1)}
                                             </li>
                                         ))}
@@ -332,13 +357,11 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                             )}
                         </div>
 
-                        {/* Columna derecha - Horarios */}
+                        {/* Columna derecha */}
                         <div className="flex-1 space-y-5">
                             {/* Nueva hora de inicio */}
                             <div>
-                                <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                                    Hora de Inicio
-                                </label>
+                                <label className="block text-sm font-medium text-[#1e293b] mb-2">Hora de Inicio</label>
                                 <div className="relative">
                                     {loading ? (
                                         <div className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg bg-gray-50">
@@ -348,11 +371,12 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                                         <select
                                             value={selectedTime}
                                             onChange={(e) => {
-                                                handleTimeChange(e.target.value);
-                                                setError(null);
+                                                handleTimeChange(e.target.value)
+                                                setError(null)
                                             }}
                                             className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0077b6] focus:border-transparent transition-all duration-200"
                                             required
+                                            disabled={updating}
                                         >
                                             <option value="">Seleccionar hora</option>
                                             {horariosLibres.map((hora) => (
@@ -364,7 +388,7 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                                     ) : (
                                         <div className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg bg-gray-50">
                                             <span className="text-[#64748b]">
-                                                {selectedDate ? 'No hay horarios disponibles' : 'Seleccione una fecha primero'}
+                                                {selectedDate ? "No hay horarios disponibles" : "Seleccione una fecha primero"}
                                             </span>
                                         </div>
                                     )}
@@ -372,8 +396,15 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                                 </div>
                             </div>
 
-
-
+                            {/* Hora de fin calculada */}
+                            {selectedTime && (
+                                <div>
+                                    <label className="block text-sm font-medium text-[#1e293b] mb-2">Hora de Fin</label>
+                                    <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
+                                        <span className="text-[#64748b]">{endTime}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -383,21 +414,22 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                             type="button"
                             onClick={onClose}
                             className="px-6 py-2.5 text-[#475569] hover:text-[#1e293b] hover:bg-gray-100 rounded-lg transition-all duration-200 font-medium"
+                            disabled={updating}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            disabled={loading || !selectedTime || error}
+                            disabled={loading || !selectedTime || error || updating}
                             className="px-6 py-2.5 bg-[#0077b6] text-white rounded-lg hover:bg-[#005b8a] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                         >
-                            {loading ? 'Cargando...' : 'Confirmar Cambio'}
+                            {updating ? "Actualizando..." : loading ? "Cargando..." : "Confirmar Cambio"}
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ModalEditarCita;
+export default ModalEditarCita

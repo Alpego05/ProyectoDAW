@@ -26,19 +26,19 @@ export const usePacienteHistorial = (pacienteId) => {
         }
     }, []);
 
-    // Función para enriquecer citas con información del doctor y paciente
+
     const enriquecerCitas = useCallback(async (citasData, pacienteData) => {
         if (!Array.isArray(citasData) || citasData.length === 0) {
             return [];
         }
 
         try {
-            // Obtener IDs únicos de doctores
+  
             const doctorIds = [...new Set(citasData.map(cita => 
                 cita.doctor_id || cita.id_doctor
             ).filter(Boolean))];
 
-            // Cargar información de doctores en paralelo
+
             const doctoresPromises = doctorIds.map(async (doctorId) => {
                 try {
                     const doctor = await getDoctorById(doctorId);
@@ -96,8 +96,6 @@ export const usePacienteHistorial = (pacienteId) => {
             setLoading(true);
             setError(null);
             
-            console.log('🔄 Cargando historial para paciente:', pacienteId);
-            
             // Cargar paciente, citas y diagnósticos en paralelo
             const [pacienteData, citasResponse, diagnosticosResponse] = await Promise.all([
                 cargarPaciente(pacienteId),
@@ -108,11 +106,8 @@ export const usePacienteHistorial = (pacienteId) => {
                 })
             ]);
             
-            console.log('👤 Paciente cargado:', pacienteData);
-            console.log('📦 Citas cargadas:', citasResponse);
-            console.log('📦 Diagnósticos cargados:', diagnosticosResponse);
+
             
-            // Procesar citas: asegurar array y manejar diferentes estructuras de respuesta
             let citasData = [];
             if (citasResponse?.data) {
                 citasData = Array.isArray(citasResponse.data) ? citasResponse.data : [citasResponse.data];
@@ -141,13 +136,13 @@ export const usePacienteHistorial = (pacienteId) => {
                     : [diagnosticosResponse.data]
                 : [];
 
-            console.log('✅ Citas procesadas:', citasProcesadas);
-            console.log('✅ Diagnósticos procesados:', diagnosticosProcesados);
+            // console.log(citasProcesadas);
+            // console.log(diagnosticosProcesados);
 
             setCitas(citasProcesadas);
             setDiagnosticos(diagnosticosProcesados);
         } catch (err) {
-            console.error('❌ Error al cargar historial:', err);
+            console.error('Error al cargar historial:', err);
             setError(err.message || "Error al cargar el historial");
             setCitas([]);
             setDiagnosticos([]);
@@ -158,9 +153,7 @@ export const usePacienteHistorial = (pacienteId) => {
 
     const generarPDFDiagnostico = useCallback(async (diagnostico) => {
         try {
-            console.log('🔄 Generando PDF para diagnóstico:', diagnostico);
-            
-            // Buscar la cita asociada al diagnóstico
+
             const citaAsociada = citas.find(c => 
                 c.id_cita === diagnostico.cita_id || 
                 c.id === diagnostico.cita_id
@@ -169,10 +162,7 @@ export const usePacienteHistorial = (pacienteId) => {
             if (!citaAsociada) {
                 throw new Error("No se encontró la cita asociada a este diagnóstico");
             }
-            
-            console.log('📋 Cita asociada encontrada:', citaAsociada);
-            
-            // Asegurar que la cita tiene información del paciente
+
             if (!citaAsociada.paciente && pacienteInfo) {
                 citaAsociada.paciente = pacienteInfo;
             }
@@ -188,12 +178,11 @@ export const usePacienteHistorial = (pacienteId) => {
                 }
             };
         } catch (error) {
-            console.error("❌ Error al preparar datos para PDF:", error);
+            console.error("Error al preparar datos para PDF:", error);
             throw error;
         }
     }, [citas, obtenerDatosPDF, pacienteInfo]);
 
-    // Actualizar una cita (cambiar horario)
     const actualizarCita = useCallback(async (citaId, datosActualizacion) => {
         try {
             setActualizando(true);
@@ -203,7 +192,6 @@ export const usePacienteHistorial = (pacienteId) => {
 
             const citaActualizada = await updateCita(citaId, datosActualizacion);
             
-            // Actualizar el estado local
             setCitas(prevCitas => 
                 prevCitas.map(cita => 
                     (cita.id_cita === citaId || cita.id === citaId) 
@@ -212,10 +200,10 @@ export const usePacienteHistorial = (pacienteId) => {
                 )
             );
 
-            console.log('✅ Cita actualizada exitosamente');
+            console.log('Cita actualizada');
             return citaActualizada;
         } catch (error) {
-            console.error('❌ Error al actualizar cita:', error);
+            console.error('Error al actualizar cita:', error);
             const errorMessage = error.response?.data?.message || error.message || 'Error al actualizar cita';
             setError(errorMessage);
             throw new Error(errorMessage);
@@ -224,15 +212,11 @@ export const usePacienteHistorial = (pacienteId) => {
         }
     }, []);
 
-    // Cancelar una cita
     const cancelarCita = useCallback(async (citaId) => {
         try {
             setActualizando(true);
             setError(null);
 
-            console.log('🔄 Cancelando cita:', citaId);
-
-            // Primero intentar cambiar el estado a "Cancelada"
             try {
                 await updateCita(citaId, { estado: 'Cancelada' });
                 
@@ -245,25 +229,23 @@ export const usePacienteHistorial = (pacienteId) => {
                     )
                 );
                 
-                console.log('✅ Cita cancelada (estado actualizado)');
+                console.log('Cita cancelada (estado actualizado)');
             } catch (updateError) {
-                // Si falla la actualización, intentar eliminar
                 console.warn('No se pudo actualizar estado, intentando eliminar:', updateError);
                 
                 await deleteCita(citaId);
                 
-                // Remover del estado local
                 setCitas(prevCitas => 
                     prevCitas.filter(cita => 
                         !(cita.id_cita === citaId || cita.id === citaId)
                     )
                 );
                 
-                console.log('✅ Cita eliminada');
+                console.log('cita eliminada');
             }
 
         } catch (error) {
-            console.error('❌ Error al cancelar cita:', error);
+            console.error('Error al cancelar cita:', error);
             const errorMessage = error.response?.data?.message || error.message || 'Error al cancelar cita';
             setError(errorMessage);
             throw new Error(errorMessage);
@@ -272,7 +254,6 @@ export const usePacienteHistorial = (pacienteId) => {
         }
     }, []);
 
-    // Obtener diagnóstico por cita
     const getDiagnosticoPorCita = useCallback((citaId) => {
         return diagnosticos.find(diag => 
             diag.cita_id === citaId || 
@@ -280,18 +261,14 @@ export const usePacienteHistorial = (pacienteId) => {
         );
     }, [diagnosticos]);
 
-    // Obtener el nombre completo de una cita
     const getNombreCita = useCallback((cita) => {
-        // Priorizar el campo 'nombre' de la cita, luego 'motivo', y finalmente un valor por defecto
         return cita.nombre || cita.motivo || 'Consulta médica';
     }, []);
 
-    // Cargar historial cuando cambie el pacienteId
     useEffect(() => {
         cargarHistorial();
     }, [cargarHistorial]);
 
-    // Separar citas por estado
     const citasPorEstado = citas.reduce((acc, cita) => {
         const estado = cita.estado || 'Sin estado';
         if (!acc[estado]) {
@@ -301,7 +278,6 @@ export const usePacienteHistorial = (pacienteId) => {
         return acc;
     }, {});
 
-    // Estadísticas del historial
     const estadisticas = {
         totalCitas: citas.length,
         citasPendientes: (citasPorEstado['Pendiente'] || []).length,
@@ -312,27 +288,23 @@ export const usePacienteHistorial = (pacienteId) => {
     };
 
     return {
-        // Estados principales
+
         citas,
         diagnosticos,
-        pacienteInfo, // Nuevo estado exportado
+        pacienteInfo, 
         citasPorEstado,
         loading,
         error,
         actualizando,
         estadisticas,
 
-        // Funciones principales
         cargarHistorial,
         generarPDFDiagnostico,
         actualizarCita,
         cancelarCita,
 
-        // Funciones de utilidad
         getDiagnosticoPorCita,
         getNombreCita,
-
-        // Función para limpiar errores
         clearError: () => setError(null)
     };
 };

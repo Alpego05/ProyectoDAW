@@ -1,177 +1,197 @@
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "http://localhost:3000"
 
 // función para obtener el token
 const getToken = () => {
-    return localStorage.getItem("authToken") || "";
-};
+    return localStorage.getItem("authToken") || ""
+}
 
 export const getAllCitas = async () => {
     try {
         const response = await fetch(`${API_BASE_URL}/citas`, {
             method: "GET",
             headers: {
-                'Authorization': `${getToken()}`
+                Authorization: `${getToken()}`,
             },
-        });
-        const data = await response.json();
-        return data.data;
+        })
+        const data = await response.json()
+        return data.data
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
-};
+}
 
 export const getCitasByPatient = async (patientId) => {
     try {
         const response = await fetch(`${API_BASE_URL}/citas/bypatient/${patientId}`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Authorization': `${getToken()}`
-            }
-        });
+                Authorization: `${getToken()}`,
+            },
+        })
 
         if (!response.ok) {
-            throw new Error("Error al obtener citas del paciente");
+            throw new Error("Error al obtener citas del paciente")
         }
 
-        const data = await response.json();
-        return data.data || []; 
+        const data = await response.json()
+        return data.data || []
     } catch (error) {
-        console.error("Error al cargar citas del paciente:", error);
-        return []; 
+        console.error("Error al cargar citas del paciente:", error)
+        return []
     }
-};
+}
 
 export const getCitasByDoctor = async (doctorId) => {
     try {
         const response = await fetch(`${API_BASE_URL}/citas/bydoctor/${doctorId}`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Authorization': `${getToken()}`
-            }
-        });
+                Authorization: `${getToken()}`,
+            },
+        })
 
         if (!response.ok) {
-            throw new Error("Error al obtener citas del doctor");
+            throw new Error("Error al obtener citas del doctor")
         }
 
-        const data = await response.json();
-        return data.data;
+        const data = await response.json()
+        return data.data
     } catch (error) {
-        console.error("Error al cargar citas del doctor:", error);
-        throw error;
+        console.error("Error al cargar citas del doctor:", error)
+        throw error
     }
-};
-
-// ver si existe una cita para un paciente con un doctor específico
-export const checkExistingCita = async (patientId, doctorId) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/citas/check/${patientId}/${doctorId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `${getToken()}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error("Error al verificar citas existentes");
-        }
-
-        const data = await response.json();
-        return data.exists || false;
-    } catch (error) {
-        console.error("Error al verificar citas existentes:", error);
-        //  asumimos que no existe 
-        return false;
-    }
-};
+}
 
 
 export const createCita = async (citaData) => {
     try {
-        const fecha = new Date(citaData.fecha);
-        const horaInicio = citaData.hora || '10:00';
-        const [horas, minutos] = horaInicio.split(':');
-        
-        const fechaFin = new Date(fecha);
-        fechaFin.setHours(parseInt(horas), parseInt(minutos) + 30);
-        
-        const payload = {
-            doctor_id: citaData.doctorId.toString(),
-            nombre: citaData.motivo || "Consulta médica",
-            paciente_id: citaData.patientId.toString(),
-            fecha: fecha.toISOString().split('T')[0], // YYYY-MM-DD
-            hora_inicio: `${horaInicio}:00`,
-            hora_fin: fechaFin.toTimeString().split(' ')[0], // HH:MM:SS
-            estado: "Pendiente"
-        };
-
-        const response = await fetch(`${API_BASE_URL}/citas/create`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${getToken()}`
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Error al crear cita");
+        console.log( citaData)
+        if (!citaData) {
+            throw new Error("Los datos de la cita son requeridos")
         }
 
-        const data = await response.json();
-        return data.data;
+        const { doctorId, patientId, fecha, hora, motivo } = citaData
+
+
+        if (!doctorId || !patientId || !fecha || !hora) {
+            throw new Error("Faltan campos requeridos: doctorId, patientId, fecha, hora")
+        }
+
+        const [hours, minutes] = hora.split(":").map(Number)
+        const startTime = new Date()
+        startTime.setHours(hours, minutes, 0, 0)
+
+        const endTime = new Date(startTime)
+        endTime.setMinutes(endTime.getMinutes() + 30)
+
+        const hora_fin = endTime.toTimeString().slice(0, 5)
+
+        const payload = {
+            doctor_id: doctorId.toString(),
+            nombre: motivo || "Consulta médica",
+            paciente_id: patientId.toString(), 
+            fecha: fecha, // YYYY-MM-DD
+            hora_inicio: hora,
+            hora_fin: hora_fin,
+            estado: "Pendiente",
+        }
+
+
+
+        const response = await fetch(`${API_BASE_URL}/citas/create`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `${getToken()}`,
+            },
+            body: JSON.stringify(payload),
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json()
+            console.error("Error del servidor:", errorData)
+            throw new Error(errorData.message || "Error al crear cita")
+        }
+
+        const data = await response.json()
+        console.log("✅ Cita creada exitosamente:", data)
+        return data.data
     } catch (error) {
-        console.error("Error al crear cita:", error);
-        throw error;
+        console.error("Error en createCita:", error)
+        throw error
     }
-};
+}
 
 // Actualizar una cita
 export const updateCita = async (id, citaData) => {
     try {
+
+        console.log(citaData)
+        const payload = {
+            patient_id: citaData.patient_id,
+            doctor_id: citaData.doctor_id,
+            fecha: citaData.fecha,
+            hora_inicio: citaData.hora_inicio,
+            hora_fin: citaData.hora_fin,
+            estado: citaData.estado || "Pendiente",
+        }
+
+        console.log("📤 Payload enviado:", payload)
+
         const response = await fetch(`${API_BASE_URL}/citas/edit/${id}`, {
-            method: 'PATCH',
+            method: "PATCH",
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${getToken()}`
+                "Content-Type": "application/json",
+                Authorization: `${getToken()}`,
             },
-            body: JSON.stringify(citaData)
-        });
+            body: JSON.stringify(payload),
+        })
 
         if (!response.ok) {
-            throw new Error("Error al actualizar cita");
+            const errorData = await response.json()
+            console.error("Error del servidor:", errorData)
+            throw new Error(errorData.message || "Error al actualizar cita")
         }
 
-        const data = await response.json();
-        return data.data;
+        const data = await response.json()
+        console.log("Cita actualizada exitosamente:", data)
+        return data.data
     } catch (error) {
-        console.error("Error al actualizar cita:", error);
-        throw error;
+        console.error("Error al actualizar cita:", error)
+        throw error
     }
-};
+}
 
-// Eliminar una cita
-export const deleteCita = async (id) => {
+export const deleteCita = async (citaId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/citas/delete/${id}`, {
-            method: 'DELETE',
+        const response = await fetch(`${API_BASE_URL}/citas/delete/${citaId}`, {
+            method: "DELETE",
             headers: {
-                'Authorization': `${getToken()}`
-            }
-        });
-
+                Authorization: `${getToken()}`,
+            },
+        })
         if (!response.ok) {
-            throw new Error("Error al eliminar cita");
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const contentType = response.headers.get("content-type")
+        if (contentType && contentType.includes("application/json")) {
+            const data = await response.json()
+            return data
+        }
+        if (response.status === 204 || response.status === 200) {
+            return { success: true, message: "Cita eliminada correctamente" }
+        }
+        const text = await response.text()
+        if (text) {
+            return { success: true, message: text }
         }
 
-        const data = await response.json();
-        return data;
+        return { success: true, message: "Cita eliminada correctamente" }
     } catch (error) {
-        console.error("Error al eliminar cita:", error);
-        throw error;
+        console.error("Error in deleteCita:", error)
+        throw new Error(`Error al eliminar la cita: ${error.message}`)
     }
-};
+}
 
 export default {
     getCitasByPatient,
@@ -180,5 +200,5 @@ export default {
     updateCita,
     deleteCita,
     getAllCitas,
-    checkExistingCita
-};
+}
+

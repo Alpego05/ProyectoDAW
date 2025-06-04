@@ -59,12 +59,14 @@ const SolicitarCita = () => {
         }
 
         try {
-            console.log('Enviando solicitud de cita...', {
-                doctorId: selectedDoctorId,
-                fecha: selectedDate,
-                hora: selectedTime,
-                motivo
-            });
+            console.log(  //   doctor_id: doctorId,
+        //         patient_id: patientId,
+        //         fecha: formattedDate,
+        //         hora_inicio: hora,
+        //         hora_fin: hora_fin,
+        //         motivo: motivo || 'Consulta médica',
+        //         estado: 'Pendiente' 
+            );
             
             await solicitarCita(selectedDoctorId, selectedDate, selectedTime, motivo);
             setShowSuccess(true);

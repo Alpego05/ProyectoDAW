@@ -12,8 +12,7 @@ import {
     CheckCircle,
     XCircle,
     Loader2,
-    Folder,
-    AlertCircle
+    Folder
 } from 'lucide-react';
 
 const FormCita = ({
@@ -85,11 +84,11 @@ const FormCita = ({
                     <div className="p-6 md:p-8">
                         {/* Alert Messages */}
                         {error && (
-                            <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
-                                <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
+                            <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-8 flex items-start">
+                                <XCircle className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
                                 <div>
-                                    <h4 className="font-semibold text-red-800">Error</h4>
-                                    <p className="text-red-700 mt-1">{error}</p>
+                                    <p className="font-semibold">Error al procesar</p>
+                                    <p className="text-sm">{error}</p>
                                 </div>
                             </div>
                         )}
