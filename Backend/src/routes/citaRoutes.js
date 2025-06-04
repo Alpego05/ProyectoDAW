@@ -6,7 +6,7 @@ CitaRouter.get("/", verifyToken,CitaController.getAllCitas);
 CitaRouter.get("/bypatient/:id", CitaController.getCitaByPatient);
 CitaRouter.get("/bydoctor/:id",   CitaController.getCitaByDoctor);
 CitaRouter.delete("/delete/:id", verifyToken, CitaController.deleteCita);
-CitaRouter.post("/create", verifyToken, CitaController.createCita);  
+CitaRouter.post("/create", CitaController.createCita);  
 CitaRouter.patch("/edit/:id", verifyToken, CitaController.updateCita);  
 
 module.exports = CitaRouter;

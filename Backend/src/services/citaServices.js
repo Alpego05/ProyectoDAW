@@ -42,9 +42,9 @@ const getCitasByDoctor = async (doctor_id) => {
 // Crear una nueva cita
 const createCita = async (citaData) => {
     try {
-        const { paciente_id, doctor_id, fecha, hora_inicio, hora_fin, estado } = citaData;
+        const { paciente_id, doctor_id, nombre, fecha, hora_inicio, hora_fin, estado } = citaData;
         // Validar que los campos obligatorios estén presentes
-        if (!paciente_id || !doctor_id || !fecha || !hora_inicio || !hora_fin || !estado) {
+        if (!paciente_id || !doctor_id || !nombre || !fecha || !hora_inicio || !hora_fin || !estado) {
             const error = new Error('Faltan campos requeridos');
             error.statusCode = 400;
             throw error;
@@ -66,6 +66,7 @@ const createCita = async (citaData) => {
         const newCita = await Cita.create({
             paciente_id,
             doctor_id,
+            nombre,
             fecha,
             hora_inicio,
             hora_fin,

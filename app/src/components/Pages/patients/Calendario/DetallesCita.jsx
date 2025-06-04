@@ -261,7 +261,7 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
                 <div className="mt-6 pt-4 flex justify-end">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-md transition-colors font-medium text-sm shadow-sm"
+                        className="cursor-pointer px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-md transition-colors font-medium text-sm shadow-sm"
                     >
                         Cerrar detalles
                     </button>

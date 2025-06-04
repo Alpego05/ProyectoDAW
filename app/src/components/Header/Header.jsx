@@ -81,7 +81,9 @@ const Header = () => {
         </div>
 
         {rol === "paciente" && (
+          <Link to={"SolicitarCita"}> 
           <button className="appointment-button">Solicitar cita</button>
+          </Link>
         )}
 
         <button className="mobile-toggle" onClick={toggleMobileMenu}>

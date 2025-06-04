@@ -30,10 +30,8 @@ const CitaCard = ({
 
     const handleGeneratePDF = async () => {
         try {
-            // Obtener todos los datos necesarios para el PDF
             const datosPDF = await obtenerDatosPDF(cita);
             
-            // Generar el PDF con los datos completos
             await generateCitaPDF(datosPDF, formatHour);
         } catch (error) {
             console.error('Error al generar PDF:', error);
@@ -134,7 +132,6 @@ const CitaCard = ({
                                             </p>
                                         </div>
                                     </div>
-
                                     {/* Sección de acciones */}
                                     <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
                                         <h4 className="text-lg font-semibold text-gray-800 mb-4">
@@ -156,14 +153,6 @@ const CitaCard = ({
                                                 <ClipboardPlus className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
                                                 <span>Nuevo Diagnóstico</span>
                                             </button>
-
-                                            {/* Nueva Cita */}
-                                            <button
-                                                onClick={() => asignarCita(cita.paciente_id)}
-                                                className="cursor-pointer group flex items-center justify-center space-x-2 bg-sky-100 text-sky-800 hover:bg-sky-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
-                                                <Plus className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-                                                <span>Nueva Cita</span>
-                                            </button>
                                         </div>
                                     </div>
 
@@ -175,8 +164,8 @@ const CitaCard = ({
                                         <button
                                             onClick={handleGeneratePDF}
                                             disabled={pdfLoading}
-                                            className="cursor-pointer group flex items-center justify-center space-x-2 bg-blue-100 text-blue-800 hover:bg-blue-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
+                                            className="cursor-pointer group flex items-center justify-center space-x-2 bg-sky-100 text-sky-800 hover:bg-sky-500 hover:text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 hover:shadow-md">
+                                                
                                             <FileText className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
                                             <span>{pdfLoading ? 'Generando PDF...' : 'Generar PDF'}</span>
                                         </button>

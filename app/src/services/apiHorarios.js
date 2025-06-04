@@ -8,7 +8,7 @@ const getToken = () => {
 export const getHorarioByDoctorId = async (id) => {
 
     try {
-        const response = await fetch(`${API_BASE_URL}/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/horarios/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `${getToken()}`
