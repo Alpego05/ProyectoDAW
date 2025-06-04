@@ -1,8 +1,8 @@
 import { getData } from "../../hooks/users/useUsuarios"
 import { Check, User } from "lucide-react"
-import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
 import useFormat from '../../hooks/useFormat';
+import LoadingScreen from "../Common/LoadingScreen";
 
 const PatientDashboard = ({ usuarioId }) => {
     const { usuario, paciente, recetas, diagnosticos, formatDate, loading, error, getProximasCitas } = getData(
@@ -11,7 +11,7 @@ const PatientDashboard = ({ usuarioId }) => {
     )
 
     if (loading) {
-        return <LoadingSpinner message="Cargando datos del paciente..." />
+        return <LoadingScreen message="Cargando datos del paciente..." />
     }
 
     if (error) {

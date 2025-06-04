@@ -1,8 +1,8 @@
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
 import Calendario from "../../../Common/Calendario"
-import LoadingSpinner from "../../../Common/LoadingSpinner"
 import { useCitas } from "../../../../hooks/medical/useCitas"
 import DetallesCita from "./DetallesCita"
+import LoadingScreen from "../../../Common/LoadingScreen"
 
 
 const AgendaPaciente = () => {
@@ -31,7 +31,7 @@ const AgendaPaciente = () => {
         </div>
         <div className="p-4">
           {isLoading ? (
-            <LoadingSpinner message="Cargando citas..." />
+            <LoadingScreen/>
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
               <div className="flex items-start">

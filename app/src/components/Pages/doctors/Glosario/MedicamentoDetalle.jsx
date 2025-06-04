@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Pill, AlertTriangle, Activity, Worm} from 'lucide-react'
 import useMedicamentos from '../../../../hooks/medical/useMedicamentos'
 import EnfermedadAsociada from './EnfermedadAsociada'
-import LoadingSpinner from '../../../Common/LoadingSpinner'
+import LoadingScreen from '../../../Common/LoadingScreen'
 
 const MedicamentoDetalle = () => {
     const { id } = useParams()
@@ -44,7 +44,7 @@ const MedicamentoDetalle = () => {
         return (
 
             <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-                <LoadingSpinner></LoadingSpinner>
+                <LoadingScreen></LoadingScreen>
             </div>
         )
     }

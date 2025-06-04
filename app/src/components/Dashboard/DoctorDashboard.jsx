@@ -1,10 +1,10 @@
 import { useState } from "react" 
 import { useDoctorData } from "../../hooks/users/useDoctores"
 import { Calendar, Clock, User, Users, FileText, ClipboardList } from "lucide-react"
-import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
 import { Link } from "react-router-dom"
 import useFormat from '../../hooks/useFormat';
+import LoadingScreen from "../Common/LoadingScreen"
 
 const DoctorDashboard = ({ doctorId }) => {
     const { usuario, doctor, citas, pacientes, loading, error, formatDate, getProximasCitas, getCitasHoy } =
@@ -14,7 +14,7 @@ const DoctorDashboard = ({ doctorId }) => {
     const { formatHour } = useFormat();
 
     if (loading) {
-        return <LoadingSpinner message="Cargando datos del médico..." />
+        return <LoadingScreen  />
     }
 
     if (error) {

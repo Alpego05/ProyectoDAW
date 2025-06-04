@@ -18,19 +18,16 @@ const useSolicitarCita = () => {
         return localStorage.getItem("userId") || "";
     };
 
-    // FIXED: Cargar todos los doctores
     const loadAllDoctors = useCallback(async () => {
-        if (loadingDoctors) return; // Prevenir múltiples llamadas simultáneas
+        if (loadingDoctors) return;
 
         setLoadingDoctors(true);
         setError(null);
 
         try {
-            console.log('🔄 Iniciando carga de doctores...');
             const response = await getAllDoctors();
-            console.log('📦 Respuesta cruda de API:', response);
+            console.log(response);
 
-            // FIXED: Manejar diferentes estructuras de respuesta
             let doctoresData;
             if (response?.data) {
                 doctoresData = Array.isArray(response.data) ? response.data : [response.data];
@@ -42,18 +39,18 @@ const useSolicitarCita = () => {
                 doctoresData = [];
             }
 
-            console.log('✅ Doctores procesados:', doctoresData);
+            console.log(doctoresData);
             setDoctores(doctoresData);
 
             if (doctoresData.length === 0) {
-                console.warn('⚠️ No se encontraron doctores');
+                console.warn(' No se encontraron doctores');
                 setError('No se encontraron doctores disponibles');
             }
 
             return doctoresData;
         } catch (err) {
-            console.error('❌ Error al cargar doctores:', err);
-            console.error('📝 Detalles completos del error:', {
+            console.error(' Error al cargar doctores:', err);
+            console.error('error:', {
                 message: err.message,
                 response: err.response,
                 status: err.response?.status,
@@ -103,13 +100,11 @@ const useSolicitarCita = () => {
         setError(null);
 
         try {
-            console.log('🔄 Cargando info del doctor:', doctorId);
             const doctorData = await getDoctorById(doctorId);
-            console.log('✅ Doctor cargado:', doctorData);
             setSelectedDoctor(doctorData);
             return doctorData;
         } catch (err) {
-            console.error('❌ Error al cargar doctor:', err);
+            console.error(' Error al cargar doctor:', err);
             const errorMessage = err.response?.data?.message || err.message || 'Error al cargar información del doctor';
             setError(errorMessage);
             throw err;
@@ -124,9 +119,9 @@ const useSolicitarCita = () => {
         setError(null);
 
         try {
-            console.log('🔄 Cargando horarios del doctor:', doctorId);
+
             const response = await getHorarioByDoctorId(doctorId);
-            console.log('📦 Respuesta horarios:', response);
+            console.log('horarios:', response);
 
             // FIXED: Manejar diferentes estructuras de respuesta
             let horarioData;
@@ -140,11 +135,10 @@ const useSolicitarCita = () => {
                 horarioData = [];
             }
 
-            console.log('✅ Horarios procesados:', horarioData);
             setHorarioDisponible(horarioData);
             return horarioData;
         } catch (err) {
-            console.error('❌ Error al cargar horarios:', err);
+            console.error('Error al cargar horarios:', err);
             const errorMessage = err.response?.data?.message || err.message || 'Error al cargar horarios';
             setError(errorMessage);
             setHorarioDisponible([]);
@@ -160,9 +154,8 @@ const useSolicitarCita = () => {
         setError(null);
 
         try {
-            console.log('🔄 Cargando citas existentes del doctor:', doctorId);
             const response = await getCitasByDoctor(doctorId);
-            console.log('📦 Respuesta citas:', response);
+            console.log('citas:', response);
 
             // FIXED: Manejar diferentes estructuras de respuesta
             let citasData;
@@ -176,11 +169,10 @@ const useSolicitarCita = () => {
                 citasData = [];
             }
 
-            console.log('✅ Citas procesadas:', citasData);
             setCitasExistentes(citasData);
             return citasData;
         } catch (err) {
-            console.error('❌ Error al cargar citas existentes:', err);
+            console.error('Error ', err);
             const errorMessage = err.response?.data?.message || err.message || 'Error al cargar citas existentes';
             setError(errorMessage);
             setCitasExistentes([]);
@@ -206,7 +198,6 @@ const useSolicitarCita = () => {
             const response = await getCitasByPatient(patientId);
             console.log('📦 Respuesta mis citas:', response);
 
-            // FIXED: Manejar diferentes estructuras de respuesta
             let citasData;
             if (response?.data) {
                 citasData = Array.isArray(response.data) ? response.data : [response.data];
@@ -218,11 +209,10 @@ const useSolicitarCita = () => {
                 citasData = [];
             }
 
-            console.log('✅ Mis citas procesadas:', citasData);
             setMisCitas(citasData);
             return citasData;
         } catch (err) {
-            console.error('❌ Error al cargar mis citas:', err);
+            console.error('Error ', err);
             const errorMessage = err.response?.data?.message || err.message || 'Error al cargar mis citas';
             setError(errorMessage);
             setMisCitas([]);
@@ -331,10 +321,9 @@ const useSolicitarCita = () => {
                 setHorariosLibres(slotsLibres);
             }
 
-            console.log('✅ Datos del doctor cargados completamente');
             return { doctor, horarios, citas };
         } catch (err) {
-            console.error('❌ Error al cargar datos del doctor:', err);
+            console.error('Error al cargar datos del doctor:', err);
             const errorMessage = err.response?.data?.message || err.message || 'Error al cargar datos del doctor';
             setError(errorMessage);
             throw err;

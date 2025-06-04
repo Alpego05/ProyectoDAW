@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useAdmin } from "../../hooks/users/useAdmin"
 import { Calendar, ClipboardList, FileText, Settings, User, Users } from "lucide-react"
-import LoadingSpinner from "../Common/LoadingSpinner"
 import HospitalInfo from "./HospitalInfo"
 import { Link } from "react-router-dom"
+import LoadingScreen from "../Common/LoadingScreen"
 // import useFormat from '../../hooks/useFormat';
 
 const AdminDashboard = () => {
@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState("usuarios")
 
     if (isLoading) {
-        return <LoadingSpinner message="Cargando datos del sistema..." />
+        return <LoadingScreen message="Cargando datos del sistema..." />
     }
 
     if (error) {

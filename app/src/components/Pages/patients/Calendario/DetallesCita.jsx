@@ -1,6 +1,6 @@
 import { Clock, User, FileText, CheckCircle, Stethoscope, Pill, AlertCircle, Calendar, Activity, Folder, Tablets, TestTube, } from "lucide-react";
 import { useFormatCita } from "../../../../hooks/medical/useFormatCita";
-import LoadingSpinner from "../../../Common/LoadingSpinner";
+import LoadingScreen from "../../../Common/LoadingScreen";
 
 const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError }) => {
     const { formatDate, formatTime, getEstadoClassName } = useFormatCita();
@@ -42,7 +42,7 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
             <div className="p-6">
                 {loadingDetails ? (
                     <div className="flex justify-center py-8">
-                        <LoadingSpinner message="Cargando información detallada..." />
+                        <LoadingScreen></LoadingScreen>
                     </div>
                 ) : detailsError ? (
                     <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded">

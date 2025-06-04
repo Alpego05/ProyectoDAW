@@ -1,8 +1,8 @@
 import React from 'react';
 import { useCitasHoyDoctor } from '../../../../hooks/medical/useCitasHoyDoctor';
 import { Calendar, Stethoscope } from 'lucide-react';
-import LoadingSpinner from '../../../Common/LoadingSpinner';
 import CitaCard from './CitaCard';
+import LoadingScreen from '../../../Common/LoadingScreen';
 
 const CitasHoy = () => {
     const {
@@ -17,7 +17,7 @@ const CitasHoy = () => {
     } = useCitasHoyDoctor();
 
     if (isLoading) {
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
     }
 
     if (error) {

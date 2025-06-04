@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
 import Calendario from "../../../Common/Calendario"
 import { RefreshCw, Calendar, AlertCircle } from "lucide-react"
-import LoadingSpinner from "../../../Common/LoadingSpinner"
 import CitasHoy from "./CitasHoy"
+import LoadingScreen from "../../../Common/LoadingScreen"
 
 const AgendaDoctor = () => {
   const [Citas, setCitas] = useState([])
@@ -62,7 +62,7 @@ const AgendaDoctor = () => {
         </div>
         <div className="p-4">
           {isLoading ? (
-            <LoadingSpinner message="Cargando citas..." />
+            <LoadingScreen message="Cargando citas..." />
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
               <div className="flex items-start">

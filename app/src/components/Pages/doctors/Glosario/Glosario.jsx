@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { Search, Pill, WormIcon as Virus, AlertCircle, Filter } from "lucide-react"
-import LoadingSpinner from "../../../Common/LoadingSpinner"
 import { MedEnfsContext } from "../../../../context/MedEnfsContext"
 import useFilters from "../../../../hooks/useFilters"
 import TabMedicamentos from "./TabMedicamentos"
 import TabEnfermedades from "./TabEnfermedades"
+import LoadingScreen from "../../../Common/LoadingScreen"
 
 const Glosario = () => {
   const navigate = useNavigate()
@@ -206,7 +206,7 @@ const Glosario = () => {
         {/* Contenido principal */}
         <div className="p-4">
           {isLoading ? (
-            <LoadingSpinner message="Cargando datos del glosario..." />
+            <LoadingScreen  />
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
               <div className="flex items-start">

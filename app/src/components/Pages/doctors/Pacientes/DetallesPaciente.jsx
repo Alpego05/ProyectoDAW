@@ -2,21 +2,20 @@ import { useParams } from 'react-router-dom'
 import { getData } from "../../../../hooks/users/useUsuarios"
 import { Check, User, Calendar, Phone, MapPin, Heart, Pill, FileText, ArrowLeft, Mail, Clock, Activity, Stethoscope, AlertCircle } from "lucide-react"
 import { useNavigate } from 'react-router-dom'
-import LoadingSpinner from "../../../Common/LoadingSpinner"
 import useFormat from '../../../../hooks/useFormat';
+import LoadingScreen from '../../../Common/LoadingScreen'
 
-const handleGeneratePDF = async () => {
-        try {
-            const datosPDF = await obtenerDatosPDF(cita);
-            
-            // Generar el PDF con los datos completos
-            await generateCitaPDF(datosPDF, formatHour);
-        } catch (error) {
-            console.error('Error al generar PDF:', error);
-            alert('Ocurrió un error al generar el PDF: ' + error.message);
-        }
-    };
-    
+// const handleGeneratePDF = async () => {
+//     try {
+//         const datosPDF = await obtenerDatosPDF(cita);
+
+//         await generateCitaPDF(datosPDF, formatHour);
+//     } catch (error) {
+//         console.error('Error al generar PDF:', error);
+//         alert('Ocurrió un error al generar el PDF: ' + error.message);
+//     }
+// };
+
 const DetallesPaciente = () => {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -29,7 +28,7 @@ const DetallesPaciente = () => {
     )
 
     if (loading) {
-        return <LoadingSpinner message="Cargando datos del paciente..." />
+        return <LoadingScreen></LoadingScreen>
     }
 
     if (error) {

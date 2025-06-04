@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import useMedicamentos from '../../../../hooks/medical/useMedicamentos'
 import MedicamentoAsociado from './MedicamentoAsociado'
-import LoadingSpinner from '../../../Common/LoadingSpinner'
+import LoadingScreen from '../../../Common/LoadingScreen'
 
 const EnfermedadDetalle = () => {
     const { id } = useParams()
@@ -51,7 +51,7 @@ const EnfermedadDetalle = () => {
     if (isLoading) {
         return (
             <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-                <LoadingSpinner></LoadingSpinner>
+                <LoadingScreen></LoadingScreen>
             </div>
         )
     }
