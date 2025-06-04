@@ -25,7 +25,6 @@ const Header = () => {
           <>
             <li className="nav-item"><Link to={"NuevoPaciente"} className="nav-link">Registrar Paciente</Link></li>
             <li className="nav-item"><Link to={"NuevoDoctor"} className="nav-link">Registrar Doctor</Link></li>
-            <li className="nav-item"><Link to={"ListaUsuarios"} className="nav-link">Usuarios</Link></li>
           </>
         )
       case "doctor":

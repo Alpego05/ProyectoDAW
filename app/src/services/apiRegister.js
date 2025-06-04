@@ -11,7 +11,7 @@ const createPatient = async (PatientData) => {
         const response = await fetch(`${API_BASE_URL}/register/patient`, {
             method: "POST",
             headers: {
-                "Authorization":  `${getToken()}`
+                "Authorization": `${getToken()}`,
             },
             body: JSON.stringify(PatientData)
         })
@@ -19,6 +19,7 @@ const createPatient = async (PatientData) => {
         return data
     } catch (error) {
         console.error(error)
+        throw error
     }
 }
 
@@ -28,7 +29,7 @@ const createDoctor = async (doctorData) => {
         const response = await fetch(`${API_BASE_URL}/register/doctor`, {
             method: "POST",
             headers: {
-                "Authorization": `${getToken()}`
+                "Authorization": `${getToken()}`,
             },
             body: JSON.stringify(doctorData)
         })
@@ -36,13 +37,11 @@ const createDoctor = async (doctorData) => {
         return data
     } catch (error) {
         console.error(error)
+        throw error
     }
 }
-
-
 
 export default {
     createPatient,
     createDoctor
-
 }

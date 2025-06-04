@@ -46,7 +46,6 @@ export const createDiagnostico = async (diagnosticoData) => {
         const response = await fetch(`${API_BASE_URL}/diagnosticos/create`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `${token}`
             },
             body: JSON.stringify(diagnosticoData)
