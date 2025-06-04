@@ -1,5 +1,5 @@
 import { getData } from "../../hooks/users/useUsuarios"
-import { Check, User } from "lucide-react"
+import { AlertCircle, Check, User } from "lucide-react"
 import HospitalInfo from "./HospitalInfo"
 import useFormat from '../../hooks/useFormat';
 import LoadingScreen from "../Common/LoadingScreen";
@@ -16,9 +16,12 @@ const PatientDashboard = ({ usuarioId }) => {
 
     if (error) {
         return (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mx-auto max-w-lg mt-10">
-                <p className="font-bold">Error</p>
-                <p>{error}</p>
+            <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
+                <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
+                <div>
+                    <h4 className="font-semibold text-red-800">Error</h4>
+                    <p className="text-red-700 mt-1">{error}</p>
+                </div>
             </div>
         )
     }
@@ -32,7 +35,7 @@ const PatientDashboard = ({ usuarioId }) => {
     }
 
     const proximasCitas = getProximasCitas()
-      const { formatHour } = useFormat();
+    const { formatHour } = useFormat();
 
     return (
         <div className="bg-gray-50 min-h-screen">

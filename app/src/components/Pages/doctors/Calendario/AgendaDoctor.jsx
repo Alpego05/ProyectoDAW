@@ -55,7 +55,7 @@ const AgendaDoctor = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
         <div className="p-4 border-b">
           <div className="flex items-center gap-2">
-              <Calendar className="h-7 w-7 "   style={{ color: "var(--primary-color)" }}/>
+            <Calendar className="h-7 w-7 " style={{ color: "var(--primary-color)" }} />
             <h2 className="text-xl font-semibold">Agenda</h2>
           </div>
           <p className="text-gray-500 text-sm mt-1">Visualiza y gestiona tus citas con pacientes</p>
@@ -64,13 +64,11 @@ const AgendaDoctor = () => {
           {isLoading ? (
             <LoadingScreen message="Cargando citas..." />
           ) : error ? (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-              <div className="flex items-start">
-                <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-                <div>
-                  <h3 className="text-red-800 font-medium">Error</h3>
-                  <p className="text-red-700 text-sm">{error}</p>
-                </div>
+            <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
+              <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-semibold text-red-800">Error</h4>
+                <p className="text-red-700 mt-1">{error}</p>
               </div>
             </div>
           ) : (

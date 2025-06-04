@@ -1,4 +1,4 @@
-import { CircleAlert, Eye, EyeOff, Heart, Users, Award, Clock, MapPin, Phone, Mail, Shield, Star, Activity } from 'lucide-react';
+import { CircleAlert, Eye, EyeOff, Heart, Users, Award, Clock, MapPin, Phone, Mail, Shield, Star, Activity, AlertCircle } from 'lucide-react';
 import { useLogin } from '../../hooks/useLogin';
 import Logo from './../../assets/images/logo.png';
 import Footer from "../Footer/Footer";
@@ -227,10 +227,13 @@ Información adicional:
 
                                 {/* Mensaje de Error */}
                                 {error && (
-                                    <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-                                        <CircleAlert className="text-red-500 flex-shrink-0" size={16} />
-                                        <p className="text-sm text-red-700">{error}</p>
-                                    </div>
+                                    <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
+                                <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
+                                <div>
+                                    <h4 className="font-semibold text-red-800">Error</h4>
+                                    <p className="text-red-700 mt-1">{error}</p>
+                                </div>
+                            </div>
                                 )}
 
                                 {/* Botón de Login */}

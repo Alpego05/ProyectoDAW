@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCitasHoyDoctor } from '../../../../hooks/medical/useCitasHoyDoctor';
-import { Calendar, Stethoscope } from 'lucide-react';
+import { AlertCircle, Calendar, Stethoscope } from 'lucide-react';
 import CitaCard from './CitaCard';
 import LoadingScreen from '../../../Common/LoadingScreen';
 
@@ -22,17 +22,11 @@ const CitasHoy = () => {
 
     if (error) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 p-4">
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 sm:p-6 max-w-md w-full shadow-lg">
-                    <div className="flex items-start space-x-3">
-                        <div className="bg-red-100 rounded-full p-2 flex-shrink-0">
-                             <TriangleAlert  className="h-6 w-6 text-red-600" ></TriangleAlert>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                            <h3 className="text-red-800 font-semibold text-sm sm:text-base">Error del Sistema</h3>
-                            <p className="text-red-600 text-xs sm:text-sm mt-1 break-words">{error}</p>
-                        </div>
-                    </div>
+            <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
+                <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
+                <div>
+                    <h4 className="font-semibold text-red-800">Error</h4>
+                    <p className="text-red-700 mt-1">{error}</p>
                 </div>
             </div>
         );
