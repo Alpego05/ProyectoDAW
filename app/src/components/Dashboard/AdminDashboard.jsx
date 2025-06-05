@@ -172,7 +172,7 @@ const AdminDashboard = () => {
                         <>
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-lg font-semibold text-gray-800">Gestión de Médicos</h3>
-                                <Link to={"NuevoMedico"} ><button
+                                <Link to={"NuevoDoctor"} ><button
                                     className=" cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                                     style={{ backgroundColor: "var(--primary-color)" }}>
                                     Nuevo Médico
@@ -203,6 +203,7 @@ const AdminDashboard = () => {
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {doctores.map((doctor) => {
+                                            console.log(doctor)
                                             const doctorInfo = doctor.doctor || {}
                                             return (
                                                 <tr key={doctor.id}>

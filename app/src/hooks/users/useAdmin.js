@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react"
 import { getAllUsers } from "../../services/apiUser"
-import { getAllCitas } from "../../services/apiCitas"
-import { getAllDiagnosticos } from "../../services/apiDiagnosticos"
-import { getAllRecetas } from "../../services/apiRecetas"
+import { getAllDoctors } from "../../services/apiDoctor"
+import { getPatients } from "../../services/apiPatient"
+
 
 export const useAdmin = () => {
     const [usuarios, setUsuarios] = useState([])
     const [doctores, setDoctores] = useState([])
     const [pacientes, setPacientes] = useState([])
-    const [citas, setCitas] = useState([])
-    const [diagnosticos, setDiagnosticos] = useState([])
-    const [recetas, setRecetas] = useState([])
+
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -19,51 +17,44 @@ export const useAdmin = () => {
         setError(null)
 
         try {
-            // Cargar todos los datos necesarios para el administrador
-            const [todosUsuarios, todasCitas, todosDiagnosticos, todasRecetas] = await Promise.allSettled([
+   
+            const [
+                todosUsuarios,
+                todosDoctores,
+                todosPacientes
+
+            ] = await Promise.allSettled([
                 getAllUsers(),
-                getAllCitas(),
-                getAllDiagnosticos(),
-                getAllRecetas(),
+                getAllDoctors(),
+                getPatients(),
             ])
 
             // Procesar usuarios
-            const usuariosData = todosUsuarios.status === 'fulfilled' 
+            const usuariosData = todosUsuarios.status === 'fulfilled'
                 ? (Array.isArray(todosUsuarios.value) ? todosUsuarios.value : [])
                 : []
             setUsuarios(usuariosData)
 
-            // Filtrar usuarios por tipo con validación
-            const doctoresData = usuariosData.filter((user) => 
-                user && user.tipo_usuario === "doctor"
-            )
-            const pacientesData = usuariosData.filter((user) => 
-                user && user.tipo_usuario === "paciente"
-            )
-
+            // Procesar doctores con información completa
+            const doctoresData = todosDoctores.status === 'fulfilled'
+                ? (Array.isArray(todosDoctores.value) ? todosDoctores.value : [])
+                : []
             setDoctores(doctoresData)
+
+            // Procesar pacientes con información completa
+            const pacientesData = todosPacientes.status === 'fulfilled'
+                ? (Array.isArray(todosPacientes.value) ? todosPacientes.value : [])
+                : []
             setPacientes(pacientesData)
 
-            // Procesar citas
-            const citasData = todasCitas.status === 'fulfilled'
-                ? (Array.isArray(todasCitas.value) ? todasCitas.value : [])
-                : []
-            setCitas(citasData)
-
-            // Procesar diagnósticos
-            const diagnosticosData = todosDiagnosticos.status === 'fulfilled'
-                ? (Array.isArray(todosDiagnosticos.value) ? todosDiagnosticos.value : [])
-                : []
-            setDiagnosticos(diagnosticosData)
-
-            // Procesar recetas
-            const recetasData = todasRecetas.status === 'fulfilled'
-                ? (Array.isArray(todasRecetas.value) ? todasRecetas.value : [])
-                : []
-            setRecetas(recetasData)
+          
 
             // Verificar si hubo errores en alguna de las llamadas
-            const errors = [todosUsuarios, todasCitas, todosDiagnosticos, todasRecetas]
+            const errors = [
+                todosUsuarios,
+                todosDoctores,
+                todosPacientes
+            ]
                 .filter(result => result.status === 'rejected')
                 .map(result => result.reason)
 
@@ -75,13 +66,10 @@ export const useAdmin = () => {
         } catch (err) {
             console.error("Error al obtener datos de administrador:", err)
             setError(err instanceof Error ? err.message : "Error desconocido al obtener datos")
-            
+
             setUsuarios([])
             setDoctores([])
             setPacientes([])
-            setCitas([])
-            setDiagnosticos([])
-            setRecetas([])
         } finally {
             setIsLoading(false)
         }
@@ -91,9 +79,6 @@ export const useAdmin = () => {
         setUsuarios([])
         setDoctores([])
         setPacientes([])
-        setCitas([])
-        setDiagnosticos([])
-        setRecetas([])
         setError(null)
         setIsLoading(false)
     }
@@ -103,11 +88,6 @@ export const useAdmin = () => {
             totalUsuarios: usuarios.length,
             totalDoctores: doctores.length,
             totalPacientes: pacientes.length,
-            totalCitas: citas.length,
-            citasPendientes: citas.filter(cita => cita?.estado === "Pendiente").length,
-            citasCompletadas: citas.filter(cita => cita?.estado === "Completada").length,
-            totalDiagnosticos: diagnosticos.length,
-            totalRecetas: recetas.length,
         }
     }
 
@@ -125,9 +105,6 @@ export const useAdmin = () => {
         usuarios,
         doctores,
         pacientes,
-        citas,
-        diagnosticos,
-        recetas,
         isLoading,
         error,
         cargarDatos,
