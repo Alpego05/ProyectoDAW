@@ -34,18 +34,19 @@ export const useAdmin = () => {
                 ? (Array.isArray(todosUsuarios.value) ? todosUsuarios.value : [])
                 : []
             setUsuarios(usuariosData)
+              console.log(usuarios)
 
-            // Procesar doctores con información completa
             const doctoresData = todosDoctores.status === 'fulfilled'
                 ? (Array.isArray(todosDoctores.value) ? todosDoctores.value : [])
                 : []
             setDoctores(doctoresData)
+            console.log(doctores)
 
-            // Procesar pacientes con información completa
             const pacientesData = todosPacientes.status === 'fulfilled'
                 ? (Array.isArray(todosPacientes.value) ? todosPacientes.value : [])
                 : []
             setPacientes(pacientesData)
+              console.log(pacientes)
 
           
 

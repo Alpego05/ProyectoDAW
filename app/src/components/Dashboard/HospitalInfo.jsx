@@ -2,7 +2,7 @@ import instalaciones from "../../assets/images/instalaciones.jpg"
 
 const HospitalInfo = () => {
     return (
-        <section className="bg-white py-16 px-6 md:px-12 lg:px-24">
+        <section className=" py-16 px-6 md:px-12 lg:px-24">
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
                     <h2 className="text-4xl font-bold mb-4" style={{ color: "var(--primary-color)" }}>

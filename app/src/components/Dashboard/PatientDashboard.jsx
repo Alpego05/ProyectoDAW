@@ -3,6 +3,7 @@ import { AlertCircle, Check, User } from "lucide-react"
 import HospitalInfo from "./HospitalInfo"
 import useFormat from '../../hooks/useFormat';
 import LoadingScreen from "../Common/LoadingScreen";
+import { Link } from "react-router-dom";
 
 const PatientDashboard = ({ usuarioId }) => {
     const { usuario, paciente, recetas, diagnosticos, formatDate, loading, error, getProximasCitas } = getData(
@@ -126,12 +127,10 @@ const PatientDashboard = ({ usuarioId }) => {
                         )}
 
                         <div className="mt-4 text-center">
-                            <button
-                                className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                style={{ backgroundColor: "var(--primary-color)" }}
-                            >
+                            <Link to={"/Home/SolicitarCita"}>  <button className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                style={{ backgroundColor: "var(--primary-color)" }}>
                                 Solicitar nueva cita
-                            </button>
+                            </button> </Link>
                         </div>
                     </div>
 
