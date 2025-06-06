@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react"
 import { X, Calendar, Clock, AlertCircle } from "lucide-react"
 import { getHorarioByDoctorId } from "../../../../services/apiHorarios"
 import { getCitasByDoctor, updateCita } from "../../../../services/apiCitas"
-const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
+
+const ModalEditarCita = ({ cita, onClose, onSubmit }) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [selectedDate, setSelectedDate] = useState("")
@@ -14,31 +15,100 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
     const [availableDays, setAvailableDays] = useState([])
     const [updating, setUpdating] = useState(false)
 
+    // Función para normalizar fechas (evitar problemas de zona horaria)
+    const normalizeDate = useCallback((dateStr) => {
+        if (!dateStr) return ""
+        try {
+            // Si ya está en formato YYYY-MM-DD, devolverlo tal como está
+            if (typeof dateStr === 'string' && dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return dateStr
+            }
+            // Si es un objeto Date o string de fecha completa, convertir a YYYY-MM-DD
+            const date = new Date(dateStr)
+            if (isNaN(date.getTime())) return ""
+
+            const year = date.getFullYear()
+            const month = String(date.getMonth() + 1).padStart(2, '0')
+            const day = String(date.getDate()).padStart(2, '0')
+            return `${year}-${month}-${day}`
+        } catch (error) {
+            console.error("Error normalizando fecha:", error)
+            return ""
+        }
+    }, [])
+
+    // Función para normalizar tiempo
+    const normalizeTime = useCallback((timeStr) => {
+        if (!timeStr) return ""
+        try {
+            // Si ya está en formato HH:MM:SS, devolverlo tal como está
+            if (typeof timeStr === 'string' && timeStr.match(/^\d{2}:\d{2}:\d{2}$/)) {
+                return timeStr
+            }
+            // Si es formato HH:MM, agregar :00
+            if (typeof timeStr === 'string' && timeStr.match(/^\d{2}:\d{2}$/)) {
+                return `${timeStr}:00`
+            }
+            return timeStr
+        } catch (error) {
+            console.error("Error normalizando tiempo:", error)
+            return ""
+        }
+    }, [])
+
     useEffect(() => {
         if (cita) {
-            setSelectedDate(cita.fecha?.split("T")[0] || "")
-            setSelectedTime(cita.hora_inicio || "")
-            setEndTime(cita.hora_fin || "")
+            const normalizedDate = normalizeDate(cita.fecha)
+            const normalizedStartTime = normalizeTime(cita.hora_inicio)
+            const normalizedEndTime = normalizeTime(cita.hora_fin)
+
+            console.log("Inicializando valores:", {
+                fecha: normalizedDate,
+                hora_inicio: normalizedStartTime,
+                hora_fin: normalizedEndTime,
+                original: cita
+            })
+
+            setSelectedDate(normalizedDate)
+            setSelectedTime(normalizedStartTime)
+            setEndTime(normalizedEndTime)
         }
-    }, [cita])
+    }, [cita, normalizeDate, normalizeTime])
 
     const getDayNameInSpanish = useCallback((fecha) => {
-        const date = new Date(fecha)
-        const days = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"]
-        return days[date.getDay()]
+        try {
+            // Crear fecha local para evitar problemas de zona horaria
+            const [year, month, day] = fecha.split('-').map(Number)
+            const date = new Date(year, month - 1, day)
+            const days = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"]
+            return days[date.getDay()]
+        } catch (error) {
+            console.error("Error obteniendo día de la semana:", error)
+            return ""
+        }
     }, [])
 
     const generateTimeSlots = useCallback((startTime, endTime) => {
         const slots = []
-        const start = new Date(`2024-01-01 ${startTime}`)
-        const end = new Date(`2024-01-01 ${endTime}`)
+        try {
+            // Usar fecha fija UTC para evitar problemas de zona horaria
+            const baseDate = '1970-01-01T'
+            const start = new Date(`${baseDate}${startTime}`)
+            const end = new Date(`${baseDate}${endTime}`)
 
-        const current = new Date(start)
+            if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                console.error("Tiempos inválidos:", { startTime, endTime })
+                return slots
+            }
 
-        while (current < end) {
-            const timeString = current.toTimeString().slice(0, 5)
-            slots.push(timeString)
-            current.setMinutes(current.getMinutes() + 30)
+            const current = new Date(start)
+            while (current < end) {
+                const timeString = current.toTimeString().slice(0, 8)
+                slots.push(timeString)
+                current.setMinutes(current.getMinutes() + 30)
+            }
+        } catch (error) {
+            console.error("Error generando slots de tiempo:", error)
         }
 
         return slots
@@ -46,46 +116,56 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
 
     const calculateAvailableSlots = useCallback(
         (horarios, citasOcupadas, fecha) => {
-            if (!horarios || horarios.length === 0) return []
+            if (!horarios || horarios.length === 0 || !fecha) return []
 
-            const fechaSeleccionada = new Date(fecha).toDateString()
-            const diaSemana = getDayNameInSpanish(fecha)
+            try {
+                const diaSemana = getDayNameInSpanish(fecha)
+                if (!diaSemana) return []
 
-            const horariosDelDia = horarios.filter((horario) => horario.dia_semana === diaSemana)
+                const horariosDelDia = horarios.filter((horario) => horario.dia_semana === diaSemana)
+                if (horariosDelDia.length === 0) return []
 
-            if (horariosDelDia.length === 0) {
+                // Filtrar citas del mismo día (excluyendo la cita actual)
+                const citasDelDia = citasOcupadas.filter((citaItem) => {
+                    const fechaCitaNormalizada = normalizeDate(citaItem.fecha)
+                    const fechaSeleccionadaNormalizada = normalizeDate(fecha)
+                    const esLaMismaCita = citaItem.id_cita === cita?.id_cita
+
+                    return fechaCitaNormalizada === fechaSeleccionadaNormalizada && !esLaMismaCita
+                })
+
+                // Generar todos los slots disponibles
+                let todosLosSlots = []
+                horariosDelDia.forEach((horario) => {
+                    const slots = generateTimeSlots(horario.hora_inicio, horario.hora_fin)
+                    todosLosSlots = [...todosLosSlots, ...slots]
+                })
+
+                // Filtrar slots ocupados
+                const slotsLibres = todosLosSlots.filter((slot) => {
+                    return !citasDelDia.some((citaItem) => {
+                        const horaCitaNormalizada = normalizeTime(citaItem.hora_inicio)
+                        return horaCitaNormalizada === slot
+                    })
+                })
+
+                const slotsUnicos = [...new Set(slotsLibres)].sort()
+                console.log("Slots calculados:", {
+                    fecha,
+                    diaSemana,
+                    horariosDelDia: horariosDelDia.length,
+                    citasDelDia: citasDelDia.length,
+                    todosLosSlots: todosLosSlots.length,
+                    slotsLibres: slotsUnicos.length
+                })
+
+                return slotsUnicos
+            } catch (error) {
+                console.error("Error calculando slots disponibles:", error)
                 return []
             }
-
-            const citasDelDia = citasOcupadas.filter((citaItem) => {
-                const fechaCita = new Date(citaItem.fecha).toDateString()
-                const esLaMismaCita = citaItem.id_cita === cita?.id_cita
-                return fechaCita === fechaSeleccionada && !esLaMismaCita
-            })
-
-            let todosLosSlots = []
-
-            horariosDelDia.forEach((horario) => {
-                const slots = generateTimeSlots(horario.hora_inicio, horario.hora_fin)
-                todosLosSlots = [...todosLosSlots, ...slots]
-            })
-
-            const slotsLibres = todosLosSlots.filter((slot) => {
-                return !citasDelDia.some((citaItem) => {
-                    let horaCita
-                    if (citaItem.hora_inicio) {
-                        horaCita = citaItem.hora_inicio.slice(0, 5)
-                    } else if (citaItem.fecha) {
-                        horaCita = new Date(citaItem.fecha).toTimeString().slice(0, 5)
-                    }
-                    return horaCita === slot
-                })
-            })
-
-            const slotsUnicos = [...new Set(slotsLibres)].sort()
-            return slotsUnicos
         },
-        [generateTimeSlots, getDayNameInSpanish, cita?.id_cita],
+        [generateTimeSlots, getDayNameInSpanish, cita?.id_cita, normalizeDate, normalizeTime],
     )
 
     const getAvailableDays = useCallback((horarios) => {
@@ -104,9 +184,8 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
     const loadDoctorData = useCallback(async () => {
         const doctorId = getDoctorId()
 
-
         if (!doctorId) {
-            console.warn("No se encontró doctorId en la cita")
+            console.warn("No se encontró doctorId en la cita:", cita)
             setError("No se pudo identificar el doctor de la cita")
             return
         }
@@ -115,30 +194,37 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
         setError(null)
 
         try {
+            console.log("Cargando datos para doctor:", doctorId)
+
             const [horariosResponse, citasResponse] = await Promise.all([
                 getHorarioByDoctorId(doctorId),
                 getCitasByDoctor(doctorId),
             ])
 
             // Procesar horarios
-            let horarioData
+            let horarioData = []
             if (horariosResponse?.data) {
                 horarioData = Array.isArray(horariosResponse.data) ? horariosResponse.data : [horariosResponse.data]
             } else if (Array.isArray(horariosResponse)) {
                 horarioData = horariosResponse
-            } else {
-                horarioData = horariosResponse ? [horariosResponse] : []
+            } else if (horariosResponse) {
+                horarioData = [horariosResponse]
             }
 
             // Procesar citas
-            let citasData
+            let citasData = []
             if (citasResponse?.data) {
                 citasData = Array.isArray(citasResponse.data) ? citasResponse.data : [citasResponse.data]
             } else if (Array.isArray(citasResponse)) {
                 citasData = citasResponse
-            } else {
-                citasData = citasResponse ? [citasResponse] : []
+            } else if (citasResponse) {
+                citasData = [citasResponse]
             }
+
+            console.log("Datos cargados:", {
+                horarios: horarioData.length,
+                citas: citasData.length
+            })
 
             setHorarioDisponible(horarioData)
             setCitasExistentes(citasData)
@@ -163,8 +249,15 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
         if (selectedDate && horarioDisponible.length > 0) {
             const slotsLibres = calculateAvailableSlots(horarioDisponible, citasExistentes, selectedDate)
             setHorariosLibres(slotsLibres)
+
+            // Si el tiempo seleccionado ya no está disponible, limpiar selección
+            if (selectedTime && !slotsLibres.includes(selectedTime)) {
+                console.log("Tiempo seleccionado ya no disponible, limpiando:", selectedTime)
+                setSelectedTime("")
+                setEndTime("")
+            }
         }
-    }, [selectedDate, horarioDisponible, citasExistentes, calculateAvailableSlots])
+    }, [selectedDate, horarioDisponible, citasExistentes, calculateAvailableSlots, selectedTime])
 
     const isValidDate = useCallback(
         (fecha) => {
@@ -179,17 +272,26 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
     const calculateEndTime = useCallback((startTime) => {
         if (!startTime) return ""
 
-        const start = new Date(`2024-01-01 ${startTime}`)
-        start.setMinutes(start.getMinutes() + 30)
-        return start.toTimeString().slice(0, 5)
+        try {
+            const baseDate = '1970-01-01T'
+            const start = new Date(`${baseDate}${startTime}`)
+            if (isNaN(start.getTime())) return ""
+
+            start.setMinutes(start.getMinutes() + 30)
+            return start.toTimeString().slice(0, 8)
+        } catch (error) {
+            console.error("Error calculando hora de fin:", error)
+            return ""
+        }
     }, [])
 
     const handleTimeChange = (time) => {
+        console.log("Cambio de tiempo:", time)
         setSelectedTime(time)
         setEndTime(calculateEndTime(time))
+        setError(null)
     }
 
-    // FIXED: Función para actualizar la cita
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -209,31 +311,39 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
         }
 
         const calculatedEndTime = calculateEndTime(selectedTime)
+        if (!calculatedEndTime) {
+            setError("Error calculando la hora de fin")
+            return
+        }
 
         setUpdating(true)
         setError(null)
 
         try {
-            console.log("Actualizando cita:", {
-                id: cita.id_cita,
-                fecha: selectedDate,
-                hora_inicio: selectedTime,
-                hora_fin: calculatedEndTime,
-            })
+            // Asegurar consistencia en los IDs
+            const doctorId = cita.doctor_id || cita.doctorId || cita.medico_id
+            const patientId = cita.patient_id || cita.paciente_id
 
+            if (!doctorId || !patientId) {
+                throw new Error("IDs de doctor o paciente no encontrados")
+            }
 
             const citaActualizada = {
-                patient_id: cita.patient_id || cita.paciente_id, 
-                doctor_id: cita.doctor_id || cita.medico_id, 
+                patient_id: patientId,
+                doctor_id: doctorId,
                 fecha: selectedDate,
                 hora_inicio: selectedTime,
                 hora_fin: calculatedEndTime,
                 estado: cita.estado || "Pendiente",
             }
 
+            console.log("Actualizando cita:", {
+                id: cita.id_cita,
+                datos: citaActualizada
+            })
 
             await updateCita(cita.id_cita, citaActualizada)
-            console.log("Cita actualizada")
+            console.log("Cita actualizada exitosamente")
 
             if (onSubmit) {
                 onSubmit(selectedDate, selectedTime, calculatedEndTime)
@@ -257,6 +367,33 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
         const future = new Date()
         future.setDate(future.getDate() + 30)
         return future.toISOString().split("T")[0]
+    }
+
+    const displayDate = (fecha) => {
+        if (!fecha) return ""
+        const normalized = normalizeDate(fecha)
+        if (!normalized) return fecha
+
+        try {
+            const [year, month, day] = normalized.split('-')
+            const date = new Date(year, month - 1, day)
+            return date.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
+        } catch (error) {
+            return normalized
+        }
+    }
+
+    const displayTime = (time) => {
+        if (!time) return ""
+        try {
+            return time.substring(0, 5) // HH:MM format
+        } catch (error) {
+            return time
+        }
     }
 
     return (
@@ -288,7 +425,7 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                             <div className="bg-[#f8fafc] rounded-lg p-4">
                                 <h4 className="text-sm font-medium text-[#475569] mb-2">Horario actual:</h4>
                                 <p className="text-sm text-[#64748b]">
-                                    {formatDate ? formatDate(cita.fecha) : cita.fecha} • {cita.hora_inicio} - {cita.hora_fin}
+                                    {displayDate(cita.fecha)} • {displayTime(cita.hora_inicio)} - {displayTime(cita.hora_fin)}
                                 </p>
                             </div>
 
@@ -308,6 +445,7 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                                         type="date"
                                         value={selectedDate}
                                         onChange={(e) => {
+                                            console.log("Cambio de fecha:", e.target.value)
                                             setSelectedDate(e.target.value)
                                             setSelectedTime("")
                                             setEndTime("")
@@ -354,10 +492,7 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                                     ) : horariosLibres.length > 0 ? (
                                         <select
                                             value={selectedTime}
-                                            onChange={(e) => {
-                                                handleTimeChange(e.target.value)
-                                                setError(null)
-                                            }}
+                                            onChange={(e) => handleTimeChange(e.target.value)}
                                             className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0077b6] focus:border-transparent transition-all duration-200"
                                             required
                                             disabled={updating}
@@ -365,7 +500,7 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                                             <option value="">Seleccionar hora</option>
                                             {horariosLibres.map((hora) => (
                                                 <option key={hora} value={hora}>
-                                                    {hora}
+                                                    {displayTime(hora)}
                                                 </option>
                                             ))}
                                         </select>
@@ -381,14 +516,16 @@ const ModalEditarCita = ({ cita, onClose, onSubmit, formatDate }) => {
                             </div>
 
                             {/* Hora de fin calculada */}
-                            {selectedTime && (
+                            {selectedTime && endTime && (
                                 <div>
                                     <label className="block text-sm font-medium text-[#1e293b] mb-2">Hora de Fin</label>
                                     <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
-                                        <span className="text-[#64748b]">{endTime}</span>
+                                        <span className="text-[#64748b]">{displayTime(endTime)}</span>
                                     </div>
                                 </div>
                             )}
+
+                          
                         </div>
                     </div>
 

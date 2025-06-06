@@ -23,7 +23,7 @@ User.init(
             validate: {
                 notEmpty: true,
                 len: {
-                    args: [8, 8],
+                    args: [8, 9],
                     msg: "El DNI debe tener 8 dígitos",
                 },
             },

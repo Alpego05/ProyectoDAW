@@ -1,4 +1,3 @@
-// CitaCard.jsx
 import React from 'react';
 import { Calendar, Clock, User, Stethoscope, FileText, Edit3, X } from 'lucide-react';
 

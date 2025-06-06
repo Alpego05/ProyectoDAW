@@ -91,7 +91,7 @@ const updateCita = async (id, citaData) => {
         if (patient_id) cita.paciente_id = patient_id;
         if (doctor_id) cita.doctor_id = doctor_id;
         if (fecha) cita.fecha = fecha;
-        if (hora_inicio) cita.hora = hora_inicio;
+        if (hora_inicio) cita.hora_inicio = hora_inicio;
         if (hora_fin) cita.hora_fin = hora_fin;
         if (estado) cita.estado = estado;
         await cita.save();
