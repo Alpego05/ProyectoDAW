@@ -15,7 +15,6 @@ export const useDiagnosticoForm = (isOpen, onSuccess, onClose) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    // Resetear formulario cuando se abre/cierra el modal
     useEffect(() => {
         if (isOpen) {
             setDiagnosticoData({
@@ -113,7 +112,7 @@ export const useDiagnosticoForm = (isOpen, onSuccess, onClose) => {
             };
 
             const diagnosticoCreado = await createDiagnostico(diagnosticoPayload);
-            console.log('Diagnóstico creado:', diagnosticoCreado);
+            // console.log('Diagnóstico creado:', diagnosticoCreado);
 
             // Crear las recetas asociadas si existen
             if (recetas.length > 0) {
@@ -126,10 +125,11 @@ export const useDiagnosticoForm = (isOpen, onSuccess, onClose) => {
                         duracion: receta.duracion.trim()
                     };
                     
-                    console.log('Creando receta con payload:', recetaPayload);
+                    // console.log('Creando receta con payload:', recetaPayload);
                     return createReceta(recetaPayload);
                 });
 
+                //se crea todo al mismo tiempo con playload
                 const recetasCreadas = await Promise.all(promesasRecetas);
                 console.log('Recetas creadas:', recetasCreadas);
             }

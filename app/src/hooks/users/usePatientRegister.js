@@ -33,7 +33,6 @@ const usePatientRegister = () => {
                 [name]: value,
             },
         }))
-        // Limpiar errores cuando el usuario empiece a escribir
         if (error) setError(null)
     }
 
@@ -124,7 +123,7 @@ const usePatientRegister = () => {
 
             return result
         } catch (err) {
-            setError(err.message || "Error al registrar paciente")
+            setError("Error al registrar paciente")
             throw err
         } finally {
             setLoading(false)

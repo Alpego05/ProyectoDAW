@@ -23,8 +23,8 @@ export const useMedicamentos = () => {
             setSelectedMedicamento(medicamento)
             return medicamento
         } catch (err) {
-            console.error("Error al obtener detalles del medicamento:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener detalles del medicamento")
+            // console.error("Error al obtener medicamento:", err)
+            setError( "Error  al obtener detalles del medicamento")
             return null
         } finally {
             setIsLoading(false)
@@ -39,8 +39,8 @@ export const useMedicamentos = () => {
             const medicamento = await getMedicamentoById(medicamentoId)
             return medicamento
         } catch (err) {
-            console.error("Error al obtener medicamento:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener medicamento")
+            // console.error("Error al obtener medicamento:", err)
+            setError("Error desconocido al obtener medicamento")
             return null
         } finally {
             setIsLoading(false)
@@ -55,8 +55,8 @@ export const useMedicamentos = () => {
             const enfermedad = await getEnfermedadById(enfermedadId)
             return enfermedad
         } catch (err) {
-            console.error("Error al obtener enfermedad:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener enfermedad")
+            // console.error("Error al obtener enfermedad:", err)
+            setError("Error desconocido al obtener enfermedad")
             return null
         } finally {
             setIsLoading(false)
@@ -71,8 +71,8 @@ export const useMedicamentos = () => {
             setMedicamentoEnfermedades(enfermedadesData || [])
             return enfermedadesData
         } catch (err) {
-            console.error("Error al obtener enfermedades por medicamento:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener enfermedades por medicamento")
+            // console.error("Error al obtener enfermedades por medicamento:", err)
+            setError("Error desconocido al obtener enfermedades por medicamento")
             return []
         } finally {
             setIsLoading(false)
@@ -87,8 +87,8 @@ export const useMedicamentos = () => {
             setEnfermedadMedicamentos(medicamentosData || [])
             return medicamentosData
         } catch (err) {
-            console.error("Error al obtener medicamentos por enfermedad:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener medicamentos por enfermedad")
+            // console.error("Error al obtener medicamentos por enfermedad:", err)
+            setError("Error desconocido al obtener medicamentos por enfermedad")
             return []
         } finally {
             setIsLoading(false)
@@ -102,8 +102,8 @@ export const useMedicamentos = () => {
         try {
             await Promise.all([cargarMedicamentos(), cargarEnfermedades()])
         } catch (err) {
-            console.error("Error al cargar datos iniciales:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al cargar datos iniciales")
+            // console.error("Error al cargar datos iniciales:", err)
+            setError("Error desconocido al cargar datos iniciales")
         } finally {
             setIsLoading(false)
         }

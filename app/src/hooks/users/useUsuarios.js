@@ -32,7 +32,7 @@ export const useUsuarios = () => {
             setUsuario(datosUsuario)
         } catch (err) {
             console.error("Error al obtener usuario:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener usuario")
+            setError("Error desconocido al obtener usuario")
         } finally {
             setIsLoading(false)
         }
@@ -77,7 +77,7 @@ export const useTodosUsuarios = () => {
             setUsuarios(Array.isArray(data) ? data : [])
         } catch (err) {
             console.error("Error al cargar usuarios:", err)
-            setError(err instanceof Error ? err.message : "Error al cargar usuarios")
+            setError("Error al cargar usuarios")
             setUsuarios([])
         } finally {
             setIsLoading(false)

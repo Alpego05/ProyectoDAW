@@ -47,11 +47,7 @@ const useSolicitarCita = () => {
             return doctoresData
         } catch (err) {
             console.error("Error al cargar doctores:", err)
-            const errorMessage =
-                err.response?.data?.message ||
-                err.response?.data?.error ||
-                err.message ||
-                "Error desconocido al cargar doctores"
+            const errorMessage ="Error desconocido al cargar doctores"
             setError(`Error al cargar doctores: ${errorMessage}`)
             setDoctores([])
             return []
@@ -61,7 +57,7 @@ const useSolicitarCita = () => {
     }, [])
 
     // Obtener nombre del día
-    const getDayNameInSpanish = useCallback((fecha) => {
+    const getDay = useCallback((fecha) => {
         const date = new Date(fecha)
         const days = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"]
         return days[date.getDay()]
@@ -215,10 +211,10 @@ const useSolicitarCita = () => {
         (fecha, horarios) => {
             if (!fecha || !horarios || horarios.length === 0) return false
 
-            const diaSemana = getDayNameInSpanish(fecha)
+            const diaSemana = getDay(fecha)
             return horarios.some((horario) => horario.dia_semana === diaSemana)
         },
-        [getDayNameInSpanish],
+        [getDay],
     )
 
     const calculateAvailableSlots = useCallback(
@@ -226,7 +222,7 @@ const useSolicitarCita = () => {
             if (!horarios || horarios.length === 0) return []
 
             const fechaSeleccionada = new Date(fecha).toDateString()
-            const diaSemana = getDayNameInSpanish(fecha)
+            const diaSemana = getDay(fecha)
 
             const horariosDelDia = horarios.filter((horario) => horario.dia_semana === diaSemana)
 
@@ -261,7 +257,7 @@ const useSolicitarCita = () => {
             const slotsUnicos = [...new Set(slotsLibres)].sort()
             return slotsUnicos
         },
-        [generateTimeSlots, getDayNameInSpanish],
+        [generateTimeSlots, getDay],
     )
 
     const loadDoctorData = useCallback(

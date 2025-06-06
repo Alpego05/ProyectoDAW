@@ -70,7 +70,7 @@ const RegistrarDoctor = () => {
                       className="w-full px-3 py-2 border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#00629B] focus:border-transparent"
                       placeholder="Ingrese el nombre"
                       disabled={loading}
-                      required
+                      
                     />
                   </div>
 
@@ -87,7 +87,7 @@ const RegistrarDoctor = () => {
                         className="w-full px-3 py-2 border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#00629B] focus:border-transparent"
                         placeholder="Primer apellido"
                         disabled={loading}
-                        required
+                        
                       />
                     </div>
 
@@ -103,7 +103,7 @@ const RegistrarDoctor = () => {
                         className="w-full px-3 py-2 border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#00629B] focus:border-transparent"
                         placeholder="Segundo apellido"
                         disabled={loading}
-                        required
+                       
                       />
                     </div>
                   </div>
@@ -121,7 +121,7 @@ const RegistrarDoctor = () => {
                         className="w-full pl-10 pr-3 py-2 border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#00629B] focus:border-transparent"
                         placeholder="ejemplo@hospital.com"
                         disabled={loading}
-                        required
+                        
                       />
                       <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#6b7280]" />
                     </div>
@@ -141,7 +141,7 @@ const RegistrarDoctor = () => {
                         placeholder="12345678A"
                         disabled={loading}
                         maxLength="9"
-                        required
+                        
                       />
                       <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#6b7280]" />
                     </div>
@@ -173,7 +173,7 @@ const RegistrarDoctor = () => {
                       className="w-full px-3 py-2 border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#00629B] focus:border-transparent"
                       placeholder="Ej: Cardiología, Traumatología"
                       disabled={loading}
-                      required
+                      
                     />
                   </div>
 
@@ -190,7 +190,7 @@ const RegistrarDoctor = () => {
                         className="w-full pl-10 pr-3 py-2 border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#00629B] focus:border-transparent"
                         placeholder="Ej: 2A Edificio B, Consulta 15"
                         disabled={loading}
-                        required
+                        
                       />
                       <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#6b7280]" />
                     </div>
@@ -209,7 +209,7 @@ const RegistrarDoctor = () => {
                         className="w-full pl-10 pr-3 py-2 border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#00629B] focus:border-transparent"
                         placeholder="Ej: 2334244"
                         disabled={loading}
-                        required
+                        
                       />
                       <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#6b7280]" />
                     </div>

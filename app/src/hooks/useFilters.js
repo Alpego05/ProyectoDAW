@@ -15,7 +15,6 @@ const useFilters = (
 
     const ELEMENTOS_POR_PAGINA = 21
 
-    //reinicia paginación para evitar detalles
     useEffect(() => {
         setPaginaActualMedicamentos(1)
     }, [searchTerm, filtroFormaMedicamento, filtroCategoriaMedicamento])

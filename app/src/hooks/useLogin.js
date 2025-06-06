@@ -43,7 +43,6 @@ export const useLogin = () => {
             } else if (err.status === 400) {
                 setError("DNI y contraseña son requeridos");
             } else if (err.response && err.response.status) {
-                // Manejo para errores con response
                 switch (err.response.status) {
                     case 404:
                         setError("Usuario no encontrado");

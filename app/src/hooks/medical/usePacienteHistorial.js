@@ -21,7 +21,7 @@ export const usePacienteHistorial = (pacienteId) => {
             setPacienteInfo(paciente);
             return paciente;
         } catch (error) {
-            console.warn('No se pudo cargar información del paciente:', error);
+            console.warn('No se pudo cargar el paciente:', error);
             return null;
         }
     }, []);
@@ -58,7 +58,7 @@ export const usePacienteHistorial = (pacienteId) => {
             // Enriquecer citas con información del doctor y paciente
             return citasData.map(cita => ({
                 ...cita,
-                doctor: doctoresMap[cita.doctor_id || cita.id_doctor] || {
+                doctor: doctoresMap[cita.doctor_id] || {
                     nombre: 'Doctor no encontrado',
                     name: 'Doctor no encontrado'
                 },
@@ -69,16 +69,16 @@ export const usePacienteHistorial = (pacienteId) => {
                 }
             }));
         } catch (error) {
-            console.error('Error al enriquecer citas:', error);
-            // Retornar citas sin enriquecer en caso de error
+            console.error('Error ', error);
+
             return citasData.map(cita => ({
                 ...cita,
                 doctor: {
-                    nombre: 'Información no disponible',
-                    name: 'Información no disponible'
+                    nombre: 'no disponible',
+                    name: 'no disponible'
                 },
                 paciente: pacienteData || {
-                    nombre: 'Paciente no encontrado',
+                    nombre: 'Undefined',
                     apellido1: '',
                     apellido2: ''
                 }
@@ -95,8 +95,6 @@ export const usePacienteHistorial = (pacienteId) => {
         try {
             setLoading(true);
             setError(null);
-            
-            // Cargar paciente, citas y diagnósticos en paralelo
             const [pacienteData, citasResponse, diagnosticosResponse] = await Promise.all([
                 cargarPaciente(pacienteId),
                 getCitasByPatient(pacienteId),
@@ -117,17 +115,15 @@ export const usePacienteHistorial = (pacienteId) => {
                 citasData = [citasResponse];
             }
 
-            // Enriquecer citas con información del doctor y paciente
             const citasEnriquecidas = await enriquecerCitas(citasData, pacienteData);
             
-            // Ordenar por fecha descendente (más recientes primero)
+            // Ordenar por fecha descendente
             const citasProcesadas = citasEnriquecidas.sort((a, b) => {
                 const fechaA = new Date(a.fecha);
                 const fechaB = new Date(b.fecha);
                 return fechaB - fechaA;
             });
             
-            // Procesar diagnósticos: asegurar array
             const diagnosticosProcesados = Array.isArray(diagnosticosResponse)
                 ? diagnosticosResponse
                 : diagnosticosResponse?.data
@@ -167,7 +163,6 @@ export const usePacienteHistorial = (pacienteId) => {
                 citaAsociada.paciente = pacienteInfo;
             }
             
-            // Obtener datos completos para el PDF
             const datosPDF = await obtenerDatosPDF(citaAsociada);
             
             return {
@@ -183,15 +178,14 @@ export const usePacienteHistorial = (pacienteId) => {
         }
     }, [citas, obtenerDatosPDF, pacienteInfo]);
 
-    const actualizarCita = useCallback(async (citaId, datosActualizacion) => {
+    const actualizarCita = useCallback(async (citaId, datos) => {
         try {
             setActualizando(true);
             setError(null);
 
-            console.log('🔄 Actualizando cita:', { citaId, datosActualizacion });
+            console.log('Actualizando cita:', { citaId, datos });
 
-            const citaActualizada = await updateCita(citaId, datosActualizacion);
-            
+            const citaActualizada = await updateCita(citaId, datos);
             setCitas(prevCitas => 
                 prevCitas.map(cita => 
                     (cita.id_cita === citaId || cita.id === citaId) 
@@ -204,9 +198,8 @@ export const usePacienteHistorial = (pacienteId) => {
             return citaActualizada;
         } catch (error) {
             console.error('Error al actualizar cita:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'Error al actualizar cita';
-            setError(errorMessage);
-            throw new Error(errorMessage);
+            setError('Error al actualizar cita');
+            throw new Error('Error al actualizar cita');
         } finally {
             setActualizando(false);
         }
@@ -219,8 +212,6 @@ export const usePacienteHistorial = (pacienteId) => {
 
             try {
                 await updateCita(citaId, { estado: 'Cancelada' });
-                
-                // Actualizar el estado local
                 setCitas(prevCitas => 
                     prevCitas.map(cita => 
                         (cita.id_cita === citaId || cita.id === citaId) 
@@ -229,9 +220,9 @@ export const usePacienteHistorial = (pacienteId) => {
                     )
                 );
                 
-                console.log('Cita cancelada (estado actualizado)');
+                console.log('Cita cancelada');
             } catch (updateError) {
-                console.warn('No se pudo actualizar estado, intentando eliminar:', updateError);
+                console.warn('No se pudo actualizar estado:', updateError);
                 
                 await deleteCita(citaId);
                 
@@ -256,13 +247,12 @@ export const usePacienteHistorial = (pacienteId) => {
 
     const getDiagnosticoPorCita = useCallback((citaId) => {
         return diagnosticos.find(diag => 
-            diag.cita_id === citaId || 
-            diag.id_cita === citaId
+            diag.cita_id === citaId 
         );
     }, [diagnosticos]);
 
     const getNombreCita = useCallback((cita) => {
-        return cita.nombre || cita.motivo || 'Consulta médica';
+        return cita.nombre ||  'Consulta médica';
     }, []);
 
     useEffect(() => {

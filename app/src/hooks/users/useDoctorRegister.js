@@ -30,7 +30,6 @@ const useDoctorRegister = () => {
                 [name]: value,
             },
         }))
-        // Limpiar errores cuando el usuario empiece a escribir
         if (error) setError(null)
     }
 

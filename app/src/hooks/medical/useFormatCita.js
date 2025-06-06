@@ -29,8 +29,6 @@ export const useFormatCita = () => {
 
     const getEstadoBadgeText = (estado) => {
         if (!estado) return 'Sin estado';
-        
-        // Capitalizar primera letra y mantener el resto
         return estado.charAt(0).toUpperCase() + estado.slice(1).toLowerCase();
     };
 

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { getDiagnosticosByPacienteId, getAllDiagnosticos } from "../../services/apiDiagnosticos"
 
-// Hook mejorado basado en el existente pero con protecciones adicionales
 export const useDiagnosticos = (pacienteIdProp = null) => {
     const [diagnosticos, setDiagnosticos] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -16,14 +15,14 @@ export const useDiagnosticos = (pacienteIdProp = null) => {
             const id = pacienteId || pacienteIdProp || localStorage.getItem("userId")
             
             if (!id) {
-                throw new Error("No se encontró el ID del paciente. Por favor, inicia sesión nuevamente.")
+                throw new Error("No se encontró el ID del paciente.")
             }
 
             const data = await getDiagnosticosByPacienteId(id)
             setDiagnosticos(Array.isArray(data) ? data : [])
         } catch (err) {
             console.error("Error al obtener diagnósticos:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener los diagnósticos")
+            setError(err instanceof Error ? err.message : "Error al obtener los diagnósticos")
             setDiagnosticos([])
         } finally {
             setIsLoading(false)
@@ -76,7 +75,7 @@ export const useDiagnosticos = (pacienteIdProp = null) => {
             .sort((a, b) => {
                 try {
                     return new Date(b?.fecha_diagnostico || b?.created_at || b?.fecha || 0) - 
-                           new Date(a?.fecha_diagnostico || a?.created_at || a?.fecha || 0)
+                        new Date(a?.fecha_diagnostico || a?.created_at || a?.fecha || 0)
                 } catch (e) {
                     console.error("Error al ordenar diagnósticos:", e)
                     return 0
@@ -114,7 +113,7 @@ export const useTodosDiagnosticos = () => {
             setDiagnosticos(Array.isArray(diagnosticosData) ? diagnosticosData : [])
         } catch (err) {
             console.error("Error al cargar todos los diagnósticos:", err)
-            setError(err instanceof Error ? err.message : "Error al cargar diagnósticos")
+            setError( "Error al cargar diagnósticos")
             setDiagnosticos([])
         } finally {
             setLoading(false)

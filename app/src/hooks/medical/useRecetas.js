@@ -12,17 +12,17 @@ export const useRecetas = (pacienteIdProp = null, diagnosticoIdProp = null) => {
         setError(null)
 
         try {
-            const id = pacienteId || pacienteIdProp || localStorage.getItem("userId")
+            const id = localStorage.getItem("userId")
             
             if (!id) {
-                throw new Error("No se encontró el ID del paciente. Por favor, inicia sesión nuevamente.")
+                throw new Error("No se encontró el ID del paciente")
             }
 
             const data = await getRecetasByPacienteId(id)
             setRecetas(Array.isArray(data) ? data : [])
         } catch (err) {
             console.error("Error al obtener recetas:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener las recetas")
+            setError(err instanceof Error ? err.message : "Error al obtener las recetas")
             setRecetas([])
         } finally {
             setIsLoading(false)
@@ -123,10 +123,7 @@ export const useRecetas = (pacienteIdProp = null, diagnosticoIdProp = null) => {
         if (!nombreMedicamento || !Array.isArray(recetas)) return recetas
         
         const busqueda = nombreMedicamento.toLowerCase()
-        return recetas.filter(receta => 
-            receta?.medicamento?.toLowerCase().includes(busqueda) ||
-            receta?.nombre_medicamento?.toLowerCase().includes(busqueda)
-        )
+        return recetas.filter(receta =>  receta.medicamento.toLowerCase().includes(busqueda) )
     }
 
     const getRecetasRecientes = (limite = 5) => {
@@ -135,8 +132,7 @@ export const useRecetas = (pacienteIdProp = null, diagnosticoIdProp = null) => {
         return [...recetas]
             .sort((a, b) => {
                 try {
-                    return new Date(b?.fecha_receta || b?.created_at || b?.fecha || 0) - 
-                           new Date(a?.fecha_receta || a?.created_at || a?.fecha || 0)
+                    return new Date( b.created_at || 0) - new Date(a.created_at || 0)
                 } catch (e) {
                     console.error("Error al ordenar recetas:", e)
                     return 0
@@ -176,8 +172,8 @@ export const useTodasRecetas = () => {
             const recetasData = await getAllRecetas()
             setRecetas(Array.isArray(recetasData) ? recetasData : [])
         } catch (err) {
-            console.error("Error al cargar todas las recetas:", err)
-            setError(err instanceof Error ? err.message : "Error al cargar recetas")
+            // console.error("Error al cargar las recetas:", err)
+            setError("Error al cargar recetas")
             setRecetas([])
         } finally {
             setLoading(false)

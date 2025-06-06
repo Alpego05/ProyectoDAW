@@ -24,14 +24,14 @@ export const useCitas = () => {
         try {
             const userId = localStorage.getItem("userId")
             if (!userId) {
-                throw new Error("No se encontró el ID del usuario. Por favor, inicia sesión nuevamente.")
+                throw new Error("No se encontró el ID del usuario")
             }
 
             const data = await getCitasByPatient(userId)
             setCitas(Array.isArray(data) ? data : [])
         } catch (err) {
             console.error("Error al obtener citas:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener las citas")
+            setError("Error desconocido al obtener las citas")
             setCitas([])
         } finally {
             setIsLoading(false)
@@ -78,8 +78,8 @@ export const useCitas = () => {
                 recetas: recetasData
             })
         } catch (err) {
-            console.error("Error al cargar detalles de la cita:", err)
-            setDetailsError("No se pudieron cargar todos los detalles de la cita")
+            console.error("Error", err)
+            setDetailsError("No se pudieron cargar los detalles de la cita")
         } finally {
             setLoadingDetails(false)
         }
@@ -114,7 +114,7 @@ export const useCitas = () => {
                     fechaCita.setHours(0, 0, 0, 0)
                     return fechaCita >= hoy && cita.estado === "Pendiente"
                 } catch (e) {
-                    console.error("Error al procesar fecha de cita:", e)
+                    console.error("Error:", e)
                     return false
                 }
             })
@@ -137,7 +137,7 @@ export const useCitas = () => {
 
         return [...citas]
             .filter((cita) => {
-                if (!cita?.fecha) return false
+                if (!cita.fecha) return false
                 try {
                     const fechaCita = new Date(cita.fecha)
                     fechaCita.setHours(0, 0, 0, 0)
@@ -149,6 +149,7 @@ export const useCitas = () => {
             })
             .sort((a, b) => {
                 try {
+                    //localeCompare = ordenar alfabeticamente por horas
                     return (a.hora_inicio || "").localeCompare(b.hora_inicio || "")
                 } catch (e) {
                     console.error("Error al ordenar citas por hora:", e)
@@ -249,6 +250,7 @@ export const useCitasDoctor = (doctorId) => {
             })
             .sort((a, b) => {
                 try {
+                     //localeCompare = ordenar alfabeticamente por horas
                     return (a.hora_inicio || "").localeCompare(b.hora_inicio || "")
                 } catch (e) {
                     console.error("Error al ordenar citas por hora:", e)

@@ -17,7 +17,7 @@ export const useAdmin = () => {
         setError(null)
 
         try {
-   
+
             const [
                 todosUsuarios,
                 todosDoctores,
@@ -29,12 +29,12 @@ export const useAdmin = () => {
                 getPatients(),
             ])
 
-            // Procesar usuarios
+            // Procesar usuarios a array
             const usuariosData = todosUsuarios.status === 'fulfilled'
                 ? (Array.isArray(todosUsuarios.value) ? todosUsuarios.value : [])
                 : []
             setUsuarios(usuariosData)
-              console.log(usuarios)
+            console.log(usuarios)
 
             const doctoresData = todosDoctores.status === 'fulfilled'
                 ? (Array.isArray(todosDoctores.value) ? todosDoctores.value : [])
@@ -46,11 +46,8 @@ export const useAdmin = () => {
                 ? (Array.isArray(todosPacientes.value) ? todosPacientes.value : [])
                 : []
             setPacientes(pacientesData)
-              console.log(pacientes)
+            console.log(pacientes)
 
-          
-
-            // Verificar si hubo errores en alguna de las llamadas
             const errors = [
                 todosUsuarios,
                 todosDoctores,
@@ -60,13 +57,13 @@ export const useAdmin = () => {
                 .map(result => result.reason)
 
             if (errors.length > 0) {
-                console.warn("Algunos datos no se pudieron cargar:", errors)
-                setError(`Advertencia: Algunos datos no se pudieron cargar completamente`)
+                // console.warn("Algunos datos no se pudieron cargar:", errors)
+                setError(`Algunos datos no se pudieron cargar completamente`)
             }
 
         } catch (err) {
-            console.error("Error al obtener datos de administrador:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener datos")
+            // console.error("Error al obtener datos de administrador:", err)
+            setError("Error desconocido al obtener datos")
 
             setUsuarios([])
             setDoctores([])

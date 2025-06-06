@@ -70,17 +70,12 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path='NuevoPaciente' element={<RegistrarPaciente />} />
               <Route path='NuevoDoctor' element={<RegistrarDoctor />} />
-
             </>
-
-
           )}
 
           {/* rutas comunes */}
           {/* <Route path='Perfil' element={<Perfil />} /> */}
         
-
-
         </Route>
       </Routes>
     </BrowserRouter>

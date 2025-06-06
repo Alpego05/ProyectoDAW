@@ -85,13 +85,9 @@ export const useDoctorData = (doctorId) => {
                 const datosUsuario = await getUserById(doctorId)
                 const datosDoctor = await getDoctorById(doctorId)
 
-                // Obtener todas las citas del doctor
                 const citasDoctor = await getCitasByDoctor(doctorId)
 
-                // Crear un mapa para almacenar pacientes únicos
                 const pacientesMap = new Map()
-
-                // Para cada cita, obtener los datos del paciente si no lo tenemos ya
                 const pacientesPromises = []
 
                 citasDoctor.forEach((cita) => {
@@ -113,10 +109,7 @@ export const useDoctorData = (doctorId) => {
                     }
                 })
 
-                // Esperar a que se resuelvan todas las promesas de pacientes
                 await Promise.all(pacientesPromises)
-
-                // Convertir el mapa a un array, filtrando los valores nulos
                 const pacientesData = Array.from(pacientesMap.values()).filter(Boolean)
 
                 setEstado({

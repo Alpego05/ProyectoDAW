@@ -24,7 +24,7 @@ export const usePacientes = () => {
             setPaciente(datosPaciente)
         } catch (err) {
             console.error("Error al obtener paciente:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener paciente")
+            setError("Error desconocido al obtener paciente")
             setPaciente(null)
         } finally {
             setIsLoading(false)
@@ -70,7 +70,7 @@ export const useTodosPacientes = () => {
             setPacientes(Array.isArray(data) ? data : [])
         } catch (err) {
             console.error("Error al cargar pacientes:", err)
-            setError(err instanceof Error ? err.message : 'Error al cargar pacientes')
+            setError('Error al cargar pacientes')
             setPacientes([])
         } finally {
             setLoading(false)

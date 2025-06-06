@@ -13,13 +13,8 @@ export const useCitaPDF = () => {
             setError(null);
 
             if (!cita) {
-                throw new Error('No se proporcionó información de la cita');
+                throw new Error('No hay data cita');
             }
-
-            // Debug: Log the cita object to see its structure
-            console.log('Estructura de la cita:', cita);
-
-            // Obtener información del doctor
             let doctor = null;
             if (cita.id_doctor || cita.doctor_id) {
                 try {
@@ -27,7 +22,6 @@ export const useCitaPDF = () => {
                     doctor = await getDoctorById(doctorId);
                 } catch (doctorError) {
                     console.warn('No se pudo obtener información del doctor:', doctorError);
-                    // Usar información del doctor desde la cita si está disponible
                     if (cita.doctor) {
                         doctor = cita.doctor;
                     }
@@ -37,9 +31,9 @@ export const useCitaPDF = () => {
             let diagnostico = null;
             let recetasAdicionales = [];
 
-            if (cita.id_cita || cita.id) {
+            if (cita.id_cita ) {
                 try {
-                    const citaId = cita.id_cita || cita.id;
+                    const citaId = cita.id_cita;
                     diagnostico = await getDiagnosticosByCitaId(citaId);
                     
                     // Si hay diagnóstico, cargar sus recetas
@@ -58,11 +52,10 @@ export const useCitaPDF = () => {
                 }
             }
 
-            // Manejar información del paciente de múltiples estructuras posibles
             let pacienteInfo = null;
             
             if (cita.paciente) {
-                // Estructura: cita.paciente.usuario.nombre
+                // cita.paciente.usuario.nombre
                 if (cita.paciente.usuario) {
                     pacienteInfo = {
                         nombre: cita.paciente.usuario.nombre,
@@ -73,25 +66,9 @@ export const useCitaPDF = () => {
                         ...cita.paciente
                     };
                 } else {
-                    // Estructura: cita.paciente.nombre directamente
                     pacienteInfo = cita.paciente;
                 }
-            } else if (cita.Paciente) {
-                // Estructura alternativa con 'Paciente' mayúscula
-                if (cita.Paciente.usuario) {
-                    pacienteInfo = {
-                        nombre: cita.Paciente.usuario.nombre,
-                        apellido1: cita.Paciente.usuario.apellido1,
-                        apellido2: cita.Paciente.usuario.apellido2,
-                        email: cita.Paciente.usuario.email,
-                        telefono: cita.Paciente.usuario.telefono,
-                        ...cita.Paciente
-                    };
-                } else {
-                    pacienteInfo = cita.Paciente;
-                }
             } else {
-                // Intentar obtener información del paciente desde las propiedades directas de la cita
                 console.warn('No se encontró información del paciente en la estructura esperada');
                 pacienteInfo = {
                     nombre: 'Paciente no especificado',
@@ -101,20 +78,17 @@ export const useCitaPDF = () => {
                     telefono: ''
                 };
             }
-
-            // Debug: Log paciente info
             console.log('Información del paciente procesada:', pacienteInfo);
 
-            // Estructura de datos para el PDF
             const datosPDF = {
                 cita: {
                     ...cita,
                     paciente: pacienteInfo
                 },
                 doctor: doctor || {
-                    nombre: cita.doctor?.nombre || cita.doctor?.name || 'Doctor no especificado',
-                    apellido1: cita.doctor?.apellido1 || '',
-                    especialidad: cita.doctor?.especialidad || 'No especificada'
+                    nombre: cita.doctor.nombre  || 'Doctor no especificado',
+                    apellido1: cita.doctor.apellido1 || '',
+                    especialidad: cita.doctor.especialidad || 'No especificada'
                 },
                 diagnostico,
                 recetasAdicionales

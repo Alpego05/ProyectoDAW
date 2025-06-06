@@ -21,7 +21,7 @@ export const useCitasHoyDoctor = () => {
         try {
             const doctorId = localStorage.getItem("userId");
             if (!doctorId) {
-                throw new Error("No se encontró el ID del doctor. Por favor, inicia sesión nuevamente.");
+                throw new Error("No se encontró el ID del doctor");
             }
 
             const todasLasCitas = await getCitasByDoctor(doctorId);
@@ -32,12 +32,12 @@ export const useCitasHoyDoctor = () => {
             }
 
             const citasDelDia = todasLasCitas.filter(cita => 
-                cita?.fecha === fechaHoy
+                cita.fecha === fechaHoy
             );
 
             const citasConPacientes = await Promise.allSettled(
                 citasDelDia.map(async (cita) => {
-                    if (!cita?.paciente_id) {
+                    if (!cita.paciente_id) {
                         return {
                             ...cita,
                             paciente: null,
@@ -62,7 +62,7 @@ export const useCitasHoyDoctor = () => {
                 })
             );
 
-            // Filtrar resultados exitosos y manejar errores
+            // Filtrar 
             const citasValidas = citasConPacientes
                 .filter(result => result.status === 'fulfilled')
                 .map(result => result.value);
@@ -104,11 +104,11 @@ export const useCitasHoyDoctor = () => {
         try {
             await updateCita(citaId, { estado: nuevoEstado });
             await recargarCitas();
-            console.log(`Cita marcada como ${nuevoEstado.toLowerCase()} exitosamente`);
+            // console.log(`Cita marcada como ${nuevoEstado.toLowerCase()} `);
         } catch (error) {
-            console.error(`Error al marcar cita como ${nuevoEstado.toLowerCase()}:`, error);
-            const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-            setError(`Error al actualizar el estado de la cita: ${errorMessage}`);
+            console.error(`Error ${nuevoEstado.toLowerCase()}:`, error);
+            const errorMessage = error instanceof Error ? error.message : 'Error ';
+            setError(`Error al actualizar la cita: ${errorMessage}`);
             throw error;
         }
     };
@@ -127,11 +127,11 @@ export const useCitasHoyDoctor = () => {
 
     const handleDiagnosticoCreated = async () => {
         try {
-            console.log('Diagnóstico creado exitosamente');
+            console.log('Diagnóstico creado');
             await recargarCitas();
         } catch (error) {
-            console.error('Error al recargar citas después de crear diagnóstico:', error);
-            setError('Error al recargar las citas después de crear el diagnóstico');
+            // console.error('Error al recargar citas :', error);
+            setError('Error al recargar las citas');
         }
     };
 
