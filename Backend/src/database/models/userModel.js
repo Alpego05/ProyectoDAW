@@ -17,7 +17,7 @@ User.init(
             allowNull: false,
         },
         dni: {
-            type: DataTypes.STRING(8),
+            type: DataTypes.STRING,
             unique: true,
             allowNull: false,
             validate: {
