@@ -34,6 +34,7 @@ const createDefaultSchedule = async (doctorId, transaction) => {
 };
 
 
+
 const registerPatient = async (userData, patientData, transaction) => {
   const t = transaction || await sequelize.transaction();
 
