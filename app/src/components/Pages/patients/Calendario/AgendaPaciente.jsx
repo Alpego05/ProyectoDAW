@@ -20,7 +20,7 @@ const AgendaPaciente = () => {
   } = useCitas();
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen mt-12">
+    <div className="px-4 py-6 p-4  min-h-screen mt-12">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
         <div className="p-4 border-b">
           <div className="flex items-center gap-2">

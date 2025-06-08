@@ -64,14 +64,18 @@ const Header = () => {
 
         <div className="contact-info">
           <div className="contact-item">
-            <Phone size={30} className="contact-icon" />
+            <div className="contact-icon">
+              <Phone size={20} />
+            </div>
             <div className="contact-text">
               <span className="contact-label">Emergencias 24/7</span>
               <span className="contact-value">666-66-66</span>
             </div>
           </div>
           <div className="contact-item">
-            <Calendar size={35} className="contact-icon" />
+            <div className="contact-icon">
+              <Calendar size={20} />
+            </div>
             <div className="contact-text">
               <span className="contact-label">Horario de atención</span>
               <span className="contact-value">Lun-Vie: 8:00 - 20:00</span>
