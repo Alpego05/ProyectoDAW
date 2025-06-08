@@ -10,8 +10,12 @@ export const useCitasHoyDoctor = () => {
     const [showPatientInfo, setShowPatientInfo] = useState(false);
 
     const obtenerFechaHoy = () => {
-        const hoy = new Date();
-        return hoy.toISOString().split('T')[0]; // YYYY-MM-DD
+        try {
+            const hoy = new Date();
+            return hoy.toISOString().split('T')[0]; // YYYY-MM-DD
+        } catch {
+            return new Date().toLocaleDateString('en-CA'); // Formato YYYY-MM-DD como fallback
+        }
     };
 
     const cargarCitasHoy = async () => {
@@ -21,18 +25,18 @@ export const useCitasHoyDoctor = () => {
         try {
             const doctorId = localStorage.getItem("userId");
             if (!doctorId) {
-                throw new Error("No se encontró el ID del doctor");
+                setIsLoading(false);
+                return;
             }
 
-            const todasLasCitas = await getCitasByDoctor(doctorId);
+            const todasLasCitas = await getCitasByDoctor(doctorId).catch(() => []);
             const fechaHoy = obtenerFechaHoy();
             
-            if (!Array.isArray(todasLasCitas)) {
-                throw new Error("Respuesta inválida del servidor");
-            }
+            // Si no hay citas o no es un array, simplemente usar array vacío
+            const citasArray = Array.isArray(todasLasCitas) ? todasLasCitas : [];
 
-            const citasDelDia = todasLasCitas.filter(cita => 
-                cita.fecha === fechaHoy
+            const citasDelDia = citasArray.filter(cita => 
+                cita && cita.fecha === fechaHoy
             );
 
             const citasConPacientes = await Promise.allSettled(
@@ -40,8 +44,7 @@ export const useCitasHoyDoctor = () => {
                     if (!cita.paciente_id) {
                         return {
                             ...cita,
-                            paciente: null,
-                            pacienteError: 'ID de paciente no válido'
+                            paciente: null
                         };
                     }
 
@@ -49,28 +52,27 @@ export const useCitasHoyDoctor = () => {
                         const pacienteData = await getPatientById(cita.paciente_id);
                         return {
                             ...cita,
-                            paciente: pacienteData
+                            paciente: pacienteData || null
                         };
-                    } catch (err) {
-                        console.error(`Error al obtener datos del paciente ${cita.paciente_id}:`, err);
+                    } catch {
                         return {
                             ...cita,
-                            paciente: null,
-                            pacienteError: 'Error al cargar datos del paciente'
+                            paciente: null
                         };
                     }
                 })
             );
 
-            // Filtrar 
+            // Obtener todas las citas válidas
             const citasValidas = citasConPacientes
                 .filter(result => result.status === 'fulfilled')
-                .map(result => result.value);
+                .map(result => result.value)
+                .filter(Boolean); // Filtrar valores null/undefined
 
             setCitasHoy(citasValidas);
         } catch (err) {
             console.error("Error al cargar citas de hoy:", err);
-            setError(err instanceof Error ? err.message : "Error desconocido al cargar las citas");
+            setError("Error al cargar las citas");
             setCitasHoy([]);
         } finally {
             setIsLoading(false);
@@ -98,39 +100,39 @@ export const useCitasHoyDoctor = () => {
 
     const actualizarEstadoCita = async (citaId, nuevoEstado) => {
         if (!citaId || !nuevoEstado) {
-            throw new Error('ID de cita y estado son requeridos');
+            return;
         }
 
         try {
             await updateCita(citaId, { estado: nuevoEstado });
             await recargarCitas();
-            // console.log(`Cita marcada como ${nuevoEstado.toLowerCase()} `);
         } catch (error) {
-            console.error(`Error ${nuevoEstado.toLowerCase()}:`, error);
-            const errorMessage = error instanceof Error ? error.message : 'Error ';
-            setError(`Error al actualizar la cita: ${errorMessage}`);
+            console.error(`Error al actualizar estado a ${nuevoEstado}:`, error);
+            setError("Error al actualizar la cita");
             throw error;
         }
     };
 
     const marcarComoCompletada = async (citaId) => {
+        if (!citaId) return;
         return actualizarEstadoCita(citaId, 'Completada');
     };
 
     const marcarComoNoAsistida = async (citaId) => {
+        if (!citaId) return;
         return actualizarEstadoCita(citaId, 'No asistida');
     };
 
     const marcarComoCancelada = async (citaId) => {
+        if (!citaId) return;
         return actualizarEstadoCita(citaId, 'Cancelada');
     };
 
     const handleDiagnosticoCreated = async () => {
         try {
-            console.log('Diagnóstico creado');
             await recargarCitas();
         } catch (error) {
-            // console.error('Error al recargar citas :', error);
+            console.error('Error al recargar citas:', error);
             setError('Error al recargar las citas');
         }
     };

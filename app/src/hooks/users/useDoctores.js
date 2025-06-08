@@ -6,51 +6,47 @@ import { getCitasByDoctor } from "../../services/apiCitas"
 import { getPatientById } from "../../services/apiPatient"
 
 export const useDoctores = () => {
-    const [doctor, setDoctor] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const [doctor, setDoctor] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const cargarDoctor = async (doctorId) => {
         if (!doctorId) {
-            setError("No se proporcionó ID de doctor")
-            setIsLoading(false)
-            return
+            setIsLoading(false);
+            return;
         }
 
-        setIsLoading(true)
-        setError(null)
+        setIsLoading(true);
+        setError(null);
 
         try {
-            const datosDoctor = await getDoctorById(doctorId)
-            if (!datosDoctor) {
-                throw new Error("Doctor no encontrado")
-            }
-            setDoctor(datosDoctor)
+            const datosDoctor = await getDoctorById(doctorId);
+            setDoctor(datosDoctor || null);
         } catch (err) {
-            console.error("Error al obtener doctor:", err)
-            setError(err instanceof Error ? err.message : "Error desconocido al obtener doctor")
-            setDoctor(null)
+            console.error("Error al obtener doctor:", err);
+            setError("Error desconocido al obtener doctor");
+            setDoctor(null);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
     const resetDoctor = () => {
-        setDoctor(null)
-        setError(null)
-        setIsLoading(false)
-    }
+        setDoctor(null);
+        setError(null);
+        setIsLoading(false);
+    };
 
     useEffect(() => {
-        const userId = localStorage.getItem("userId")
-        const userRole = localStorage.getItem("rol")
+        const userId = localStorage.getItem("userId");
+        const userRole = localStorage.getItem("rol");
 
         if (userId && userRole === "doctor") {
-            cargarDoctor(userId)
+            cargarDoctor(userId);
         } else {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }, [])
+    }, []);
 
     return {
         doctor,
@@ -58,11 +54,11 @@ export const useDoctores = () => {
         error,
         cargarDoctor,
         resetDoctor,
-    }
-}
+    };
+};
 
 export const useDoctorData = (doctorId) => {
-    const { formatDate, formatDay, formatDateTime } = useFormat()
+    const { formatDate, formatDay, formatDateTime } = useFormat();
 
     const [estado, setEstado] = useState({
         usuario: null,
@@ -71,98 +67,135 @@ export const useDoctorData = (doctorId) => {
         pacientes: [],
         loading: true,
         error: null,
-    })
+    });
 
     useEffect(() => {
         const fetchData = async () => {
             if (!doctorId) {
-                setEstado((prev) => ({ ...prev, loading: false, error: "No se encontró ID de doctor" }))
-                return
+                setEstado((prev) => ({ ...prev, loading: false }));
+                return;
             }
 
             try {
-                // Obtener datos del usuario y doctor
-                const datosUsuario = await getUserById(doctorId)
-                const datosDoctor = await getDoctorById(doctorId)
+                setEstado((prev) => ({ ...prev, loading: true, error: null }));
 
-                const citasDoctor = await getCitasByDoctor(doctorId)
+                // Obtener datos básicos
+                const datosUsuario = await getUserById(doctorId).catch(() => null);
+                const datosDoctor = await getDoctorById(doctorId).catch(() => null);
+                const citasDoctor = await getCitasByDoctor(doctorId).catch(() => []);
 
-                const pacientesMap = new Map()
-                const pacientesPromises = []
+                const pacientesMap = new Map();
+                const pacientesPromises = [];
 
-                citasDoctor.forEach((cita) => {
-                    if (cita.paciente_id && !pacientesMap.has(cita.paciente_id)) {
-                        pacientesMap.set(cita.paciente_id, null)
-                        pacientesPromises.push(
-                            getPatientById(cita.paciente_id)
-                                .then((pacienteData) => {
-                                    pacientesMap.set(cita.paciente_id, pacienteData)
-                                    // Añadir la referencia del paciente a la cita
-                                    cita.paciente = pacienteData
-                                    return pacienteData
-                                })
-                                .catch((error) => {
-                                    console.error(`Error al obtener paciente ${cita.paciente_id}:`, error)
-                                    return null
-                                }),
-                        )
-                    }
-                })
+                // Procesar citas de forma segura
+                if (Array.isArray(citasDoctor)) {
+                    citasDoctor.forEach((cita) => {
+                        if (cita && cita.paciente_id && !pacientesMap.has(cita.paciente_id)) {
+                            pacientesMap.set(cita.paciente_id, null);
+                            pacientesPromises.push(
+                                getPatientById(cita.paciente_id)
+                                    .then((pacienteData) => {
+                                        if (pacienteData) {
+                                            pacientesMap.set(cita.paciente_id, pacienteData);
+                                            cita.paciente = pacienteData;
+                                        }
+                                        return pacienteData;
+                                    })
+                                    .catch(() => null)
+                            );
+                        }
+                    });
+                }
 
-                await Promise.all(pacientesPromises)
-                const pacientesData = Array.from(pacientesMap.values()).filter(Boolean)
+                // Esperar a que se resuelvan todas las promesas de pacientes
+                await Promise.allSettled(pacientesPromises);
+                const pacientesData = Array.from(pacientesMap.values()).filter(Boolean);
 
                 setEstado({
                     usuario: datosUsuario,
                     doctor: datosDoctor,
-                    citas: citasDoctor,
+                    citas: Array.isArray(citasDoctor) ? citasDoctor : [],
                     pacientes: pacientesData,
                     loading: false,
                     error: null,
-                })
+                });
             } catch (error) {
-                console.error("Error al cargar datos del doctor:", error)
+                console.error("Error al cargar datos del doctor:", error);
                 setEstado((prev) => ({
                     ...prev,
                     loading: false,
-                    error: "Error al cargar los datos. Por favor, intente nuevamente.",
-                }))
+                    error: "Error al cargar los datos",
+                }));
             }
-        }
+        };
 
-        fetchData()
-    }, [doctorId])
+        fetchData();
+    }, [doctorId]);
 
     const getProximasCitas = () => {
-        if (!estado.citas.length) return []
+        if (!Array.isArray(estado.citas) || estado.citas.length === 0) return [];
 
-        const hoy = new Date()
-        hoy.setHours(0, 0, 0, 0)
+        try {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
 
-        return [...estado.citas]
-            .filter((cita) => {
-                const fechaCita = new Date(cita.fecha)
-                fechaCita.setHours(0, 0, 0, 0)
-                return fechaCita > hoy && cita.estado === "Pendiente"
-            })
-            .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
-            .slice(0, 5)
-    }
+            return estado.citas
+                .filter((cita) => {
+                    if (!cita || !cita.fecha) return false;
+                    try {
+                        const fechaCita = new Date(cita.fecha);
+                        if (isNaN(fechaCita.getTime())) return false;
+                        fechaCita.setHours(0, 0, 0, 0);
+                        return fechaCita > hoy && cita.estado === "Pendiente";
+                    } catch {
+                        return false;
+                    }
+                })
+                .sort((a, b) => {
+                    try {
+                        return new Date(a.fecha) - new Date(b.fecha);
+                    } catch {
+                        return 0;
+                    }
+                })
+                .slice(0, 5);
+        } catch {
+            return [];
+        }
+    };
 
     const getCitasHoy = () => {
-        if (!estado.citas.length) return []
+        if (!Array.isArray(estado.citas) || estado.citas.length === 0) return [];
 
-        const hoy = new Date()
-        hoy.setHours(0, 0, 0, 0)
+        try {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
 
-        return [...estado.citas]
-            .filter((cita) => {
-                const fechaCita = new Date(cita.fecha)
-                fechaCita.setHours(0, 0, 0, 0)
-                return fechaCita.getTime() === hoy.getTime() && cita.estado === "Pendiente"
-            })
-            .sort((a, b) => a.hora_inicio.localeCompare(b.hora_inicio))
-    }
+            return estado.citas
+                .filter((cita) => {
+                    if (!cita || !cita.fecha) return false;
+                    try {
+                        const fechaCita = new Date(cita.fecha);
+                        if (isNaN(fechaCita.getTime())) return false;
+                        fechaCita.setHours(0, 0, 0, 0);
+                        return fechaCita.getTime() === hoy.getTime() && cita.estado === "Pendiente";
+                    } catch {
+                        return false;
+                    }
+                })
+                .sort((a, b) => {
+                    try {
+                        const horaA = a.hora_inicio || "";
+                        const horaB = b.hora_inicio || "";
+                        return horaA.localeCompare(horaB);
+                    } catch {
+                        return 0;
+                    }
+                });
+        } catch {
+            return [];
+        }
+    };
 
     return {
         ...estado,
@@ -171,5 +204,5 @@ export const useDoctorData = (doctorId) => {
         formatDateTime,
         getProximasCitas,
         getCitasHoy,
-    }
-}
+    };
+};

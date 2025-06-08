@@ -18,25 +18,29 @@ const AgendaDoctor = () => {
       const token = localStorage.getItem("authtoken")
 
       if (!doctorId) {
-        throw new Error("No se encontró el ID del doctor en localStorage")
+        setIsLoading(false)
+        return
       }
 
       const response = await fetch(`http://localhost:3000/citas/bydoctor/${doctorId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `${token}`
+          'Authorization': `${token || ''}`
         }
-      })
+      }).catch(() => null)
 
-      if (!response.ok) {
-        throw new Error(`Error al obtener las citas: ${response.statusText}`)
+      if (!response || !response.ok) {
+        setCitas([])
+        setIsLoading(false)
+        return
       }
 
-      const data = await response.json()
-      setCitas(data.data)
+      const data = await response.json().catch(() => ({ data: [] }))
+      setCitas(Array.isArray(data.data) ? data.data : [])
     } catch (err) {
-      console.error(err)
-      setError(err instanceof Error ? err.message : "Error desconocido al obtener las citas")
+      console.error("Error al obtener citas:", err)
+      setError("Error al cargar las citas")
+      setCitas([])
     } finally {
       setIsLoading(false)
     }
@@ -47,41 +51,57 @@ const AgendaDoctor = () => {
   }, [])
 
   const handleCitasClick = (Citas) => {
-    console.log("Cita seleccionada:", Citas)
+    if (Citas) {
+      console.log("Cita seleccionada:", Citas)
+    }
   }
+
+  
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen mt-12">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
         <div className="p-4 border-b">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-7 w-7 " style={{ color: "var(--primary-color)" }} />
-            <h2 className="text-xl font-semibold">Agenda</h2>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-7 w-7" style={{ color: "var(--primary-color)" }} />
+              <h2 className="text-xl font-semibold">Agenda</h2>
+            </div>
+           
           </div>
           <p className="text-gray-500 text-sm mt-1">Visualiza y gestiona tus citas con pacientes</p>
         </div>
         <div className="p-4">
           {isLoading ? (
             <LoadingScreen message="Cargando citas..." />
-          ) : error ? (
-            <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
-              <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-semibold text-red-800">Error</h4>
-                <p className="text-red-700 mt-1">{error}</p>
-              </div>
-            </div>
           ) : (
-            <Calendario
-              citas={Citas}
-              onCitaClick={handleCitasClick}
-              viewType="doctor"
-            />
+            <>
+              {error && (
+                <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-4 mb-4 flex items-start space-x-3 shadow-sm">
+                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <h4 className="font-medium text-red-800">Error al cargar citas</h4>
+                    <p className="text-red-700 text-sm mt-1">{error}</p>
+                    <button
+                      onClick={handleRefresh}
+                      className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+                    >
+                      Intentar nuevamente
+                    </button>
+                  </div>
+                </div>
+              )}
+              <Calendario
+                citas={Citas}
+                onCitaClick={handleCitasClick}
+                viewType="doctor"
+              />
+            </>
           )}
         </div>
       </div>
 
-      <CitasHoy></CitasHoy>
+      <CitasHoy />
     </div>
   )
 }
