@@ -3,7 +3,7 @@ const userController = require("../controllers/userController");
 const {verifyToken,checkRole} = require("./../middleware/authMiddleware");
 
 
-userRouter.get("/",  userController.getAllUsers);
+userRouter.get("/", verifyToken,  userController.getAllUsers);
 userRouter.get("/:id", verifyToken, userController.getUserById);
 userRouter.delete("/delete/:id", verifyToken, userController.deleteUser);
 userRouter.post("/login",  userController.login);  
