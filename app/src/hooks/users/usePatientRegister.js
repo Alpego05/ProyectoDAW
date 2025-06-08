@@ -51,7 +51,6 @@ const usePatientRegister = () => {
     const validateForm = () => {
         const { user, patient } = formData
 
-        // Validar campos requeridos
         if (!user.nombre.trim()) return "El nombre es requerido"
         if (!user.apellido1.trim()) return "El primer apellido es requerido"
         if (!user.apellido2.trim()) return "El segundo apellido es requerido"
@@ -102,7 +101,6 @@ const usePatientRegister = () => {
     }
 
     const submitPatient = async () => {
-        // Validar formulario antes de enviar
         const validationError = validateForm()
         if (validationError) {
             setError(validationError)

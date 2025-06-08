@@ -37,7 +37,7 @@ const createReceta = async (req, res) => {
     try {
         const newReceta = await recetaService.createReceta(req.body);
         return res.status(201).json({
-            message: 'Receta creada exitosamente',
+            message: 'Receta creada',
             data: newReceta
         });
     } catch (error) {
@@ -54,7 +54,7 @@ const updateReceta = async (req, res) => {
         const updatedReceta = await recetaService.updateReceta(req.params.id, req.body);
         if (updatedReceta) {
             return res.status(200).json({
-                message: 'Receta actualizada exitosamente',
+                message: 'Receta actualizada',
                 data: updatedReceta
             });
         } else {

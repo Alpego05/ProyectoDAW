@@ -31,7 +31,6 @@ const registerPatient = async (req, res) => {
     await t.commit() // Confirmar la transacción
 
     return res.status(201).json({
-      success: true,
       message: "Paciente registrado exitosamente. Se ha enviado un correo para establecer la contraseña.",
       data: result,
     })
@@ -72,7 +71,6 @@ const registerDoctor = async (req, res) => {
     await t.commit()
 
     return res.status(201).json({
-      success: true,
       message: "Doctor registrado exitosamente. Se ha enviado un correo para establecer la contraseña.",
       data: result,
     })

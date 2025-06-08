@@ -97,7 +97,7 @@ export const useRecetas = (pacienteIdProp = null, diagnosticoIdProp = null) => {
                 return fechaFin >= hoy
             } catch (e) {
                 console.error("Error al procesar fecha de receta:", e)
-                return true // En caso de error, se asume activa
+                return true 
             }
         })
     }

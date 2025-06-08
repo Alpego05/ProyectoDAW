@@ -66,7 +66,6 @@ const SearchableSelect = ({
 
             {isOpen && !disabled && (
                 <div className="absolute z-50 w-full mt-2 bg-white border-2 border-emerald-200 rounded-xl shadow-xl max-h-60 overflow-hidden">
-                    {/* Search input */}
                     <div className="p-3 border-b border-emerald-100">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -81,7 +80,6 @@ const SearchableSelect = ({
                         </div>
                     </div>
 
-                    {/* Options */}
                     <div className="max-h-40 overflow-y-auto">
                         {filteredOptions.length > 0 ? (
                             filteredOptions.map((option) => (
@@ -105,7 +103,7 @@ const SearchableSelect = ({
                 </div>
             )}
 
-            {/* Overlay para cerrar el dropdown */}
+
             {isOpen && (
                 <div
                     className="fixed inset-0 z-40"

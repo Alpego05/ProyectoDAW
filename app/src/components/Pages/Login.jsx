@@ -17,7 +17,7 @@ function Login() {
         clearError
     } = useLogin();
 
-    // Función para manejar el soporte por email
+
     const handleEmailSupport = () => {
         const subject = encodeURIComponent("Ayuda con acceso - Portal Medinet");
         const body = encodeURIComponent(`
@@ -58,7 +58,6 @@ Información adicional:
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid lg:grid-cols-2 gap-16 items-start">
-                    {/* Columna Izquierda - Información simplificada */}
                     <div className="space-y-8">
                         {/* Hero Section */}
                         <section className="text-center lg:text-left">
@@ -80,7 +79,6 @@ Información adicional:
                             </div>
                         </section>
 
-                        {/* Estadísticas simplificadas */}
                         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="text-center p-4 bg-white rounded-xl border border-slate-100">
                                 <Users className="mx-auto mb-3" style={{ color: "var(--primary-color)" }} size={24} />
@@ -104,7 +102,6 @@ Información adicional:
                             </div>
                         </section>
 
-                        {/* Servicios simplificados */}
                         <section>
                             <h2 className="text-xl font-medium text-slate-800 mb-4">Servicios Principales</h2>
                             <div className="grid md:grid-cols-2 gap-3">
@@ -139,7 +136,6 @@ Información adicional:
                             </div>
                         </section>
 
-                        {/* Contacto simplificado */}
                         <section className="bg-sky-50 p-6 rounded-xl border border-sky-100">
                             <h2 className="text-lg font-medium text-slate-800 mb-4">Contacto</h2>
                             <div className="space-y-3">
@@ -159,7 +155,6 @@ Información adicional:
                         </section>
                     </div>
 
-                    {/* Columna Derecha - Formulario simplificado */}
                     <div className="lg:sticky lg:top-24">
                         <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
                             <div className="text-center mb-8">
@@ -194,7 +189,6 @@ Información adicional:
                                     />
                                 </div>
 
-                                {/* Campo Contraseña */}
                                 <div>
                                     <label
                                         htmlFor="password"
@@ -228,12 +222,12 @@ Información adicional:
                                 {/* Mensaje de Error */}
                                 {error && (
                                     <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
-                                <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                                <div>
-                                    <h4 className="font-semibold text-red-800">Error</h4>
-                                    <p className="text-red-700 mt-1">{error}</p>
-                                </div>
-                            </div>
+                                        <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <h4 className="font-semibold text-red-800">Error</h4>
+                                            <p className="text-red-700 mt-1">{error}</p>
+                                        </div>
+                                    </div>
                                 )}
 
                                 {/* Botón de Login */}
@@ -254,7 +248,6 @@ Información adicional:
                                 </button>
                             </form>
 
-                            {/* Footer del Form */}
                             <div className="mt-6 text-center">
                                 <p className="text-xs text-slate-500">
                                     ¿Problemas para acceder?{' '}

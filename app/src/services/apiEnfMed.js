@@ -77,7 +77,7 @@ export const getMedicamentosByEnfermedad = async (enfermedadId) => {
     const response = await fetch(`${API_BASE_URL}/enfmed/enf/med/${enfermedadId}`, {
       method: "GET",
       headers: {
-        Authorization: `${getToken()}`,
+        'Authorization': `${getToken()}`,
       },
     })
     if (!response.ok) {
@@ -97,7 +97,7 @@ export const getEnfermedadesByMedicamento = async (medicamentoId) => {
     const response = await fetch(`${API_BASE_URL}/enfmed/med/enf/${medicamentoId}`, {
       method: "GET",
       headers: {
-        Authorization: `${getToken()}`,
+        'Authorization': `${getToken()}`,
       },
     })
     if (!response.ok) {

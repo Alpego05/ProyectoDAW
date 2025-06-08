@@ -104,7 +104,6 @@ const FormCita = ({
                         </div>
 
                         <form onSubmit={onSubmit} className="p-6 space-y-8">
-                            {/* Doctor Selection Section */}
                             <div className="space-y-6">
                                 <div className="flex items-center space-x-2 pb-2 border-b border-[#e5e7eb]">
                                     <User className="h-5 w-5 text-[#00629B]" />
@@ -150,7 +149,6 @@ const FormCita = ({
                                     )}
                                 </div>
 
-                                {/* Doctor Information Card */}
                                 {selectedDoctor && (
                                     <div className="bg-[#f0f8ff] border border-[#00629B]/20 p-6">
                                         <div className="space-y-4">
@@ -196,7 +194,6 @@ const FormCita = ({
                                 )}
                             </div>
 
-                            {/* Appointment Details Section */}
                             <div className="space-y-6">
                                 <div className="flex items-center space-x-2 pb-2 border-b border-[#e5e7eb]">
                                     <CalendarCheck className="h-5 w-5 text-[#00629B]" />
@@ -204,7 +201,6 @@ const FormCita = ({
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Date Selection */}
                                     <div className="space-y-3">
                                         <label htmlFor="fecha" className="block text-sm font-medium text-[#1f2937]">
                                             Fecha de la Cita <span className="text-red-500">*</span>
@@ -228,7 +224,6 @@ const FormCita = ({
                                         )}
                                     </div>
 
-                                    {/* Time Selection */}
                                     <div className="space-y-3">
                                         <label htmlFor="hora" className="block text-sm font-medium text-[#1f2937]">
                                             Hora Disponible <span className="text-red-500">*</span>
@@ -280,7 +275,6 @@ const FormCita = ({
                                     </div>
                                 </div>
 
-                                {/* Consultation Reason */}
                                 <div className="space-y-3">
                                     <label htmlFor="motivo" className="block text-sm font-medium text-[#1f2937]">
                                         Motivo de la Consulta
@@ -297,7 +291,6 @@ const FormCita = ({
                                 </div>
                             </div>
 
-                            {/* Submit Button */}
                             <div className="pt-4">
                                 <button
                                     type="submit"
@@ -319,7 +312,6 @@ const FormCita = ({
                         </form>
                     </div>
 
-                    {/* Additional Information Section */}
                     <div className="bg-white border border-[#e5e7eb] shadow-sm md:w-1/3">
                         <div className="px-6 py-4 border-b border-[#e5e7eb] bg-[#f9fafb]">
                             <h2 className="text-lg font-semibold text-[#1f2937]">Información Importante</h2>

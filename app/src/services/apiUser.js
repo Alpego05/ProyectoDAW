@@ -39,7 +39,7 @@ export const getUserById = async (id) => {
     }
 };
 
-// función para editar un usuario (requiere token)
+// función para editar un usuario
 export const updateUser = async (id, userData) => {
     try {
         const response = await fetch(`${API_BASE_URL}/users/edit/${id}`, {
@@ -74,7 +74,6 @@ export const changePassword = async (id, passwordData) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
-                // No incluimos Authorization header
             },
             body: JSON.stringify(passwordData)
         });

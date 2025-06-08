@@ -7,7 +7,6 @@ const getMedicamentosByEnfermedad = async (req, res) => {
     const medicamentos = await medicamentoEnfermedadService.getMedicamentosByEnfermedad(id)
 
     return res.status(200).json({
-      success: true,
       data: medicamentos,
     })
   } catch (error) {
@@ -25,7 +24,6 @@ const getEnfermedadesByMedicamento = async (req, res) => {
     const enfermedades = await medicamentoEnfermedadService.getEnfermedadesByMedicamento(id)
 
     return res.status(200).json({
-      success: true,
       data: enfermedades,
     })
   } catch (error) {
@@ -48,8 +46,7 @@ const asignarMedicamentoAEnfermedad = async (req, res) => {
     })
 
     return res.status(201).json({
-      success: true,
-      message: "Medicamento asignado a enfermedad exitosamente",
+      message: "Medicamento asignado a enfermedad",
       data: asignacion,
     })
   } catch (error) {

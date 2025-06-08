@@ -37,7 +37,7 @@ const createEnfermedad = async (req, res) => {
     try {
         const newEnfermedad = await enfermedadService.createEnfermedad(req.body);
         return res.status(201).json({
-            message: 'Enfermedad creada exitosamente',
+            message: 'Enfermedad creada',
             data: newEnfermedad
         });
     } catch (error) {
@@ -54,7 +54,7 @@ const updateEnfermedad = async (req, res) => {
         const updatedEnfermedad = await enfermedadService.updateEnfermedad(req.params.id, req.body);
         if (updatedEnfermedad) {
             return res.status(200).json({
-                message: 'Enfermedad actualizada exitosamente',
+                message: 'Enfermedad actualizada',
                 data: updatedEnfermedad
             });
         } else {

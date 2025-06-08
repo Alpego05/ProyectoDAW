@@ -10,7 +10,7 @@ export const getAllCitas = async () => {
         const response = await fetch(`${API_BASE_URL}/citas`, {
             method: "GET",
             headers: {
-                Authorization: `${getToken()}`,
+                'Authorization': `${getToken()}`,
             },
         })
         const data = await response.json()
@@ -25,7 +25,7 @@ export const getCitasByPatient = async (patientId) => {
         const response = await fetch(`${API_BASE_URL}/citas/bypatient/${patientId}`, {
             method: "GET",
             headers: {
-                Authorization: `${getToken()}`,
+                'Authorization': `${getToken()}`,
             },
         })
 
@@ -46,7 +46,7 @@ export const getCitasByDoctor = async (doctorId) => {
         const response = await fetch(`${API_BASE_URL}/citas/bydoctor/${doctorId}`, {
             method: "GET",
             headers: {
-                Authorization: `${getToken()}`,
+                'Authorization': `${getToken()}`,
             },
         })
 
@@ -102,7 +102,7 @@ export const createCita = async (citaData) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `${getToken()}`,
+                'Authorization': `${getToken()}`,
             },
             body: JSON.stringify(payload),
         })
@@ -140,7 +140,7 @@ export const updateCita = async (id, citaData) => {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `${getToken()}`,
+                'Authorization': `${getToken()}`,
             },
             body: JSON.stringify(payload),
         })
@@ -165,7 +165,7 @@ export const deleteCita = async (citaId) => {
         const response = await fetch(`${API_BASE_URL}/citas/delete/${citaId}`, {
             method: "DELETE",
             headers: {
-                Authorization: `${getToken()}`,
+                'Authorization': `${getToken()}`,
             },
         })
         if (!response.ok) {

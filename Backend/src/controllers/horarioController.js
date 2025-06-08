@@ -37,7 +37,7 @@ const createHorario = async (req, res) => {
     try {
         const newHorario = await horarioService.createHorario(req.body);
         return res.status(201).json({
-            message: 'Horario creado exitosamente',
+            message: 'Horario creado',
             data: newHorario
         });
     } catch (error) {
@@ -54,7 +54,7 @@ const updateHorario = async (req, res) => {
         const updatedHorario = await horarioService.updateHorario(req.params.id, req.body);
         if (updatedHorario) {
             return res.status(200).json({
-                message: 'Horario actualizado exitosamente',
+                message: 'Horario actualizado',
                 data: updatedHorario
             });
         } else {

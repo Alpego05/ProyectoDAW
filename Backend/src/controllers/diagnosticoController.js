@@ -37,7 +37,7 @@ const createDiagnostico = async (req, res) => {
     try {
         const newDiagnostico = await diagnosticoService.createDiagnostico(req.body);
         return res.status(201).json({
-            message: 'Diagnóstico creado exitosamente',
+            message: 'Diagnóstico creado',
             data: newDiagnostico
         });
     } catch (error) {
@@ -54,7 +54,7 @@ const updateDiagnostico = async (req, res) => {
         const updatedDiagnostico = await diagnosticoService.updateDiagnostico(req.params.id, req.body);
         if (updatedDiagnostico) {
             return res.status(200).json({
-                message: 'Diagnóstico actualizado exitosamente',
+                message: 'Diagnóstico actualizado',
                 data: updatedDiagnostico
             });
         } else {

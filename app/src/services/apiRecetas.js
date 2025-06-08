@@ -48,7 +48,6 @@ export const getRecetasByPacienteId = async (pacienteId) => {
     } catch (error) {
         console.error(`Error al cargar recetas del paciente ${pacienteId}:`, error.message);
         
-        // Si es un error de "no encontrado", retornar array vacío en lugar de error
         if (error.message.includes('404') || error.message.includes('No se encontraron')) {
             return [];
         }
@@ -86,7 +85,6 @@ export const getRecetasByCitaId = async (citaId) => {
     } catch (error) {
         console.error(`Error al obtener recetas de la cita ${citaId}:`, error.message);
         
-        // Si es un error de "no encontrado", retornar array vacío en lugar de error
         if (error.message.includes('404') || error.message.includes('No se encontraron')) {
             return [];
         }
@@ -124,7 +122,6 @@ export const getRecetasByDiagnosticoId = async (diagnosticoId) => {
     } catch (error) {
         console.error(`Error al obtener recetas del diagnóstico ${diagnosticoId}:`, error.message);
         
-        // Si es un error de "no encontrado", retornar array vacío en lugar de error
         if (error.message.includes('404') || error.message.includes('No se encontraron')) {
             return [];
         }

@@ -8,7 +8,6 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
 
     if (!cita) return null;
 
-    // Estado de cita personalizado con los nuevos colores
     const getEstadoClass = (estado) => {
         switch (estado?.toLowerCase()) {
             case 'completada':
@@ -24,7 +23,6 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
 
     return (
         <div className="mt-6 bg-slate-50 rounded-lg border border-slate-200 shadow-md overflow-hidden animate-fadeIn">
-            {/* Encabezado */}
             <div className="bg-sky-700 text-white px-6 py-4 flex justify-between items-center">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                     <Folder className="h-5 w-5" />
@@ -56,7 +54,6 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
                     </div>
                 ) : (
                     <>
-                        {/* Panel de información principal */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Información de la cita */}
                             <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
@@ -106,7 +103,6 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
                                 </div>
                             </div>
 
-                            {/* Información del doctor */}
                             <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
                                 <h4 className="font-semibold text-sky-800 flex items-center gap-2 mb-4 pb-2 border-b border-slate-100">
                                     <User className="h-4 w-4" />
@@ -154,7 +150,6 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
                             </div>
                         </div>
 
-                        {/* Sección de diagnóstico */}
                         {diagnostico && (
                             <div className="mt-6">
                                 <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
@@ -185,7 +180,6 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
                             </div>
                         )}
 
-                        {/* Sección de recetas */}
                         {recetas && recetas.length > 0 && (
                             <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
                                 <h4 className="font-semibold text-sky-800 flex items-center gap-2 mb-5 pb-3 border-b border-slate-100">
@@ -257,7 +251,6 @@ const DetallesCita = ({ cita, onClose, citaDetails, loadingDetails, detailsError
                     </>
                 )}
 
-                {/* Botón de cerrar en el footer */}
                 <div className="mt-6 pt-4 flex justify-end">
                     <button
                         onClick={onClose}

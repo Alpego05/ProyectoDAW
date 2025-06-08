@@ -79,7 +79,6 @@ export const useDoctorData = (doctorId) => {
             try {
                 setEstado((prev) => ({ ...prev, loading: true, error: null }));
 
-                // Obtener datos básicos
                 const datosUsuario = await getUserById(doctorId).catch(() => null);
                 const datosDoctor = await getDoctorById(doctorId).catch(() => null);
                 const citasDoctor = await getCitasByDoctor(doctorId).catch(() => []);
@@ -87,7 +86,6 @@ export const useDoctorData = (doctorId) => {
                 const pacientesMap = new Map();
                 const pacientesPromises = [];
 
-                // Procesar citas de forma segura
                 if (Array.isArray(citasDoctor)) {
                     citasDoctor.forEach((cita) => {
                         if (cita && cita.paciente_id && !pacientesMap.has(cita.paciente_id)) {
@@ -107,7 +105,6 @@ export const useDoctorData = (doctorId) => {
                     });
                 }
 
-                // Esperar a que se resuelvan todas las promesas de pacientes
                 await Promise.allSettled(pacientesPromises);
                 const pacientesData = Array.from(pacientesMap.values()).filter(Boolean);
 

@@ -37,7 +37,7 @@ const createMedicamento = async (req, res) => {
     try {
         const newMedicamento = await medicamentoService.createMedicamento(req.body);
         return res.status(201).json({
-            message: 'Medicamento creado exitosamente',
+            message: 'Medicamento creado',
             data: newMedicamento
         });
     } catch (error) {
@@ -54,7 +54,7 @@ const updateMedicamento = async (req, res) => {
         const updatedMedicamento = await medicamentoService.updateMedicamento(req.params.id, req.body);
         if (updatedMedicamento) {
             return res.status(200).json({
-                message: 'Medicamento actualizado exitosamente',
+                message: 'Medicamento actualizado',
                 data: updatedMedicamento
             });
         } else {

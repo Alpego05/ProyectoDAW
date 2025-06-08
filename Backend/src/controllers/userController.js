@@ -48,7 +48,6 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await updateUser(id, userData);
         res.status(200).json({
-            success: true,
             message: updatedUser.message || 'Usuario actualizado correctamente',
             data: updatedUser
         });
@@ -103,7 +102,6 @@ const changePassword = async (req, res) => {
         });
 
         res.status(200).json({
-            success: true,
             message: updatedUser.message || 'Contraseña actualizada correctamente',
             data: {
                 dni: updatedUser.dni,

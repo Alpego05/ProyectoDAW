@@ -28,13 +28,11 @@ const HistorialPaciente = () => {
     const [modalCancelarCita, setModalCancelarCita] = useState(null)
     const [loadingDelete, setLoadingDelete] = useState(false)
 
-    // Estados para notificaciones
     const [error, setError] = useState("")
     const [showSuccess, setShowSuccess] = useState(false)
 
     const { formatDate, formatHour } = useFormat()
 
-    // Función para mostrar mensajes temporales
     const showSuccessMessage = () => {
         setError("")
         setShowSuccess(true)
@@ -198,7 +196,6 @@ const HistorialPaciente = () => {
                     </div>
                 )}
 
-                {/* Header */}
                 <div className="bg-white border border-[#e5e7eb] shadow-sm mb-6">
                     <div className="px-6 py-4 border-b border-[#e5e7eb] bg-[#f9fafb]">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -211,7 +208,6 @@ const HistorialPaciente = () => {
                     </div>
                 </div>
 
-                {/* Grid de citas por estado */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {estadosAMostrar.map((estado) => {
                         const citasDelEstado = citasPorEstado[estado] || []
@@ -276,7 +272,6 @@ const HistorialPaciente = () => {
                     })}
                 </div>
 
-                {/* Modales */}
                 {modalEditarCita && (
                     <ModalEditarCita
                         cita={modalEditarCita}

@@ -15,7 +15,6 @@ const DiagnosticoModal = ({
 }) => {
     const { medicamentos, enfermedades } = useContext(MedEnfsContext);
     
-    // Usar el hook personalizado para manejar toda la lógica del formulario
     const {
         diagnosticoData,
         recetas,
@@ -72,7 +71,6 @@ const DiagnosticoModal = ({
                             isLoading={isLoading}
                         />
 
-                        {/* Formulario de Recetas */}
                         <RecetaForm
                             recetas={recetas}
                             showRecetas={showRecetas}
@@ -83,7 +81,6 @@ const DiagnosticoModal = ({
                             isLoading={isLoading}
                         />
 
-                        {/* Error Message */}
                         {error && (
                             <div className="bg-red-50 border-l-4 border-red-500 rounded-md p-5 flex items-start space-x-4 shadow-sm">
                                 <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
@@ -94,7 +91,6 @@ const DiagnosticoModal = ({
                             </div>
                         )}
 
-                        {/* Botones */}
                         <div className="flex justify-end space-x-4 pt-8 border-t border-gray-200">
                             <button
                                 type="button"

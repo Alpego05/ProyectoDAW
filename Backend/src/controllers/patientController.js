@@ -75,7 +75,7 @@ const updatePatient = async (req, res) => {
         );
         
         res.status(200).json({
-            message: 'Paciente actualizado exitosamente',
+            message: 'Paciente actualizado',
             data: updatedPatient
         });
     } catch (error) {

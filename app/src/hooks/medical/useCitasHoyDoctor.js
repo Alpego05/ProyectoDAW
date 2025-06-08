@@ -14,7 +14,7 @@ export const useCitasHoyDoctor = () => {
             const hoy = new Date();
             return hoy.toISOString().split('T')[0]; // YYYY-MM-DD
         } catch {
-            return new Date().toLocaleDateString('en-CA'); // Formato YYYY-MM-DD como fallback
+            return new Date().toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
         }
     };
 
@@ -32,7 +32,7 @@ export const useCitasHoyDoctor = () => {
             const todasLasCitas = await getCitasByDoctor(doctorId).catch(() => []);
             const fechaHoy = obtenerFechaHoy();
             
-            // Si no hay citas o no es un array, simplemente usar array vacío
+            // Si no hay citas o no es un array usar array vacío
             const citasArray = Array.isArray(todasLasCitas) ? todasLasCitas : [];
 
             const citasDelDia = citasArray.filter(cita => 
@@ -67,7 +67,7 @@ export const useCitasHoyDoctor = () => {
             const citasValidas = citasConPacientes
                 .filter(result => result.status === 'fulfilled')
                 .map(result => result.value)
-                .filter(Boolean); // Filtrar valores null/undefined
+                .filter(Boolean); 
 
             setCitasHoy(citasValidas);
         } catch (err) {

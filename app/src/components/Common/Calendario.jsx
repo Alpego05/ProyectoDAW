@@ -27,7 +27,6 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
     citasPorFecha[cita.fecha].push(cita)
   })
 
-  // Función para obtener el color del badge basado en los estados de las citas
   const getBadgeColor = (dayCitas) => {
     if (dayCitas.some((c) => c.estado === "No asistida")) {
       return "bg-red-500 text-white"
@@ -38,7 +37,6 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
     }
   }
 
-  // Renderizar el contenido del día
   const tileContent = ({ date, view }) => {
     if (view !== "month") return null
 
@@ -74,7 +72,6 @@ const Calendario = ({ citas = [], onCitaClick, viewType = "patient" }) => {
     return "font-medium"
   }
 
-  // Mostrar detalles de las citas del día seleccionado
   const selectedDateStr = formatDateForCalendar(date)
   const citasSeleccionadas = citasPorFecha[selectedDateStr] || []
 

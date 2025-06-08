@@ -55,7 +55,6 @@ export const usePacienteHistorial = (pacienteId) => {
                 return acc;
             }, {});
 
-            // Enriquecer citas con información del doctor y paciente
             return citasData.map(cita => ({
                 ...cita,
                 doctor: doctoresMap[cita.doctor_id] || {

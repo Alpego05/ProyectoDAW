@@ -26,7 +26,6 @@ const SolicitarCita = () => {
         getAvailableDays
     } = useSolicitarCita();
 
-    // Cargar doctores al montar el componente
     useEffect(() => {
         loadAllDoctors();
     }, [loadAllDoctors]);
@@ -39,7 +38,6 @@ const SolicitarCita = () => {
         }
     }, [selectedDoctorId, loadDoctorData, clearData]);
 
-    // Actualizar horarios cuando cambia la fecha
     useEffect(() => {
         if (selectedDate && selectedDoctorId) {
             updateAvailableSlots(selectedDate);

@@ -114,7 +114,7 @@ export const useDiagnosticoForm = (isOpen, onSuccess, onClose) => {
             const diagnosticoCreado = await createDiagnostico(diagnosticoPayload);
             // console.log('Diagnóstico creado:', diagnosticoCreado);
 
-            // Crear las recetas asociadas si existen
+            // Crear las recetas 
             if (recetas.length > 0) {
                 const promesasRecetas = recetas.map(receta => {
                     const recetaPayload = {
@@ -129,12 +129,11 @@ export const useDiagnosticoForm = (isOpen, onSuccess, onClose) => {
                     return createReceta(recetaPayload);
                 });
 
-                //se crea todo al mismo tiempo con playload
                 const recetasCreadas = await Promise.all(promesasRecetas);
                 console.log('Recetas creadas:', recetasCreadas);
             }
 
-            // Notificar éxito y cerrar modal
+            // cerrar modal
             onSuccess?.();
             onClose();
             return true;

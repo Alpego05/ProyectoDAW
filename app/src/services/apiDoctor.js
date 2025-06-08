@@ -11,17 +11,16 @@ export const getAllDoctors = async () => {
         const response = await fetch(`${API_BASE_URL}/doctors`, {
             method: "GET",
             headers: {
-                "Authorization": `Bearer ${getToken()}`
+                "Authorization": `${getToken()}`
             }
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(` ${response.status}`);
         }
 
         const data = await response.json();
         
-        // Handle different possible response structures
         if (Array.isArray(data)) {
             return data;
         } else if (data && Array.isArray(data.data)) {
@@ -29,10 +28,10 @@ export const getAllDoctors = async () => {
         } else if (data && data.data) {
             return [data.data];
         } else {
-            throw new Error("Unexpected API response structure");
+            throw new Error("Err");
         }
     } catch (error) {
-        console.error("Error fetching doctors:", error);
+        console.error("Error al obtener doctores:", error);
         throw error;
     }
 };
